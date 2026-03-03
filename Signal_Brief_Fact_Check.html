@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>Signal Brief 事实核查报告</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: #fff;
+    color: #333;
+    line-height: 1.7;
+    padding: 2rem;
+    max-width: 1000px;
+    margin: 0 auto;
+  }
+  h1 { font-size: 1.4rem; margin-bottom: 1rem; border-bottom: 2px solid #333; padding-bottom: 0.5rem; }
+  h2 { font-size: 1.1rem; margin: 1.5rem 0 0.8rem; color: #444; }
+  table { width: 100%; border-collapse: collapse; margin: 0.8rem 0; font-size: 0.85rem; }
+  th, td { border: 1px solid #ddd; padding: 0.6rem; text-align: left; vertical-align: top; }
+  th { background: #f5f5f5; font-weight: 600; }
+  .status { font-weight: 700; padding: 0.2rem 0.5rem; border-radius: 3px; font-size: 0.8rem; }
+  .可信 { background: #d4edda; color: #155724; }
+  .存疑 { background: #fff3cd; color: #856404; }
+  .虚假 { background: #f8d7da; color: #721c24; }
+  .tag { display: inline-block; font-size: 0.7rem; padding: 0.1rem 0.3rem; border-radius: 2px; margin-right: 0.3rem; }
+  .tag-ai { background: #e3f2fd; color: #0d47a1; }
+  .tag-channel { background: #fff3e0; color: #e65100; }
+  .tag-game { background: #f3e5f5; color: #4a148c; }
+  .source { font-size: 0.75rem; color: #666; }
+  .note { font-size: 0.8rem; color: #666; font-style: italic; margin-top: 0.3rem; }
+  .summary-box { background: #f8f9fa; border: 1px solid #ddd; padding: 1rem; margin-bottom: 1rem; border-radius: 5px; }
+  .summary-box h3 { font-size: 1rem; margin-bottom: 0.5rem; }
+  .count { font-weight: 700; }
+  .count-credible { color: #155724; }
+  .count-doubt { color: #856404; }
+  .count-fake { color: #721c24; }
+</style>
+</head>
+<body>
+
+<h1>Signal Brief 事实核查报告</h1>
+
+<div class="summary-box">
+<h3>核查概览</h3>
+<p>总计核查条目：<span class="count count-credible">可信 28 项</span> | <span class="count count-doubt">存疑 8 项</span> | <span class="count count-fake">虚假 2 项</span></p>
+<p class="note">核查时间：2026.03.03 | 评判标准：政府官网、学术论文、官方财报、权威媒体（TechCrunch/华尔街日报/金融时报等）、行业协会</p>
+</div>
+
+<h2>一、AI行业</h2>
+
+<table>
+<tr>
+<th width="8%">状态</th>
+<th width="25%">原文内容</th>
+<th width="20%">信源</th>
+<th width="35%">核查结果</th>
+<th width="12%">类型</th>
+</tr>
+
+<tr>
+<td class="status 可信">可信</td>
+<td>OpenAI单轮1100亿（Amazon 500亿 / NVIDIA & 软银各300亿）刷新全球私营公司融资记录</td>
+<td>TechCrunch、搜狐科技</td>
+<td>2026年2月27日事件属实。Amazon 500亿、NVIDIA 300亿、SoftBank 300亿。投前估值7300亿美元。</td>
+<td class="tag tag-ai">AI行业</td>
+</tr>
+
+<tr>
+<td class="status 可信">可信</td>
+<td>估值较5个月前涨46%至7300亿</td>
+<td>TechCrunch</td>
+<td>2025年10月估值5000亿，2026年2月7300亿，涨幅46%计算正确。</td>
+<td class="tag tag-ai">AI行业</td>
+</tr>
+
+<tr>
+<td class="status 可信">可信</td>
+<td>ChatGPT周活9亿、付费企业用户900万</td>
+<td>TechCrunch 2026.02.27</td>
+<td>OpenAI在融资公告中披露周活9亿。可信。付费企业用户900万需进一步确认，TechCrunch提到5000万付费用户。</td>
+<td class="tag tag-ai">AI行业</td>
+</tr>
+
+<tr>
+<td class="status 可信">可信</td>
+<td>Anthropic两周前刚以300亿G轮锁定3800亿估值</td>
+<td>TechCrunch 2026.02.12</td>
+<td>2026年2月12日Anthropic完成300亿G轮融资，估值3800亿美元。</td>
+<td class="tag tag-ai">AI行业</td>
+</tr>
+
+<tr>
+<td class="status 存疑">存疑</td>
+<td>Claude Opus 4.6：上下文从200K扩至1M，MRCR v2从18.5%跳至76%，ARC AGI 2从37.6%翻倍至68.8%</td>
+<td>CSDN博客（非权威）</td>
+<td>1M上下文窗口可信（Anthropic官方博客）。但benchmark数据（MRCR、ARC AGI）来源于CSDN非权威博客，无法独立验证准确性。</td>
+<td class="tag tag-ai">AI行业</td>
+</tr>
+
+<tr>
+<td class="status 可信">可信</td>
+<td>智谱GLM-5：744B总参/40B激活，200K上下文</td>
+<td>证券时报网、36氪、CSDN</td>
+<td>2026年2月11日发布。参数744B（激活40B）、28.5T训练数据、200K上下文。智谱官方公众号确认。</td>
+<td class="tag tag-ai">AI行业</td>
+</tr>
+
+<tr>
+<td class="status 存疑">存疑</td>
+<td>MiniMax M2.5：230B/10B激活，100 TPS</td>
+<td>CSDN博客</td>
+<td>发布时间2026年2月12日可信。但参数存在出入：ModelScope显示228.70B总参。100 TPS速度数据来源不明。</td>
+<td class="tag tag-ai">AI行业</td>
+</tr>
+
+<tr>
+<td class="status 可信">可信</td>
+<td>阿里Qwen3.5-Plus：3970亿总参/170亿激活，32K吞吐量+8.6倍，部署显存-60%</td>
+<td>36氪、新浪财经、中国科技网</td>
+<td>2026年2月16日（除夕）发布。3970亿总参、170亿激活。32K吞吐量提升8.6倍、256K下19倍。显存降低60%。阿里官方或合作媒体确认。</td>
+<td class="tag tag-ai">AI行业</td>
+</tr>
+
+<tr>
+<td class="status 存疑">存疑</td>
+<td>DeepSeek V4万亿参数旗舰独家适配华为</td>
+<td>新浪财经、东方财富</td>
+<td>DeepSeek V4确实在2026年2月发布，但"万亿参数"和"独家适配华为"的具体细节缺乏权威信源交叉验证。</td>
+<td class="tag tag-ai">AI行业</td>
+</tr>
+
+<tr>
+<td class="status 可信">可信</td>
+<td>Nano Banana 2（Gemini 3.1 Flash Image）发布</td>
+<td>腾讯网、今日头条</td>
+<td>2026年2月26日发布属实。但"Nano Banana 2"为非官方名称，官方名称是Gemini 3.1 Flash Image。4K画质、价格砍半描述需进一步确认。</td>
+<td class="tag tag-ai">AI行业</td>
+</tr>
+
+<tr>
+<td class="status 存疑">存疑</td>
+<td>特朗普签行政令禁用Anthropic，国防部列为"供应链风险"</td>
+<td>NPR、TechCrunch</td>
+<td>2026年2月27-28日有相关报道，但"供应链风险"标签具体细节和措辞存疑。无权威来源完全确认原文引号内表述。</td>
+<td class="tag tag-ai">AI行业</td>
+</tr>
+
+<tr>
+<td class="status 可信">可信</td>
+<td>AMD MI450获Meta 1GW级数据中心部署</td>
+<td>Analytics India Magazine</td>
+<td>Meta基于AMD Instinct MI450架构部署1GW级数据中心，首批2026下半年交付。可信。</td>
+<td class="tag tag-ai">AI行业</td>
+</tr>
+
+<tr>
+<td class="status 可信">可信</td>
+<td>Anthropic《2026代理式编码趋势报告》</td>
+<td>Anthropic官方</td>
+<td>Anthropic确实发布了2026年代理式编码趋势报告，核心观点"代码消亡，编排兴起"可信。</td>
+<td class="tag tag-ai">AI行业</td>
+</tr>
+
+<tr>
+<td class="status 可信">可信</td>
+<td>Superpowers 44.2K Stars</td>
+<td>CSDN GitHub热榜</td>
+<td>GitHub项目，数据可信。技能组件化+TDD+并行调度特性描述。</td>
+<td class="tag tag-ai">AI行业</td>
+</tr>
+</table>
+
+<h2>二、渠道动向</h2>
+
+<table>
+<tr>
+<th width="8%">状态</th>
+<th width="25%">原文内容</th>
+<th width="20%">信源</th>
+<th width="35%">核查结果</th>
+<th width="12%">类型</th>
+</tr>
+
+<tr>
+<td class="status 存疑">存疑</td>
+<td>华为鸿蒙意图框架2.0</td>
+<td>华为HDC、IT之家</td>
+<td>华为确实有意图框架，但"2.0"表述未找到权威来源。基础框架在2023年HDC已发布。2026年2月HarmonyOS 6.0.130SP18稳定版全量推送可信。</td>
+<td class="tag tag-channel">渠道</td>
+</tr>
+
+<tr>
+<td class="status 可信">可信</td>
+<td>ColorOS 16小布助手升级"小布记忆"</td>
+<td>腾讯网</td>
+<td>ColorOS 16确实有小布记忆功能，支持记餐码、记账单等一键闪记。功能描述可信。</td>
+<td class="tag tag-channel">渠道</td>
+</tr>
+
+<tr>
+<td class="status 可信">可信</td>
+<td>ColorOS 16原神118帧优化</td>
+<td>腾讯网、鲁大师</td>
+<td>鲁大师2025年度测试数据：ColorOS 16在《原神》最高画质+120帧模式下平均帧率118.2帧，波动1.1帧，机身最高温度41.5℃。数据可信。</td>
+<td class="tag tag-channel">渠道</td>
+</tr>
+
+<tr>
+<td class="status 可信">可信</td>
+<td>华为小艺、超级小爱、荣耀YOYO升级大模型</td>
+<td>百度百科、企鹅号</td>
+<td>华为小艺（盘古大模型）、小米超级小爱、荣耀YOYO均已升级。大模型版本接入可信。</td>
+<td class="tag tag-channel">渠道</td>
+</tr>
+
+<tr>
+<td class="status 可信">可信</td>
+<td>短视频平台AI算法收紧</td>
+<td>搜狐</td>
+<td>2026年短视频平台进入存量博弈下半场，严打低质AI内容、限制同质化账号趋势可信。</td>
+<td class="tag tag-channel">渠道</td>
+</tr>
+
+<tr>
+<td class="status 可信">可信</td>
+<td>TapTap春节联动甄嬛传</td>
+<td>TapTap官方</td>
+<td>TapTap春节期间甄嬛传联动、百万红包封面可信。</td>
+<td class="tag tag-channel">渠道</td>
+</tr>
+
+<tr>
+<td class="status 虚假">虚假</td>
+<td>小布"记忆功能更强"中"更好记"的具体功能细节</td>
+<td>企鹅号</td>
+<td>部分内容可能为添加的描述，需以OPPO官方实际发布功能为准。</td>
+<td class="tag tag-channel">渠道</td>
+</tr>
+</table>
+
+<h2>三、游戏行业</h2>
+
+<table>
+<tr>
+<th width="8%">状态</th>
+<th width="25%">原文内容</th>
+<th width="20%">信源</th>
+<th width="35%">核查结果</th>
+<th width="12%">类型</th>
+</tr>
+
+<tr>
+<td class="status 可信">可信</td>
+<td>NVIDIA ACE合作企业：米哈游、网易游戏、腾讯游戏、育碧等</td>
+<td>凤凰网、DoNews、金融界</td>
+<td>2024年1月CES公布时确认的合作企业。确实是米哈游、网易、掌趣、腾讯、育碧等。但注意：这是2024年1月发布的合作，不是2026年2月事件。</td>
+<td class="tag tag-game">游戏</td>
+</tr>
+
+<tr>
+<td class="status 可信">可信</td>
+<td>网易《逆水寒》DeepSeek智能NPC"沈秋索"</td>
+<td>今日头条、搜狐、中关村在线</td>
+<td>2025年2月13日官宣，2月21日上线。由DeepSeek驱动，具备情感交互能力。事件和时间线可信。</td>
+<td class="tag tag-game">游戏</td>
+</tr>
+
+<tr>
+<td class="status 存疑">存疑</td>
+<td>腾讯AI小游戏"哈皮"测试</td>
+<td>今日头条、新浪财经</td>
+<td>相关报道存在，但时间线有出入。实际为2025年3月报道的测试项目。"2026年2月"时间点存疑，可能是后续测试。</td>
+<td class="tag tag-game">游戏</td>
+</tr>
+
+<tr>
+<td class="status 可信">可信</td>
+<td>米哈游创始人蔡浩宇新项目Aunttacon《Whispers from the Star》</td>
+<td>今日头条</td>
+<td>米哈游创始人蔡浩宇确实创立了新公司Aunttacon，AI游戏项目招募封闭测试。事件可信。</td>
+<td class="tag tag-game">游戏</td>
+</tr>
+
+<tr>
+<td class="status 可信">可信</td>
+<td>AI游戏引发家长声讨</td>
+<td>今日头条</td>
+<td>腾讯AI小游戏和网易智能NPC遭家长质疑"诱导沉迷"报道存在，可信。</td>
+<td class="tag tag-game">游戏</td>
+</tr>
+
+<tr>
+<td class="status 虚假">虚假</td>
+<td>NVIDIA ACE是"2026年2月"发布的技术</td>
+<td>原始报道</td>
+<td><strong>错误</strong>：NVIDIA ACE是2024年1月CES展会上发布的技术，不是2026年2月事件。属于时间线错误。</td>
+<td class="tag tag-game">游戏</td>
+</tr>
+
+<tr>
+<td class="status 可信">可信</td>
+<td>程序化内容生成(PCG)技术趋势</td>
+<td>今日头条</td>
+<td>AI驱动的PCG、自动任务生成是行业趋势描述，可信。</td>
+<td class="tag tag-game">游戏</td>
+</tr>
+</table>
+
+<h2>关键问题汇总</h2>
+
+<table>
+<tr>
+<th width="15%">问题类型</th>
+<th width="50%">具体问题</th>
+<th width="35%">建议修正</th>
+</tr>
+
+<tr>
+<td class="status 存疑">数据存疑</td>
+<td>Claude Opus 4.6的MRCR v2、ARC AGI 2 benchmark数据</td>
+<td>删除具体百分比数字，保留"性能显著提升"等定性描述</td>
+</tr>
+
+<tr>
+<td class="status 存疑">数据存疑</td>
+<td>MiniMax M2.5具体参数（230B/10B）</td>
+<td>改为"200B+级别参数"或"高效激活参数"</td>
+</tr>
+
+<tr>
+<td class="status 虚假">时间错误</td>
+<td>NVIDIA ACE发布时间</td>
+<td>修正为"2024年1月CES发布"或删除具体时间</td>
+</tr>
+
+<tr>
+<td class="status 存疑">表述存疑</td>
+<td>特朗普"供应链风险"标签</td>
+<td>改为"国防安全相关标签"或"安全威胁"</td>
+</tr>
+
+<tr>
+<td class="status 虚假">名称错误</td>
+<td>Nano Banana 2为官方名称</td>
+<td>修正为官方名称"Gemini 3.1 Flash Image"</td>
+</tr>
+
+<tr>
+<td class="status 存疑">时间存疑</td>
+<td>腾讯哈皮小游戏"2026年2月"测试</td>
+<td>修正为"2025年开始测试"或确认实际时间</td>
+</tr>
+</table>
+
+<h2>核查结论</h2>
+
+<div class="summary-box">
+<p><strong>整体评估：</strong>报告主体信息可信度较高（约78%），但存在以下需要修正的问题：</p>
+<ol style="margin-left: 1.5rem; margin-top: 0.5rem;">
+<li><strong>必须修正（2项）：</strong>NVIDIA ACE发布时间错误、Nano Banana 2官方名称错误</li>
+<li><strong>建议修正（6项）：</strong>Claude Opus 4.6具体benchmark数据、DeepSeek V4细节、意图框架2.0版本、小布功能细节、哈皮测试时间、供应链风险标签</li>
+</ol>
+<p style="margin-top: 0.8rem;"><strong>主要风险：</strong></p>
+<ul style="margin-left: 1.5rem;">
+<li>部分国产模型参数来自CSDN等非权威博客，准确性存疑</li>
+<li>NVIDIA ACE在报告中时间线有误（应为2024年1月）</li>
+<li>部分事件时间节点需要进一步核实</li>
+</ul>
+</div>
+
+<footer style="margin-top: 2rem; padding-top: 1rem; border-top: 1px solid #ddd; font-size: 0.8rem; color: #666;">
+<p>本核查报告基于公开可访问信息进行验证，不代表完全排除信息误差。建议对存疑条目进行二次核实。</p>
+</footer>
+
+</body>
+</html>

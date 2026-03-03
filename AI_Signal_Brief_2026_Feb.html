@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Signal Brief — 2026年2月</title>
+<style>
+  :root {
+    --bg: #0d1117;
+    --surface: #161b22;
+    --border: #30363d;
+    --text: #c9d1d9;
+    --text-muted: #8b949e;
+    --accent-tech: #58a6ff;
+    --accent-biz: #f0883e;
+    --accent-cap: #3fb950;
+    --accent-opinion: #bc8cff;
+    --accent-danger: #f85149;
+    --heading: #e6edf3;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans SC', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.7;
+    padding: 2rem;
+    max-width: 960px;
+    margin: 0 auto;
+  }
+  header {
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 1.5rem;
+    margin-bottom: 2rem;
+  }
+  header h1 {
+    font-size: 1.6rem;
+    color: var(--heading);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+  }
+  header .meta {
+    color: var(--text-muted);
+    font-size: 0.82rem;
+    margin-top: 0.4rem;
+  }
+  header .meta span {
+    margin-right: 1.2rem;
+  }
+  h2 {
+    color: var(--heading);
+    font-size: 1.15rem;
+    font-weight: 600;
+    margin: 2.2rem 0 1rem;
+    padding-bottom: 0.4rem;
+    border-bottom: 1px solid var(--border);
+  }
+  h2 .num {
+    display: inline-block;
+    background: var(--accent-tech);
+    color: var(--bg);
+    width: 1.5rem;
+    height: 1.5rem;
+    text-align: center;
+    line-height: 1.5rem;
+    border-radius: 4px;
+    font-size: 0.82rem;
+    margin-right: 0.5rem;
+    font-weight: 700;
+  }
+  .signal-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1.2rem 1.4rem;
+    margin-bottom: 1rem;
+  }
+  .signal-card .title-row {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin-bottom: 0.5rem;
+  }
+  .signal-card h3 {
+    color: var(--heading);
+    font-size: 0.98rem;
+    font-weight: 600;
+  }
+  .tag {
+    display: inline-block;
+    font-size: 0.68rem;
+    font-weight: 600;
+    padding: 0.15rem 0.5rem;
+    border-radius: 3px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    flex-shrink: 0;
+  }
+  .tag-tech { background: rgba(88,166,255,0.15); color: var(--accent-tech); }
+  .tag-biz { background: rgba(240,136,62,0.15); color: var(--accent-biz); }
+  .tag-cap { background: rgba(63,185,80,0.15); color: var(--accent-cap); }
+  .tag-opinion { background: rgba(188,140,255,0.15); color: var(--accent-opinion); }
+  .signal-card .source {
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    margin-bottom: 0.5rem;
+  }
+  .signal-card .body {
+    font-size: 0.88rem;
+    line-height: 1.65;
+  }
+  .signal-card .verdict {
+    margin-top: 0.6rem;
+    font-size: 0.84rem;
+    color: var(--accent-tech);
+    font-weight: 500;
+  }
+  .project-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.85rem;
+    margin-bottom: 1rem;
+  }
+  .project-table th {
+    text-align: left;
+    color: var(--text-muted);
+    font-weight: 600;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 0.6rem 0.8rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .project-table td {
+    padding: 0.7rem 0.8rem;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+  }
+  .project-table tr:last-child td { border-bottom: none; }
+  .project-table .name { color: var(--heading); font-weight: 600; white-space: nowrap; }
+  .market-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-bottom: 1rem;
+  }
+  .market-item {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1rem 1.2rem;
+  }
+  .market-item .q {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    font-weight: 600;
+    margin-bottom: 0.4rem;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+  }
+  .market-item .a {
+    font-size: 0.88rem;
+    line-height: 1.6;
+  }
+  .variable-list {
+    list-style: none;
+  }
+  .variable-list li {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 0.9rem 1.2rem;
+    margin-bottom: 0.7rem;
+    font-size: 0.88rem;
+    line-height: 1.6;
+  }
+  .variable-list li strong {
+    color: var(--heading);
+  }
+  .appendix {
+    background: linear-gradient(135deg, rgba(88,166,255,0.08), rgba(188,140,255,0.08));
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1.4rem 1.6rem;
+    margin-top: 2rem;
+  }
+  .appendix h3 {
+    color: var(--heading);
+    font-size: 1rem;
+    margin-bottom: 0.8rem;
+  }
+  .appendix p, .appendix li {
+    font-size: 0.88rem;
+    line-height: 1.7;
+  }
+  .appendix ul {
+    padding-left: 1.2rem;
+    margin-top: 0.5rem;
+  }
+  .appendix li { margin-bottom: 0.4rem; }
+  footer {
+    margin-top: 2.5rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border);
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    text-align: center;
+  }
+  @media (max-width: 640px) {
+    body { padding: 1rem; }
+    .market-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>AI Signal Brief — 2026年2月</h1>
+  <div class="meta">
+    <span>周期: 2026.02.01 – 2026.02.28</span>
+    <span>分类: Internal / Investment Signal</span>
+    <span>生成: 2026.03.03</span>
+  </div>
+</header>
+
+<!-- ============ PART 1 ============ -->
+<h2><span class="num">1</span>核心洞察</h2>
+
+<div class="signal-card">
+  <div class="title-row">
+    <span class="tag tag-cap">资本信号</span>
+    <h3>OpenAI 完成 1100 亿美元融资，估值 7300 亿；Anthropic G 轮 300 亿估值 3800 亿</h3>
+  </div>
+  <div class="source">来源: OpenAI 官方公告 / Crunchbase · 2026.02.27 & 2026.02.12</div>
+  <div class="body">
+    OpenAI 单轮 1100 亿美元（Amazon 500 亿 / NVIDIA & 软银各 300 亿）刷新全球私营公司融资记录，估值较 5 个月前涨 46%。两周前 Anthropic 刚以 300 亿 G 轮锁定 3800 亿估值。两家合计月内吸金 1400 亿美元，头部集中效应已不可逆。ChatGPT 周活 9 亿、付费企业用户 900 万的数据表明，收入曲线开始 justify 估值叙事。
+  </div>
+  <div class="verdict">→ 判断：资本正在为"AGI 前夜的基础设施锁仓"定价，而非当期利润。2027 年 IPO 窗口（万亿估值）已进入倒计时。</div>
+</div>
+
+<div class="signal-card">
+  <div class="title-row">
+    <span class="tag tag-tech">技术拐点</span>
+    <h3>Claude Opus 4.6 发布：100万 Token 上下文 + Agent Teams 多智能体并行架构</h3>
+  </div>
+  <div class="source">来源: Anthropic 官方博客 · 2026.02.05</div>
+  <div class="body">
+    Opus 4.6 将上下文窗口从 200K 扩至 1M（Beta），MRCR v2 长上下文得分从 18.5% 跳至 76%，ARC AGI 2 从 37.6% 翻倍至 68.8%。核心新增"Agent Teams"——多 Agent 并行协作架构，以及自适应思维深度调节。同日 OpenAI 推出 GPT-5.3-Codex，速度提升 25%，但架构创新弱于 Opus。
+  </div>
+  <div class="verdict">→ 判断：Agent 从单体串行进入多体并行，标志着"AI 即团队"范式正式落地。长上下文 + 多 Agent 的组合将重新定义企业级工作流。</div>
+</div>
+
+<div class="signal-card">
+  <div class="title-row">
+    <span class="tag tag-opinion">舆论转向</span>
+    <h3>特朗普签行政令全面禁止联邦机构使用 Anthropic，国防部将其列为"供应链风险"</h3>
+  </div>
+  <div class="source">来源: NPR / TechCrunch · 2026.02.27-28</div>
+  <div class="body">
+    Anthropic CEO Dario Amodei 拒绝允许 Claude 用于国内大规模监控及完全自主武器系统，特朗普随即签令全面禁用，国防部长 Hegseth 援引国家安全法将 Anthropic 列为"供应链风险"——该标签此前从未用于美国本土企业。同日 OpenAI 宣布获得五角大楼合同。
+  </div>
+  <div class="verdict">→ 判断：AI 安全 vs. 国家安全的核心矛盾首次以行政级别爆发。Anthropic 的"负责任 AI"路线面临政治成本的压力测试，但也可能成为欧盟/日韩客户的信任背书。行业分化加剧。</div>
+</div>
+
+<div class="signal-card">
+  <div class="title-row">
+    <span class="tag tag-tech">技术拐点</span>
+    <h3>DeepSeek V4 万亿参数旗舰即将发布，独家优先适配华为而非 NVIDIA</h3>
+  </div>
+  <div class="source">来源: 东方财富网 / 新浪财经 · 2026.02.26-28</div>
+  <div class="body">
+    DeepSeek 宣布万亿参数 V4 模型原生支持图片/视频/文本生成，且独家允许华为提前访问和适配优化，暂不向 NVIDIA/AMD 开放。这是全球主要 AI 模型首次在首发窗口优先绑定非 NVIDIA 芯片。V4 支持 1000K 上下文，编程能力内测声称超越 Claude 和 GPT 系列。
+  </div>
+  <div class="verdict">→ 判断：国产算力脱钩从口号进入工程实践。DeepSeek 给华为的"首发独占"具有产业政策信号意义，可能触发 NVIDIA 对中国市场策略调整。</div>
+</div>
+
+<div class="signal-card">
+  <div class="title-row">
+    <span class="tag tag-biz">商业信号</span>
+    <h3>Anthropic 发布《2026 代理式编码趋势报告》——"代码消亡，编排兴起"</h3>
+  </div>
+  <div class="source">来源: Anthropic / CSDN 解读 · 2026.02</div>
+  <div class="body">
+    基于数百家企业客户实践，Anthropic 正式提出"人类从编码者转为 AI 指挥官"的叙事。配合 Opus 4.6 Agent Teams 功能，workplace 插件已嵌入邮件/电子表格等办公软件，直接执行任务而非对话辅助。Anthropic 核心工程师效率被引证为 2005 年同行的 1000 倍。
+  </div>
+  <div class="verdict">→ 判断：Agent 正在从"帮你写代码"升级到"替你做工作"。入门级岗位替代已从预测变为事实，企业 SaaS 面临 Agent-native 冲击。</div>
+</div>
+
+<div class="signal-card">
+  <div class="title-row">
+    <span class="tag tag-cap">资本信号</span>
+    <h3>算力军备竞赛升级：Meta 签约 AMD MI450 架构 1GW 级数据中心</h3>
+  </div>
+  <div class="source">来源: Analytics India Magazine · 2026.02</div>
+  <div class="body">
+    Meta 签下基于 AMD Instinct MI450 架构的 1GW 级数据中心部署，配合 6th Gen EPYC Venice CPU，首批 2026 下半年交付。Amazon 年度 AI 资本开支计划约 2000 亿美元。NVIDIA 不再是唯一选项——AMD 通过 OCP 联合开发的 Helios 架构开始分食训练算力市场。
+  </div>
+  <div class="verdict">→ 判断：算力供给侧格局生变。AMD 在训练集群层面首获 Tier-1 大单，NVIDIA 的定价权将承压。</div>
+</div>
+
+<!-- ============ PART 2 ============ -->
+<h2><span class="num">2</span>新兴项目 / 新模型</h2>
+
+<table class="project-table">
+<thead>
+<tr>
+  <th>名称</th>
+  <th>定位</th>
+  <th>差异点</th>
+  <th>潜在影响</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td class="name">Claude Opus 4.6</td>
+  <td>企业级 AI 基础设施旗舰</td>
+  <td>Agent Teams 多智能体并行；1M 上下文；自适应思维深度；ARC AGI 2 翻倍</td>
+  <td>重新定义企业工作流，推动"AI 团队"范式替代人力团队编制</td>
+</tr>
+<tr>
+  <td class="name">GPT-5.3-Codex</td>
+  <td>OpenAI 编码专用旗舰</td>
+  <td>融合 GPT-5.2 推理 + Codex 编码能力，速度 +25%，支持实时交互式长任务</td>
+  <td>直接对标 Cursor/Copilot，编码 Agent 进入"协作而非补全"阶段</td>
+</tr>
+<tr>
+  <td class="name">DeepSeek V4</td>
+  <td>国产万亿参数多模态旗舰</td>
+  <td>原生图片/视频/文本生成；1000K 上下文；华为首发适配；编程声称超越 Claude & GPT</td>
+  <td>开源低成本路线的极限测试；国产算力链验证的标杆项目</td>
+</tr>
+<tr>
+  <td class="name">Superpowers</td>
+  <td>AI Agent 技能框架（GitHub 44.2K Stars）</td>
+  <td>技能组件化 + TDD + 并行 Agent 调度 + Git 工作区隔离，支持 Claude Code/Codex</td>
+  <td>Agent 开发从"手搓 prompt"走向工程化、可复用的技能库范式</td>
+</tr>
+<tr>
+  <td class="name">NanoChat (Karpathy)</td>
+  <td>单 GPU 全流程 LLM 训练+部署</td>
+  <td>一张卡完成 pretraining→finetuning→inference→Chat UI</td>
+  <td>进一步降低模型研发门槛，利好独立研究者和边缘场景</td>
+</tr>
+<tr>
+  <td class="name">OpenClaw</td>
+  <td>开源 AI Agent 平台（飞书/企业对接）</td>
+  <td>多 Agent 编排 + 国内企业通讯工具（飞书）原生集成</td>
+  <td>中国市场 Agent 落地工具链的重要补充</td>
+</tr>
+<tr>
+  <td class="name">GPT-OSS-120B</td>
+  <td>单 GPU 可跑的开源 120B 模型</td>
+  <td>Apache 2.0 协议；80GB GPU 即可部署；性能对标 GPT-4 级别</td>
+  <td>中小企业和隐私敏感场景的私有化部署选项</td>
+</tr>
+<tr>
+  <td class="name">OpenAI Prism</td>
+  <td>GPT-5.2 驱动的 AI 原生科研协作空间</td>
+  <td>云端 LaTeX 原生 + AI 初稿/润色/团队协作一体化，免费开放</td>
+  <td>直接冲击 Overleaf 等学术写作工具，OpenAI 开辟科研垂直场景</td>
+</tr>
+</tbody>
+</table>
+
+<!-- ============ PART 3 ============ -->
+<h2><span class="num">3</span>市场动向</h2>
+
+<div class="market-grid">
+  <div class="market-item">
+    <div class="q">技术升级 vs 应用爆发</div>
+    <div class="a">
+      <strong>两者并行，但应用层开始接管叙事权。</strong>本月核心事件——Opus 4.6 的 Agent Teams、GPT-5.3 的实时协作、Anthropic 的 workplace 插件——都指向"Agent 做真实工作"而非"模型跑分更高"。Benchmark 竞争进入衰减期，产品体验和 workflow 集成度成为下一轮差异化的核心。
+    </div>
+  </div>
+  <div class="market-item">
+    <div class="q">算力叙事 vs Agent 叙事</div>
+    <div class="a">
+      <strong>Agent 叙事正式上位，但算力底盘在重构。</strong>资本注意力从"多少卡训多大模型"转向"Agent 能替代多少人头"。但底层博弈仍在——AMD MI450 首获 Tier-1 训练大单、DeepSeek V4 绑定华为，算力供给侧正从 NVIDIA 单极走向三足格局（NVIDIA / AMD / 华为昇腾）。
+    </div>
+  </div>
+  <div class="market-item">
+    <div class="q">资本加速 vs 理性回调</div>
+    <div class="a">
+      <strong>绝对的加速，且集中度空前。</strong>月内 OpenAI + Anthropic 合计融资 1400 亿美元，Top 2 垄断了几乎全部增量资本。中腰部 AI 公司融资窗口进一步收窄。Amazon 单笔 500 亿的下注意味着云厂商已将 AI 视为生存级别的赌注。理性回调至少在未来 6 个月内不会发生。
+    </div>
+  </div>
+  <div class="market-item">
+    <div class="q">开源 vs 闭源格局变化</div>
+    <div class="a">
+      <strong>开源追赶速度超预期，但头部闭源正在拉开体验壁垒。</strong>DeepSeek V4、Qwen3-235B、LLaMA 4、GPT-OSS-120B 等开源选项已覆盖绝大多数生产场景。但 Opus 4.6 的 Agent Teams 和 GPT-5.3 的实时协作代表了闭源模型通过系统能力（而非单模型性能）构建护城河的新策略。开源与闭源的竞争焦点正从"模型质量"转向"Agent 基础设施"。
+    </div>
+  </div>
+</div>
+
+<!-- ============ PART 4 ============ -->
+<h2><span class="num">4</span>未来变量（未来 1–3 个月）</h2>
+
+<ul class="variable-list">
+  <li>
+    <strong>DeepSeek V4 正式发布窗口（预计 2026.03 上旬）</strong>——若万亿参数+华为适配的性能兑现声称，将引发国产算力链重估和全球开源模型排名洗牌。关注其开源协议和 API 定价策略。
+  </li>
+  <li>
+    <strong>Anthropic 被禁后的连锁反应</strong>——特朗普禁令是否扩展到更多 AI 公司？Anthropic 是否转向欧盟/亚太政府客户？OpenAI 独占美国军事合同的监管风险如何演变？这一事件可能成为 AI 行业"政治化元年"的标志。
+  </li>
+  <li>
+    <strong>OpenAI IPO 路径确认</strong>——1100 亿融资后，市场预期 2027 年万亿估值 IPO。Q2 可能出现 IPO 结构（从非营利转型完成度、利润率披露等）的关键信号，直接影响整个 AI 一级市场的估值锚定。
+  </li>
+  <li>
+    <strong>AMD MI450 量产验证</strong>——首批 2026H2 交付。若训练性能达标，NVIDIA 将面临成立以来最严峻的训练算力竞争。GPU 定价权松动将显著降低模型训练成本下限。
+  </li>
+  <li>
+    <strong>Agent 替代岗位的社会反弹</strong>——Anthropic workplace 插件"直接做工作"已在软件工程、金融、保险、法律等入门级岗位产生替代效应。Q2 可能出现首批集体诉讼或工会行动，触发监管讨论。
+  </li>
+  <li>
+    <strong>Benchmark 公信力危机</strong>——LLaMA 4 此前在 LMArena 的排名暴跌事件余波未平，ARC AGI 2 等新基准的采信度仍有争议。若头部模型被曝在特定 benchmark 上"训练集泄漏"，将冲击整个模型评估体系。
+  </li>
+</ul>
+
+<!-- ============ APPENDIX ============ -->
+<div class="appendix">
+  <h3>进阶判断：游戏外部获客部门应做什么</h3>
+  <p>作为承担全公司游戏从外部渠道获客命题的部门，基于以上信号，建议关注以下方向：</p>
+  <ul>
+    <li><strong>Agent 驱动的自动化投放运营：</strong>Opus 4.6 Agent Teams + workplace 插件的范式意味着广告投放链路（素材生成→受众策略→出价调整→效果分析）可以由多 Agent 编排自动完成。当前窗口应启动 POC，目标是将单人投放产能提升 5-10 倍。</li>
+    <li><strong>AI 原生素材生产管线：</strong>DeepSeek V4 / GPT-5.2 的多模态能力已支持从文本 prompt 直接生成视频/图片素材。建议搭建"AI 素材工厂"，将素材制作成本降低一个数量级的同时实现日产千量级 A/B 测试变体。</li>
+    <li><strong>关注 Agent-native 分发渠道：</strong>当 AI 助手（ChatGPT 9 亿周活、各类 Agent 嵌入办公场景）成为用户新入口，传统应用商店和信息流广告的触达效率将被稀释。应提前布局 AI 助手/Agent 内的游戏推荐与互动获客能力。</li>
+    <li><strong>算力成本下降红利：</strong>AMD 分食训练算力 + 开源模型成本持续下探，意味着私有化部署的 AI 获客工具链在 2026H2 将变得可行。建议评估自建 AI 投放模型（用户 LTV 预测、流失预警、个性化推荐）的 ROI。</li>
+    <li><strong>政策与舆论风险前置：</strong>特朗普禁令 Anthropic 事件表明 AI 政策风险正在急剧上升。应提前建立获客链路中 AI 使用的合规审计机制，尤其关注用户数据用于 AI 训练/推理的隐私合规（GDPR/个人信息保护法）。</li>
+  </ul>
+</div>
+
+<footer>
+  AI Signal Brief · Compiled 2026.03.03 · 信息基于公开来源，判断仅供内部讨论，不构成投资建议。
+</footer>
+
+</body>
+</html>
