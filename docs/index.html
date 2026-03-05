@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Daily Brief · 存档</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Serif+SC:wght@400;600;700&display=swap');
+
+  :root {
+    --bg: #FAF9F5;
+    --bg-warm: #F5F0E8;
+    --card: #FFFFFF;
+    --border: #E8E2D9;
+    --border-light: #F0EBE3;
+    --accent: #C96442;
+    --accent-hover: #B5573A;
+    --accent-soft: rgba(201, 100, 66, 0.08);
+    --accent-border: rgba(201, 100, 66, 0.2);
+    --text: #1A1A1A;
+    --text-secondary: #6B6560;
+    --text-tertiary: #9B9590;
+    --shadow-sm: 0 1px 3px rgba(0,0,0,0.04);
+    --shadow-md: 0 4px 12px rgba(0,0,0,0.06);
+    --shadow-hover: 0 8px 24px rgba(0,0,0,0.1);
+    --radius: 16px;
+    --radius-sm: 10px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Inter', -apple-system, 'SF Pro Text', 'PingFang SC', 'Noto Sans SC', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.8;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .container {
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+
+  /* Header */
+  .header {
+    padding: 60px 0 20px;
+    text-align: center;
+  }
+
+  .header-logo {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 56px;
+    height: 56px;
+    background: var(--accent);
+    border-radius: 14px;
+    margin-bottom: 24px;
+  }
+
+  .header-logo svg {
+    width: 30px;
+    height: 30px;
+    fill: white;
+  }
+
+  .header h1 {
+    font-family: 'Noto Serif SC', 'Georgia', serif;
+    font-size: 34px;
+    font-weight: 700;
+    color: var(--text);
+    letter-spacing: -0.5px;
+    margin-bottom: 8px;
+  }
+
+  .header .subtitle {
+    color: var(--text-tertiary);
+    font-size: 15px;
+    font-weight: 400;
+    letter-spacing: 0.2px;
+    margin-bottom: 8px;
+  }
+
+  .header .divider {
+    width: 40px;
+    height: 2px;
+    background: var(--accent);
+    margin: 28px auto;
+    border-radius: 1px;
+  }
+
+  /* Stats bar */
+  .stats-bar {
+    display: flex;
+    justify-content: center;
+    gap: 32px;
+    margin-bottom: 40px;
+  }
+
+  .stats-bar .stat-item {
+    text-align: center;
+  }
+
+  .stats-bar .stat-num {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--accent);
+    font-family: 'Noto Serif SC', serif;
+  }
+
+  .stats-bar .stat-label {
+    font-size: 12px;
+    color: var(--text-tertiary);
+    margin-top: 2px;
+    letter-spacing: 0.5px;
+  }
+
+  /* Timeline */
+  .timeline {
+    position: relative;
+    padding-left: 28px;
+  }
+
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 5px;
+    top: 8px;
+    bottom: 8px;
+    width: 1.5px;
+    background: var(--border);
+  }
+
+  /* Month group */
+  .month-group {
+    margin-bottom: 36px;
+  }
+
+  .month-label {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-tertiary);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 16px;
+    position: relative;
+  }
+
+  .month-label::before {
+    content: '';
+    position: absolute;
+    left: -27px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 9px;
+    height: 9px;
+    background: var(--accent);
+    border-radius: 50%;
+    border: 2px solid var(--bg);
+    box-shadow: 0 0 0 2px var(--accent);
+  }
+
+  /* Brief card */
+  .brief-card {
+    background: var(--card);
+    border: 1px solid var(--border-light);
+    border-radius: var(--radius);
+    padding: 24px 28px;
+    margin-bottom: 14px;
+    box-shadow: var(--shadow-sm);
+    transition: all 0.3s ease;
+    cursor: pointer;
+    text-decoration: none;
+    display: block;
+    color: inherit;
+    position: relative;
+  }
+
+  .brief-card::before {
+    content: '';
+    position: absolute;
+    left: -25px;
+    top: 32px;
+    width: 7px;
+    height: 7px;
+    background: var(--border);
+    border-radius: 50%;
+    transition: background 0.3s;
+  }
+
+  .brief-card:hover {
+    box-shadow: var(--shadow-hover);
+    border-color: var(--accent-border);
+    transform: translateY(-2px);
+  }
+
+  .brief-card:hover::before {
+    background: var(--accent);
+  }
+
+  .brief-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+  }
+
+  .brief-date {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .brief-date .day {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--accent);
+    line-height: 1;
+  }
+
+  .brief-date .weekday {
+    font-size: 13px;
+    color: var(--text-tertiary);
+    font-weight: 500;
+  }
+
+  .brief-arrow {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: var(--bg-warm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-tertiary);
+    font-size: 14px;
+    transition: all 0.3s;
+    flex-shrink: 0;
+  }
+
+  .brief-card:hover .brief-arrow {
+    background: var(--accent);
+    color: white;
+  }
+
+  .brief-summary {
+    font-size: 14px;
+    color: var(--text-secondary);
+    line-height: 1.85;
+  }
+
+  .brief-summary strong {
+    color: var(--text);
+    font-weight: 600;
+  }
+
+  .brief-tags {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin-top: 12px;
+  }
+
+  .brief-tag {
+    font-size: 11px;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-weight: 500;
+    letter-spacing: 0.3px;
+  }
+
+  .brief-tag-1 { background: rgba(201,100,66,0.08); color: #C96442; }
+  .brief-tag-2 { background: rgba(90,143,107,0.08); color: #5A8F6B; }
+  .brief-tag-3 { background: rgba(74,123,157,0.08); color: #4A7B9D; }
+  .brief-tag-4 { background: rgba(123,107,157,0.08); color: #7B6B9D; }
+  .brief-tag-5 { background: rgba(184,134,59,0.08); color: #B8863B; }
+
+  /* Empty state */
+  .empty-hint {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--text-tertiary);
+    font-size: 14px;
+  }
+
+  /* Footer */
+  .footer {
+    text-align: center;
+    padding: 40px 0 50px;
+    border-top: 1px solid var(--border);
+    margin-top: 40px;
+  }
+
+  .footer p {
+    color: var(--text-tertiary);
+    font-size: 12px;
+    line-height: 2;
+  }
+
+  .footer .footer-brand {
+    font-family: 'Noto Serif SC', 'Georgia', serif;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    margin-bottom: 4px;
+  }
+
+  /* Theme toggle */
+  .theme-toggle {
+    position: fixed;
+    top: 24px;
+    right: 24px;
+    width: 36px;
+    height: 36px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: var(--shadow-sm);
+    transition: all 0.3s;
+    font-size: 16px;
+    z-index: 100;
+  }
+
+  .theme-toggle:hover {
+    box-shadow: var(--shadow-md);
+    border-color: var(--accent-border);
+  }
+
+  /* Dark mode */
+  [data-theme="dark"] {
+    --bg: #1C1B18;
+    --bg-warm: #252420;
+    --card: #2A2925;
+    --border: #3D3B36;
+    --border-light: #333230;
+    --accent: #D4845F;
+    --accent-hover: #E0966F;
+    --accent-soft: rgba(212, 132, 95, 0.1);
+    --accent-border: rgba(212, 132, 95, 0.25);
+    --text: #E8E4DE;
+    --text-secondary: #A8A29A;
+    --text-tertiary: #78736C;
+    --shadow-sm: 0 1px 3px rgba(0,0,0,0.15);
+    --shadow-md: 0 4px 12px rgba(0,0,0,0.2);
+    --shadow-hover: 0 8px 24px rgba(0,0,0,0.3);
+  }
+
+  /* Responsive */
+  @media (max-width: 640px) {
+    .container { padding: 0 16px; }
+    .header { padding: 40px 0 16px; }
+    .header h1 { font-size: 28px; }
+    .brief-card { padding: 18px 20px; }
+    .stats-bar { gap: 24px; }
+    .stats-bar .stat-num { font-size: 24px; }
+    .theme-toggle { top: 16px; right: 16px; }
+    .timeline { padding-left: 24px; }
+  }
+
+  html { scroll-behavior: smooth; }
+
+  ::selection {
+    background: var(--accent-soft);
+    color: var(--accent);
+  }
+</style>
+</head>
+<body>
+
+<button class="theme-toggle" onclick="toggleTheme()" title="切换深色/浅色模式" aria-label="切换主题">☀️</button>
+
+<div class="container">
+
+<header class="header">
+  <div class="header-logo">
+    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+  </div>
+  <h1>AI Daily Brief</h1>
+  <div class="subtitle">每日 AI 行业动态速递 · 存档</div>
+  <div class="divider"></div>
+</header>
+
+<div class="stats-bar">
+  <div class="stat-item">
+    <div class="stat-num" id="totalCount">1</div>
+    <div class="stat-label">期数</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-num" id="totalDays">1</div>
+    <div class="stat-label">天</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-num">20+</div>
+    <div class="stat-label">信源</div>
+  </div>
+</div>
+
+<!-- ====== 日报存档列表 ====== -->
+<div class="timeline" id="timeline">
+</div>
+
+<footer class="footer">
+  <p class="footer-brand">AI Daily Brief</p>
+  <p>每日更新 · 数据来源覆盖 Tavily · GitHub Trending · TechCrunch · 东方财富 · 新浪科技 等 20+ 源</p>
+</footer>
+
+</div>
+
+<script>
+// ========== 日报数据 ==========
+// 每天新增一条，格式如下：
+const BRIEFS = [
+  {
+    date: '2026-03-05',
+    weekday: '周四',
+    summary: '两会政府工作报告首提"<strong>智能经济</strong>"，深化"人工智能+"、支持开源社区建设；荣耀 MWC 开源 MagicAgent（30B MoE，6项测试超 GPT-5.2）；阿里明确 Qwen 为集团第一优先级，MAU 达 2.03 亿；Claude Code 推出语音编程模式，年化收入破 25 亿美元；苹果发布搭载 M5 芯片的 MacBook Air，AI 性能提升 6 倍；Samsung Galaxy S26 携定制高通芯片亮相 MWC；字节豆包 Seedance 2.0 视频生成 API 定价公布。',
+    tags: ['两会·智能经济', '荣耀MagicAgent', 'Claude Code', 'MacBook Air M5', 'Galaxy S26'],
+    url: 'brief/2026-03-05.html'
+  }
+  // 之后每天在这里添加新条目即可，最新的放在最前面
+];
+
+// ========== 渲染逻辑 ==========
+function renderTimeline() {
+  const container = document.getElementById('timeline');
+  const totalEl = document.getElementById('totalCount');
+  const daysEl = document.getElementById('totalDays');
+
+  totalEl.textContent = BRIEFS.length;
+
+  if (BRIEFS.length > 1) {
+    const first = new Date(BRIEFS[BRIEFS.length - 1].date);
+    const last = new Date(BRIEFS[0].date);
+    const diff = Math.ceil((last - first) / (1000 * 60 * 60 * 24)) + 1;
+    daysEl.textContent = diff;
+  }
+
+  // Group by month
+  const groups = {};
+  BRIEFS.forEach(brief => {
+    const d = new Date(brief.date);
+    const monthKey = `${d.getFullYear()}年${d.getMonth() + 1}月`;
+    if (!groups[monthKey]) groups[monthKey] = [];
+    groups[monthKey].push(brief);
+  });
+
+  let html = '';
+  const tagColors = ['brief-tag-1', 'brief-tag-2', 'brief-tag-3', 'brief-tag-4', 'brief-tag-5'];
+
+  for (const [month, briefs] of Object.entries(groups)) {
+    html += `<div class="month-group">`;
+    html += `<div class="month-label">${month}</div>`;
+
+    briefs.forEach(brief => {
+      const day = new Date(brief.date).getDate();
+      const tagsHtml = (brief.tags || []).map((t, i) =>
+        `<span class="brief-tag ${tagColors[i % tagColors.length]}">${t}</span>`
+      ).join('');
+
+      html += `
+        <a class="brief-card" href="${brief.url}">
+          <div class="brief-card-header">
+            <div class="brief-date">
+              <span class="day">${day}</span>
+              <span class="weekday">${brief.weekday}</span>
+            </div>
+            <div class="brief-arrow">→</div>
+          </div>
+          <div class="brief-summary">${brief.summary}</div>
+          <div class="brief-tags">${tagsHtml}</div>
+        </a>
+      `;
+    });
+
+    html += `</div>`;
+  }
+
+  container.innerHTML = html;
+}
+
+renderTimeline();
+
+// Theme
+function toggleTheme() {
+  const root = document.documentElement;
+  const btn = document.querySelector('.theme-toggle');
+  if (root.getAttribute('data-theme') === 'dark') {
+    root.removeAttribute('data-theme');
+    btn.textContent = '☀️';
+    localStorage.setItem('theme', 'light');
+  } else {
+    root.setAttribute('data-theme', 'dark');
+    btn.textContent = '🌙';
+    localStorage.setItem('theme', 'dark');
+  }
+}
+
+(function() {
+  const saved = localStorage.getItem('theme');
+  if (saved === 'dark') {
+    document.documentElement.setAttribute('data-theme', 'dark');
+    document.querySelector('.theme-toggle').textContent = '🌙';
+  }
+})();
+</script>
+
+</body>
+</html>
