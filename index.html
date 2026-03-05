@@ -3,953 +3,514 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AI Signal Brief — 2026年2月</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=JetBrains+Mono:wght@400;500;700&family=Noto+Sans+SC:wght@300;400;500;700;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<title>AI Daily Brief · 存档</title>
 <style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Serif+SC:wght@400;600;700&display=swap');
+
   :root {
-    --bg-page: #fafaf8;
-    --bg-white: #ffffff;
-    --bg-warm: #f5f3ef;
-    --bg-cool: #f0f2f7;
-    --bg-accent-soft: #f8f6ff;
-    --border-light: #e8e5e0;
-    --border-mid: #d4d0c8;
-    --border-accent: #c5bfb3;
-    --text-primary: #1a1817;
-    --text-body: #3d3a36;
-    --text-secondary: #7a756d;
-    --text-muted: #a09a90;
-    --ink-blue: #2d4a7a;
-    --ink-blue-soft: rgba(45, 74, 122, 0.08);
-    --ink-blue-mid: rgba(45, 74, 122, 0.15);
-    --terracotta: #c25e3a;
-    --terracotta-soft: rgba(194, 94, 58, 0.08);
-    --forest: #3d7a5c;
-    --forest-soft: rgba(61, 122, 92, 0.08);
-    --plum: #7a4d8a;
-    --plum-soft: rgba(122, 77, 138, 0.06);
-    --gold: #9a7b3c;
-    --gold-soft: rgba(154, 123, 60, 0.08);
-    --font-display: 'Playfair Display', 'Noto Sans SC', serif;
-    --font-mono: 'JetBrains Mono', 'Menlo', monospace;
-    --font-body: 'Noto Sans SC', 'Inter', -apple-system, sans-serif;
-    --font-sans: 'Inter', 'Noto Sans SC', -apple-system, sans-serif;
+    --bg: #FAF9F5;
+    --bg-warm: #F5F0E8;
+    --card: #FFFFFF;
+    --border: #E8E2D9;
+    --border-light: #F0EBE3;
+    --accent: #C96442;
+    --accent-hover: #B5573A;
+    --accent-soft: rgba(201, 100, 66, 0.08);
+    --accent-border: rgba(201, 100, 66, 0.2);
+    --text: #1A1A1A;
+    --text-secondary: #6B6560;
+    --text-tertiary: #9B9590;
+    --shadow-sm: 0 1px 3px rgba(0,0,0,0.04);
+    --shadow-md: 0 4px 12px rgba(0,0,0,0.06);
+    --shadow-hover: 0 8px 24px rgba(0,0,0,0.1);
+    --radius: 16px;
+    --radius-sm: 10px;
   }
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
-  html { scroll-behavior: smooth; }
 
   body {
-    font-family: var(--font-body);
-    background: var(--bg-page);
-    color: var(--text-body);
+    font-family: 'Inter', -apple-system, 'SF Pro Text', 'PingFang SC', 'Noto Sans SC', sans-serif;
+    background: var(--bg);
+    color: var(--text);
     line-height: 1.8;
-    min-height: 100vh;
-    overflow-x: hidden;
     -webkit-font-smoothing: antialiased;
   }
 
-  /* ── Container ── */
-  .wrap {
-    max-width: 920px;
+  .container {
+    max-width: 780px;
     margin: 0 auto;
-    padding: 4rem 2.5rem 5rem;
+    padding: 0 24px;
   }
 
-  /* ── Header ── */
-  header {
-    margin-bottom: 4.5rem;
-    position: relative;
+  /* Header */
+  .header {
+    padding: 60px 0 20px;
+    text-align: center;
   }
 
-  .kicker {
-    font-family: var(--font-mono);
-    font-size: 0.68rem;
-    font-weight: 500;
-    letter-spacing: 0.3em;
-    text-transform: uppercase;
-    color: var(--terracotta);
-    margin-bottom: 1.5rem;
-    display: flex;
-    align-items: center;
-    gap: 0.875rem;
-  }
-
-  .kicker::before {
-    content: '';
-    width: 32px;
-    height: 2px;
-    background: var(--terracotta);
-  }
-
-  header h1 {
-    font-family: var(--font-display);
-    font-size: clamp(2.2rem, 5vw, 3.4rem);
-    color: var(--text-primary);
-    font-weight: 700;
-    letter-spacing: -0.03em;
-    line-height: 1.15;
-    margin-bottom: 1.5rem;
-  }
-
-  header h1 em {
-    font-style: italic;
-    font-weight: 400;
-    color: var(--ink-blue);
-  }
-
-  .meta-row {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 1.75rem;
-    font-family: var(--font-mono);
-    font-size: 0.7rem;
-    color: var(--text-muted);
-    letter-spacing: 0.02em;
-    padding-top: 1.5rem;
-    border-top: 1px solid var(--border-light);
-  }
-
-  .meta-row span { white-space: nowrap; }
-
-  /* ── Sections ── */
-  .section {
-    margin-bottom: 5rem;
-  }
-
-  .section-head {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    margin-bottom: 2.5rem;
-  }
-
-  .section-num {
-    font-family: var(--font-display);
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: var(--terracotta);
-    line-height: 1;
-    flex-shrink: 0;
-  }
-
-  .section-title {
-    font-family: var(--font-display);
-    font-size: 1.6rem;
-    color: var(--text-primary);
-    font-weight: 700;
-    letter-spacing: -0.02em;
-  }
-
-  .sub-label {
-    font-family: var(--font-mono);
-    font-size: 0.62rem;
-    font-weight: 700;
-    letter-spacing: 0.22em;
-    text-transform: uppercase;
-    color: var(--text-muted);
-    margin-bottom: 1.25rem;
-    padding-left: 2px;
-  }
-
-  /* ── Signal Cards ── */
-  .card {
-    position: relative;
-    background: var(--bg-white);
-    border: 1px solid var(--border-light);
-    border-radius: 3px;
-    padding: 1.75rem 2rem;
-    margin-bottom: 0.875rem;
-    transition: box-shadow 0.25s ease, border-color 0.25s ease;
-  }
-
-  .card::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0;
-    width: 3px;
-    height: 100%;
-    border-radius: 3px 0 0 3px;
-  }
-
-  .card[data-type="tech"]::before { background: var(--ink-blue); }
-  .card[data-type="biz"]::before { background: var(--terracotta); }
-  .card[data-type="cap"]::before { background: var(--forest); }
-
-  .card:hover {
-    border-color: var(--border-mid);
-    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
-  }
-
-  .card-top {
-    display: flex;
-    align-items: flex-start;
-    gap: 0.875rem;
-    margin-bottom: 1rem;
-  }
-
-  .badge {
-    font-family: var(--font-mono);
-    font-size: 0.58rem;
-    font-weight: 700;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    padding: 0.25rem 0.55rem;
-    border-radius: 2px;
-    flex-shrink: 0;
-    margin-top: 3px;
-  }
-
-  .badge-tech { background: var(--ink-blue-soft); color: var(--ink-blue); }
-  .badge-biz { background: var(--terracotta-soft); color: var(--terracotta); }
-  .badge-cap { background: var(--forest-soft); color: var(--forest); }
-
-  .card h4 {
-    font-family: var(--font-body);
-    font-size: 1rem;
-    font-weight: 700;
-    color: var(--text-primary);
-    line-height: 1.6;
-    letter-spacing: -0.01em;
-  }
-
-  .card .evidence {
-    font-size: 0.85rem;
-    color: var(--text-secondary);
-    line-height: 1.8;
-    margin-bottom: 1.25rem;
-    padding: 0.875rem 1rem;
-    background: var(--bg-warm);
-    border-radius: 2px;
-    border-left: 2px solid var(--border-accent);
-    position: relative;
-  }
-
-  .card .evidence::before {
-    content: 'FACT';
-    position: absolute;
-    top: -0.45rem;
-    left: 0.875rem;
-    font-family: var(--font-mono);
-    font-size: 0.5rem;
-    font-weight: 700;
-    letter-spacing: 0.18em;
-    color: var(--text-muted);
-    background: var(--bg-warm);
-    padding: 0 0.35rem;
-  }
-
-  .src-row {
-    display: flex;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-  }
-
-  .src-label {
-    font-family: var(--font-mono);
-    font-size: 0.58rem;
-    font-weight: 700;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    color: var(--text-muted);
-  }
-
-  .src-links {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.375rem;
-    align-items: center;
-  }
-
-  .src-links a {
-    font-family: var(--font-mono);
-    font-size: 0.68rem;
-    font-weight: 400;
-    color: var(--ink-blue);
-    background: var(--ink-blue-soft);
-    padding: 0.25rem 0.65rem;
-    border-radius: 2px;
-    text-decoration: none;
-    transition: all 0.2s ease;
+  .header-logo {
     display: inline-flex;
     align-items: center;
-    gap: 0.25rem;
-    border: 1px solid transparent;
+    justify-content: center;
+    width: 56px;
+    height: 56px;
+    background: var(--accent);
+    border-radius: 14px;
+    margin-bottom: 24px;
   }
 
-  .src-links a::after {
-    content: '↗';
-    font-size: 0.6rem;
-    opacity: 0.4;
-    transition: opacity 0.2s ease;
+  .header-logo svg {
+    width: 30px;
+    height: 30px;
+    fill: white;
   }
 
-  .src-links a:hover {
-    background: var(--ink-blue-mid);
-    border-color: var(--ink-blue-mid);
-  }
-
-  .src-links a:hover::after { opacity: 1; }
-
-  .src-date {
-    font-family: var(--font-mono);
-    font-size: 0.65rem;
-    color: var(--text-muted);
-    margin-left: 0.25rem;
-  }
-
-  /* ── Table ── */
-  .table-wrap {
-    overflow-x: auto;
-    margin-bottom: 2rem;
-    border-radius: 3px;
-    border: 1px solid var(--border-light);
-    background: var(--bg-white);
-  }
-
-  .table-wrap table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 0.82rem;
-  }
-
-  .table-wrap th {
-    text-align: left;
-    font-family: var(--font-mono);
-    font-size: 0.6rem;
+  .header h1 {
+    font-family: 'Noto Serif SC', 'Georgia', serif;
+    font-size: 34px;
     font-weight: 700;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    color: var(--text-muted);
-    padding: 0.875rem 1.125rem;
-    background: var(--bg-warm);
-    border-bottom: 1px solid var(--border-light);
+    color: var(--text);
+    letter-spacing: -0.5px;
+    margin-bottom: 8px;
   }
 
-  .table-wrap td {
-    padding: 0.75rem 1.125rem;
-    border-bottom: 1px solid var(--bg-warm);
-    vertical-align: top;
-    color: var(--text-body);
+  .header .subtitle {
+    color: var(--text-tertiary);
+    font-size: 15px;
+    font-weight: 400;
+    letter-spacing: 0.2px;
+    margin-bottom: 8px;
   }
 
-  .table-wrap tr:last-child td { border-bottom: none; }
-  .table-wrap tr:hover td { background: var(--bg-warm); }
-  .table-wrap .name { color: var(--text-primary); font-weight: 700; white-space: nowrap; }
-
-  /* ── Market Grid ── */
-  .market-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 0.875rem;
-    margin-bottom: 1.5rem;
+  .header .divider {
+    width: 40px;
+    height: 2px;
+    background: var(--accent);
+    margin: 28px auto;
+    border-radius: 1px;
   }
 
-  .m-card {
-    background: var(--bg-white);
-    border: 1px solid var(--border-light);
-    border-radius: 3px;
-    padding: 1.375rem 1.5rem;
-    transition: box-shadow 0.25s ease, border-color 0.25s ease;
+  /* Stats bar */
+  .stats-bar {
+    display: flex;
+    justify-content: center;
+    gap: 32px;
+    margin-bottom: 40px;
+  }
+
+  .stats-bar .stat-item {
+    text-align: center;
+  }
+
+  .stats-bar .stat-num {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--accent);
+    font-family: 'Noto Serif SC', serif;
+  }
+
+  .stats-bar .stat-label {
+    font-size: 12px;
+    color: var(--text-tertiary);
+    margin-top: 2px;
+    letter-spacing: 0.5px;
+  }
+
+  /* Timeline */
+  .timeline {
     position: relative;
+    padding-left: 28px;
   }
 
-  .m-card:hover {
-    border-color: var(--border-mid);
-    box-shadow: 0 2px 12px rgba(0,0,0,0.05);
-  }
-
-  .m-card .dim {
-    font-family: var(--font-mono);
-    font-size: 0.62rem;
-    font-weight: 700;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--terracotta);
-    margin-bottom: 0.625rem;
-  }
-
-  .m-card .evidence {
-    font-size: 0.78rem;
-    color: var(--text-secondary);
-    margin-bottom: 0.625rem;
-    line-height: 1.65;
-    padding-left: 0.75rem;
-    border-left: 2px solid var(--border-light);
-  }
-
-  .m-card .verdict {
-    font-size: 0.85rem;
-    line-height: 1.65;
-    color: var(--text-body);
-  }
-
-  .m-card .verdict strong {
-    color: var(--text-primary);
-    font-weight: 700;
-  }
-
-  /* ── Appendix ── */
-  .appendix {
-    position: relative;
-    background: var(--bg-white);
-    border: 1px solid var(--border-light);
-    border-radius: 3px;
-    padding: 2rem 2.25rem;
-    margin-top: 1.5rem;
-  }
-
-  .appendix::before {
+  .timeline::before {
     content: '';
     position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 3px;
-    background: linear-gradient(90deg, var(--terracotta), var(--ink-blue), var(--forest));
+    left: 5px;
+    top: 8px;
+    bottom: 8px;
+    width: 1.5px;
+    background: var(--border);
   }
 
-  .appendix h3 {
-    font-family: var(--font-display);
-    font-size: 1.2rem;
-    color: var(--text-primary);
-    font-weight: 700;
-    margin-bottom: 0.5rem;
+  /* Month group */
+  .month-group {
+    margin-bottom: 36px;
   }
 
-  .appendix > p {
-    font-size: 0.85rem;
-    color: var(--text-secondary);
-    margin-bottom: 1.5rem;
-  }
-
-  .appendix ul {
-    list-style: none;
-    padding: 0;
-  }
-
-  .appendix li {
-    font-size: 0.85rem;
-    line-height: 1.75;
-    color: var(--text-body);
-    padding: 0.875rem 0 0.875rem 1.75rem;
+  .month-label {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-tertiary);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 16px;
     position: relative;
-    border-bottom: 1px solid var(--bg-warm);
   }
 
-  .appendix li:last-child { border-bottom: none; }
-
-  .appendix li::before {
+  .month-label::before {
     content: '';
     position: absolute;
-    left: 0;
-    top: 1.2rem;
+    left: -27px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 9px;
+    height: 9px;
+    background: var(--accent);
+    border-radius: 50%;
+    border: 2px solid var(--bg);
+    box-shadow: 0 0 0 2px var(--accent);
+  }
+
+  /* Brief card */
+  .brief-card {
+    background: var(--card);
+    border: 1px solid var(--border-light);
+    border-radius: var(--radius);
+    padding: 24px 28px;
+    margin-bottom: 14px;
+    box-shadow: var(--shadow-sm);
+    transition: all 0.3s ease;
+    cursor: pointer;
+    text-decoration: none;
+    display: block;
+    color: inherit;
+    position: relative;
+  }
+
+  .brief-card::before {
+    content: '';
+    position: absolute;
+    left: -25px;
+    top: 32px;
     width: 7px;
     height: 7px;
-    border: 2px solid var(--terracotta);
+    background: var(--border);
     border-radius: 50%;
-    background: transparent;
+    transition: background 0.3s;
   }
 
-  .appendix li strong {
-    color: var(--text-primary);
+  .brief-card:hover {
+    box-shadow: var(--shadow-hover);
+    border-color: var(--accent-border);
+    transform: translateY(-2px);
+  }
+
+  .brief-card:hover::before {
+    background: var(--accent);
+  }
+
+  .brief-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+  }
+
+  .brief-date {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .brief-date .day {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 28px;
     font-weight: 700;
+    color: var(--accent);
+    line-height: 1;
   }
 
-  /* ── Footer ── */
-  footer {
-    margin-top: 5rem;
-    padding-top: 2rem;
-    border-top: 1px solid var(--border-light);
-    font-family: var(--font-mono);
-    font-size: 0.62rem;
-    color: var(--text-muted);
+  .brief-date .weekday {
+    font-size: 13px;
+    color: var(--text-tertiary);
+    font-weight: 500;
+  }
+
+  .brief-arrow {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: var(--bg-warm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-tertiary);
+    font-size: 14px;
+    transition: all 0.3s;
+    flex-shrink: 0;
+  }
+
+  .brief-card:hover .brief-arrow {
+    background: var(--accent);
+    color: white;
+  }
+
+  .brief-summary {
+    font-size: 14px;
+    color: var(--text-secondary);
+    line-height: 1.85;
+  }
+
+  .brief-summary strong {
+    color: var(--text);
+    font-weight: 600;
+  }
+
+  .brief-tags {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin-top: 12px;
+  }
+
+  .brief-tag {
+    font-size: 11px;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-weight: 500;
+    letter-spacing: 0.3px;
+  }
+
+  .brief-tag-1 { background: rgba(201,100,66,0.08); color: #C96442; }
+  .brief-tag-2 { background: rgba(90,143,107,0.08); color: #5A8F6B; }
+  .brief-tag-3 { background: rgba(74,123,157,0.08); color: #4A7B9D; }
+  .brief-tag-4 { background: rgba(123,107,157,0.08); color: #7B6B9D; }
+  .brief-tag-5 { background: rgba(184,134,59,0.08); color: #B8863B; }
+
+  /* Empty state */
+  .empty-hint {
     text-align: center;
-    letter-spacing: 0.03em;
+    padding: 60px 20px;
+    color: var(--text-tertiary);
+    font-size: 14px;
   }
 
-  /* ── Divider ── */
-  .section-divider {
-    height: 1px;
-    background: var(--border-light);
-    margin: 0 0 5rem 0;
-    position: relative;
+  /* Footer */
+  .footer {
+    text-align: center;
+    padding: 40px 0 50px;
+    border-top: 1px solid var(--border);
+    margin-top: 40px;
   }
 
-  .section-divider::after {
-    content: '◆';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background: var(--bg-page);
-    padding: 0 1rem;
-    color: var(--border-mid);
-    font-size: 0.6rem;
+  .footer p {
+    color: var(--text-tertiary);
+    font-size: 12px;
+    line-height: 2;
   }
 
-  /* ── Responsive ── */
-  @media (max-width: 768px) {
-    .wrap { padding: 2.5rem 1.25rem 3rem; }
-    header h1 { font-size: 1.75rem; }
-    .market-grid { grid-template-columns: 1fr; }
-    .card { padding: 1.25rem 1.375rem; }
-    .meta-row { gap: 1rem; }
-    .appendix { padding: 1.5rem; }
+  .footer .footer-brand {
+    font-family: 'Noto Serif SC', 'Georgia', serif;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    margin-bottom: 4px;
   }
 
-  /* ── Selection ── */
+  /* Theme toggle */
+  .theme-toggle {
+    position: fixed;
+    top: 24px;
+    right: 24px;
+    width: 36px;
+    height: 36px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: var(--shadow-sm);
+    transition: all 0.3s;
+    font-size: 16px;
+    z-index: 100;
+  }
+
+  .theme-toggle:hover {
+    box-shadow: var(--shadow-md);
+    border-color: var(--accent-border);
+  }
+
+  /* Dark mode */
+  [data-theme="dark"] {
+    --bg: #1C1B18;
+    --bg-warm: #252420;
+    --card: #2A2925;
+    --border: #3D3B36;
+    --border-light: #333230;
+    --accent: #D4845F;
+    --accent-hover: #E0966F;
+    --accent-soft: rgba(212, 132, 95, 0.1);
+    --accent-border: rgba(212, 132, 95, 0.25);
+    --text: #E8E4DE;
+    --text-secondary: #A8A29A;
+    --text-tertiary: #78736C;
+    --shadow-sm: 0 1px 3px rgba(0,0,0,0.15);
+    --shadow-md: 0 4px 12px rgba(0,0,0,0.2);
+    --shadow-hover: 0 8px 24px rgba(0,0,0,0.3);
+  }
+
+  /* Responsive */
+  @media (max-width: 640px) {
+    .container { padding: 0 16px; }
+    .header { padding: 40px 0 16px; }
+    .header h1 { font-size: 28px; }
+    .brief-card { padding: 18px 20px; }
+    .stats-bar { gap: 24px; }
+    .stats-bar .stat-num { font-size: 24px; }
+    .theme-toggle { top: 16px; right: 16px; }
+    .timeline { padding-left: 24px; }
+  }
+
+  html { scroll-behavior: smooth; }
+
   ::selection {
-    background: rgba(194, 94, 58, 0.15);
-    color: var(--text-primary);
-  }
-
-  /* ── Print styles ── */
-  @media print {
-    body { background: white; }
-    .card, .m-card, .table-wrap, .appendix { box-shadow: none; border-color: #ddd; }
-    .card:hover, .m-card:hover { box-shadow: none; transform: none; }
+    background: var(--accent-soft);
+    color: var(--accent);
   }
 </style>
 </head>
 <body>
 
-<div class="wrap">
+<button class="theme-toggle" onclick="toggleTheme()" title="切换深色/浅色模式" aria-label="切换主题">☀️</button>
 
-<header>
-  <div class="kicker">Signal Brief</div>
-  <h1>AI Signal Brief<br><em>2026年2月</em></h1>
-  <div class="meta-row">
-    <span>周期 2026.02.01 – 02.28</span>
-    <span>Internal / Investment Signal</span>
-    <span>Compiled 2026.03.03</span>
+<div class="container">
+
+<header class="header">
+  <div class="header-logo">
+    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
   </div>
+  <h1>AI Daily Brief</h1>
+  <div class="subtitle">每日 AI 行业动态速递 · 存档</div>
+  <div class="divider"></div>
 </header>
 
-<!-- ══════════ PART 1: AI行业 ══════════ -->
-<section class="section">
-
-<div class="section-head">
-  <span class="section-num">01</span>
-  <h2 class="section-title">AI行业</h2>
-</div>
-
-<div class="sub-label">核心洞察</div>
-
-<div class="card" data-type="cap">
-  <div class="card-top">
-    <span class="badge badge-cap">资本信号</span>
-    <h4>头部AI公司月内合计吸金1400亿美元，2027年万亿估值IPO窗口进入倒计时</h4>
+<div class="stats-bar">
+  <div class="stat-item">
+    <div class="stat-num" id="totalCount">1</div>
+    <div class="stat-label">期数</div>
   </div>
-  <div class="evidence">
-    OpenAI单轮1100亿（Amazon 500亿 / NVIDIA & 软银各300亿），估值涨46%至7300亿；Anthropic两周前以300亿G轮锁定3800亿估值。ChatGPT周活9亿。
+  <div class="stat-item">
+    <div class="stat-num" id="totalDays">1</div>
+    <div class="stat-label">天</div>
   </div>
-  <div class="src-row">
-    <span class="src-label">信源</span>
-    <div class="src-links">
-      <a href="https://techcrunch.com/2026/02/27/openai-raises-110b-in-one-of-the-largest-private-funding-rounds-in-history/" target="_blank">TechCrunch</a>
-      <a href="https://techcrunch.com/2026/02/12/anthropic-raises-another-30-billion-in-series-g-with-a-new-value-of-380-billion/" target="_blank">TechCrunch · Anthropic</a>
-      <span class="src-date">2026.02.27 & 02.12</span>
-    </div>
+  <div class="stat-item">
+    <div class="stat-num">20+</div>
+    <div class="stat-label">信源</div>
   </div>
 </div>
 
-<div class="card" data-type="tech">
-  <div class="card-top">
-    <span class="badge badge-tech">技术拐点</span>
-    <h4>Agent从单体串行进入多体并行，"AI即团队"范式正式落地</h4>
-  </div>
-  <div class="evidence">
-    Claude Opus 4.6上下文从200K扩至1M，新增"Agent Teams"多Agent并行协作架构，SWE-bench Verified 81.42%。同期OpenAI推出GPT-5.3-Codex。
-  </div>
-  <div class="src-row">
-    <span class="src-label">信源</span>
-    <div class="src-links">
-      <a href="https://www.anthropic.com/news/claude-opus-4-6" target="_blank">Anthropic</a>
-      <span class="src-date">2026.02.05</span>
-    </div>
-  </div>
+<!-- ====== 日报存档列表 ====== -->
+<div class="timeline" id="timeline">
 </div>
 
-<div class="card" data-type="tech">
-  <div class="card-top">
-    <span class="badge badge-tech">技术拐点</span>
-    <h4>国产模型从单点突破进入群体崛起，开源生态已具备与国际闭源一战基线</h4>
-  </div>
-  <div class="evidence">
-    2月11日智谱开源GLM-5（744B总参/40B激活）；2月12日MiniMax开源M2.5（约200B级别）；2月16日阿里开源Qwen3.5-Plus（3970亿总参/170亿激活）。
-  </div>
-  <div class="src-row">
-    <span class="src-label">信源</span>
-    <div class="src-links">
-      <a href="https://www.stcn.com/article/wx/sjb.html" target="_blank">证券时报网</a>
-      <a href="https://www.ithome.com/0/921/416.htm" target="_blank">IT之家</a>
-      <span class="src-date">2026.02.11-16</span>
-    </div>
-  </div>
-</div>
-
-<div class="card" data-type="tech">
-  <div class="card-top">
-    <span class="badge badge-tech">技术拐点</span>
-    <h4>DeepSeek V4绑定华为具有产业政策信号意义，可能触发NVIDIA对中国市场策略调整</h4>
-  </div>
-  <div class="evidence">
-    DeepSeek V4万亿参数原生支持图片/视频/文本生成，1000K上下文。已向华为等国内硬件供应商提供测试优化，暂未向NVIDIA/AMD开放。与寒武纪等国产芯片完成深度优化。
-  </div>
-  <div class="src-row">
-    <span class="src-label">信源</span>
-    <div class="src-links">
-      <a href="https://tech.ifeng.com/c/8r3g3MqtMTN" target="_blank">凤凰网</a>
-      <a href="https://www.tmtpost.com/nictation/7895987.html" target="_blank">钛媒体</a>
-      <span class="src-date">2026.02.26</span>
-    </div>
-  </div>
-</div>
-
-<div class="card" data-type="biz">
-  <div class="card-top">
-    <span class="badge badge-biz">商业信号</span>
-    <h4>图像生成从"高质量慢速"转向"高速度高质量"，游戏素材生产面临成本重构</h4>
-  </div>
-  <div class="evidence">
-    Gemini 3.1 Flash Image登顶文生图全球榜首，Flash级速度交出Pro级4K超清画质，价格砍半。
-  </div>
-  <div class="src-row">
-    <span class="src-label">信源</span>
-    <div class="src-links">
-      <a href="https://www.toutiao.com/article/7611456733731439146/" target="_blank">今日头条</a>
-      <span class="src-date">2026.02.26</span>
-    </div>
-  </div>
-</div>
-
-<div class="sub-label">新兴项目</div>
-
-<div class="table-wrap">
-<table>
-<thead>
-<tr><th>名称</th><th>定位</th><th>差异点</th><th>潜在影响</th></tr>
-</thead>
-<tbody>
-<tr><td class="name">GLM-5</td><td>智谱Agentic工程旗舰</td><td>744B总参/40B激活，200K上下文</td><td>开源Agent任务王者</td></tr>
-<tr><td class="name">MiniMax M2.5</td><td>Agent场景原生生产级模型</td><td>约200B级别参数，对标Opus 4.6</td><td>Office场景Agent化</td></tr>
-<tr><td class="name">Qwen3.5-Plus</td><td>阿里开源旗舰</td><td>3970亿总参/170亿激活，32K吞吐量+8.6倍</td><td>全球最强开源模型之一</td></tr>
-<tr><td class="name">Claude Opus 4.6</td><td>企业级AI基础设施</td><td>1M Token上下文，Agent Teams</td><td>"AI团队"范式</td></tr>
-<tr><td class="name">DeepSeek V4</td><td>国产万亿参数旗舰</td><td>华为独家适配，1000K上下文</td><td>国产算力链标杆</td></tr>
-<tr><td class="name">Gemini 3.1 Flash Image</td><td>谷歌图像生成</td><td>Flash速度+Pro质量，价格砍半</td><td>游戏素材成本重构</td></tr>
-</tbody>
-</table>
-</div>
-
-<div class="sub-label">市场动向</div>
-<div class="market-grid">
-  <div class="m-card">
-    <div class="dim">技术升级 vs 应用爆发</div>
-    <div class="evidence">Opus 4.6 Agent Teams、GPT-5.3协作、M2.5/GLM-5的Office场景都指向"Agent做真实工作"。</div>
-    <div class="verdict"><strong>应用层接管叙事。</strong>产品体验和workflow集成度成为下一轮差异化核心。</div>
-  </div>
-  <div class="m-card">
-    <div class="dim">算力叙事 vs Agent叙事</div>
-    <div class="evidence">DeepSeek V4绑定华为，算力供给从NVIDIA单极走向多极。AMD MI450获Meta 1GW训练大单。</div>
-    <div class="verdict"><strong>Agent叙事上位。</strong>算力底盘重构，多元化供给形成。</div>
-  </div>
-  <div class="m-card">
-    <div class="dim">开源 vs 闭源</div>
-    <div class="evidence">GLM-5/M2.5/Qwen3.5模型能力差距收窄，但Opus 4.6 Agent Teams和GPT-5.3通过系统能力构建护城河。</div>
-    <div class="verdict"><strong>开源追赶加速，闭源建新护城河。</strong>系统能力成为差异化关键。</div>
-  </div>
-  <div class="m-card">
-    <div class="dim">国产 vs 国际</div>
-    <div class="evidence">GLM-5/M2.5/Qwen3.5-Plus/DeepSeek V4首次形成对标国际顶尖的集群效应。</div>
-    <div class="verdict"><strong>国产模型集群崛起。</strong>开源阵营首次具备与国际一战的基线。</div>
-  </div>
-</div>
-
-</section>
-
-<div class="section-divider"></div>
-
-<!-- ══════════ PART 2: 渠道动向 ══════════ -->
-<section class="section">
-
-<div class="section-head">
-  <span class="section-num">02</span>
-  <h2 class="section-title">渠道动向</h2>
-</div>
-
-<div class="sub-label">核心洞察</div>
-
-<div class="card" data-type="biz">
-  <div class="card-top">
-    <span class="badge badge-biz">商业信号</span>
-    <h4>手机厂商正从"应用商店分发"转向"AI意图驱动的内容/服务直达"</h4>
-  </div>
-  <div class="evidence">
-    HarmonyOS 6持续放量，小艺助手升级至鸿蒙AI意图框架。多维系统感知+盘古大模型理解用户意图。2月28日HarmonyOS 6.0.130SP18全量推送。
-  </div>
-  <div class="src-row">
-    <span class="src-label">信源</span>
-    <div class="src-links">
-      <a href="https://dcdv.zol.com.cn/879/8795348.html" target="_blank">中关村在线</a>
-      <span class="src-date">2026.02</span>
-    </div>
-  </div>
-</div>
-
-<div class="card" data-type="biz">
-  <div class="card-top">
-    <span class="badge badge-biz">商业信号</span>
-    <h4>ColorOS在游戏场景的持续投入构成与游戏厂商谈判的硬筹码</h4>
-  </div>
-  <div class="evidence">
-    ColorOS 16小布助手升级"小布记忆"。《原神》最高画质+120帧模式下平均帧率118.2帧，连续6年蝉联系统流畅榜冠军。
-  </div>
-  <div class="src-row">
-    <span class="src-label">信源</span>
-    <div class="src-links">
-      <a href="https://new.qq.com/rain/a/20260226A05VYS00" target="_blank">腾讯网</a>
-      <span class="src-date">2026.02</span>
-    </div>
-  </div>
-</div>
-
-<div class="card" data-type="tech">
-  <div class="card-top">
-    <span class="badge badge-tech">技术拐点</span>
-    <h4>语音助手正从"工具"升级为"个人AI管家"</h4>
-  </div>
-  <div class="evidence">
-    华为小艺（HarmonyOS +盘古大模型）、小米超级小爱（多模态理解）、荣耀YOYO均已升级至大模型版本。文字/语音/图片/文档/屏幕多模态识别、圈搜、文档摘要。
-  </div>
-  <div class="src-row">
-    <span class="src-label">信源</span>
-    <div class="src-links">
-      <a href="https://baike.baidu.com/item/小艺/49858117" target="_blank">百度百科</a>
-      <span class="src-date">2026.02</span>
-    </div>
-  </div>
-</div>
-
-<div class="card" data-type="biz">
-  <div class="card-top">
-    <span class="badge badge-biz">商业信号</span>
-    <h4>短视频平台严打低质AI内容，游戏买量需从"批量生产"转向"质量优先"</h4>
-  </div>
-  <div class="evidence">
-    2026年短视频赛道进入"存量博弈"下半场。抖音、视频号、小红书严打低质AI内容、限制同质化账号、收紧站外导流。传统"僵尸号"铺量矩阵打法效果甚微。
-  </div>
-  <div class="src-row">
-    <span class="src-label">信源</span>
-    <div class="src-links">
-      <a href="https://www.sohu.com/a/990854825_122505958" target="_blank">搜狐</a>
-      <span class="src-date">2026.02</span>
-    </div>
-  </div>
-</div>
-
-<div class="card" data-type="biz">
-  <div class="card-top">
-    <span class="badge badge-biz">商业信号</span>
-    <h4>TapTap从纯粹下载平台向"游戏内容社区+私域运营平台"转型</h4>
-  </div>
-  <div class="evidence">
-    TapTap春节期间推出"甄嬛传联动"，百万红包封面福利派送。B站/抖音/快手/虎牙/视频号6平台同步直播发布会。
-  </div>
-  <div class="src-row">
-    <span class="src-label">信源</span>
-    <div class="src-links">
-      <a href="#" target="_blank">TapTap官方</a>
-      <span class="src-date">2026.02</span>
-    </div>
-  </div>
-</div>
-
-<div class="sub-label">新兴项目</div>
-
-<div class="table-wrap">
-<table>
-<thead>
-<tr><th>名称</th><th>定位</th><th>差异点</th><th>潜在影响</th></tr>
-</thead>
-<tbody>
-<tr><td class="name">小艺（鸿蒙）</td><td>华为智能分发入口</td><td>意图框架+盘古大模型</td><td>游戏从"应用商店"转向"意图直达"</td></tr>
-<tr><td class="name">超级小爱</td><td>小米AI管家</td><td>多模态理解+圈搜</td><td>端侧AI交互新入口</td></tr>
-<tr><td class="name">小布（ColorOS 16）</td><td>OPPO语音助手</td><td>小布记忆+实景对话，原神118帧</td><td>游戏场景系统级优化</td></tr>
-<tr><td class="name">Pangle（字节）</td><td>AI驱动移动广告</td><td>Hyper-casual游戏变现</td><td>海外游戏买量主渠道</td></tr>
-</tbody>
-</table>
-</div>
-
-<div class="sub-label">市场动向</div>
-<div class="market-grid">
-  <div class="m-card">
-    <div class="dim">分发入口变迁</div>
-    <div class="evidence">华为意图框架、小布记忆正将用户需求直接匹配服务。</div>
-    <div class="verdict"><strong>从应用商店到AI意图驱动。</strong>绕开传统应用商店搜索。</div>
-  </div>
-  <div class="m-card">
-    <div class="dim">买量策略调整</div>
-    <div class="evidence">抖音/视频号/小红书严打低质AI内容，矩阵打法失效。</div>
-    <div class="verdict"><strong>从矩阵铺量到质量优先。</strong>合规AI素材+精细化运营成为新基建。</div>
-  </div>
-  <div class="m-card">
-    <div class="dim">游戏厂商谈判筹码</div>
-    <div class="evidence">ColorOS连续6年流畅榜冠军，原神118帧优化。</div>
-    <div class="verdict"><strong>系统级游戏优化成为稀缺能力。</strong>构成与厂商谈判的硬筹码。</div>
-  </div>
-  <div class="m-card">
-    <div class="dim">私域与社区</div>
-    <div class="evidence">TapTap甄嬛传联动，6平台同步直播。</div>
-    <div class="verdict"><strong>TapTap向内容社区转型。</strong>IP联动+私域触达+AI个性化推荐。</div>
-  </div>
-</div>
-
-</section>
-
-<div class="section-divider"></div>
-
-<!-- ══════════ PART 3: 游戏行业 ══════════ -->
-<section class="section">
-
-<div class="section-head">
-  <span class="section-num">03</span>
-  <h2 class="section-title">游戏行业</h2>
-</div>
-
-<div class="sub-label">核心洞察</div>
-
-<div class="card" data-type="tech">
-  <div class="card-top">
-    <span class="badge badge-tech">技术拐点</span>
-    <h4>AI NPC从"功能型"升级为"情感型"，长线留存模型可能因此重构</h4>
-  </div>
-  <div class="evidence">
-    2月21日《逆水寒》手游2.3海洋主题大赛季更新中，DeepSeek驱动的AI智能NPC"沈秋索"正式上线。这是DeepSeek首次涉足游戏领域。
-  </div>
-  <div class="src-row">
-    <span class="src-label">信源</span>
-    <div class="src-links">
-      <a href="https://www.gc.com.cn/news/nishuihandsnpcsqs.htm" target="_blank">红手指云手机</a>
-      <a href="https://www.sohu.com/a/858727447_122004016" target="_blank">搜狐</a>
-      <span class="src-date">2026.02.21</span>
-    </div>
-  </div>
-</div>
-
-<div class="card" data-type="biz">
-  <div class="card-top">
-    <span class="badge badge-biz">商业信号</span>
-    <h4>AI技术正在重塑游戏防沉迷体系，"技术管技术"成为新趋势</h4>
-  </div>
-  <div class="evidence">
-    腾讯游戏发布2026年寒假未成年人限玩通知（2月5日至3月5日，共29天，总时长不超过15小时）。同步推出成长守护平台三项AI新功能："AI游戏周报"、"AI一键管控"、"家长AI助手"。
-  </div>
-  <div class="src-row">
-    <span class="src-label">信源</span>
-    <div class="src-links">
-      <a href="https://finance.sina.com.cn/roll/2026-02-06/doc-inhkwhai5088908.shtml" target="_blank">新浪财经</a>
-      <span class="src-date">2026.02.05</span>
-    </div>
-  </div>
-</div>
-
-<div class="card" data-type="biz">
-  <div class="card-top">
-    <span class="badge badge-biz">商业信号</span>
-    <h4>版号发放常态化，头部厂商新产品储备充足</h4>
-  </div>
-  <div class="evidence">
-    国家新闻出版署公布2月版号审批信息：146款国产网络游戏与6款进口网络游戏过审。重点产品包括：腾讯《雪中悍刀行之世子多娇》《王者万象棋》、三七互娱《斗罗大陆:传承》、鹰角网络《明日方舟:终末地》（2周超2.4亿元收入）。
-  </div>
-  <div class="src-row">
-    <span class="src-label">信源</span>
-    <div class="src-links">
-      <a href="https://new.qq.com/rain/a/20260227A06UVM00" target="_blank">腾讯网</a>
-      <span class="src-date">2026.02.27</span>
-    </div>
-  </div>
-</div>
-
-<div class="card" data-type="biz">
-  <div class="card-top">
-    <span class="badge badge-biz">商业信号</span>
-    <h4>AI应用90亿红包大战证明头部厂商不计成本抢用户，游戏获客成本承压</h4>
-  </div>
-  <div class="evidence">
-    2026年春节，阿里、腾讯、字节跳动合计投入约90亿元为各自AI应用拉新。除夕当天字节豆包App日活1.45亿，腾讯元宝App日活4054万，阿里千问App日活5511万。
-  </div>
-  <div class="src-row">
-    <span class="src-label">信源</span>
-    <div class="src-links">
-      <a href="http://finance.eastmoney.com/a/202603023658949720.html" target="_blank">东方财富网</a>
-      <span class="src-date">2026.02.16</span>
-    </div>
-  </div>
-</div>
-
-<div class="sub-label">新兴项目</div>
-
-<div class="table-wrap">
-<table>
-<thead>
-<tr><th>名称</th><th>定位</th><th>差异点</th><th>潜在影响</th></tr>
-</thead>
-<tbody>
-<tr><td class="name">沈秋索（逆水寒）</td><td>情感陪伴型NPC</td><td>DeepSeek驱动，实时对话调整剧情</td><td>乙女/乙男游戏深度个性化</td></tr>
-<tr><td class="name">AI家长管控</td><td>腾讯成长守护</td><td>AI游戏周报/一键管控/家长AI助手</td><td>防沉迷进入AI时代</td></tr>
-<tr><td class="name">《明日方舟:终末地》</td><td>鹰角科幻新品</td><td>2周超2.4亿元收入</td><td>2026年首个爆款</td></tr>
-</tbody>
-</table>
-</div>
-
-<div class="sub-label">市场动向</div>
-<div class="market-grid">
-  <div class="m-card">
-    <div class="dim">AI NPC商业化</div>
-    <div class="evidence">逆水寒沈秋索2月21日上线，DeepSeek首次涉足游戏。</div>
-    <div class="verdict"><strong>从技术展示到产品卖点。</strong>"会说话的NPC"进入可落地阶段。</div>
-  </div>
-  <div class="m-card">
-    <div class="dim">防沉迷体系</div>
-    <div class="evidence">腾讯推出AI游戏周报/一键管控/家长AI助手三项功能。</div>
-    <div class="verdict"><strong>AI技术重塑管控。</strong>"技术管技术"成为游戏合规新基建。</div>
-  </div>
-  <div class="m-card">
-    <div class="dim">发行与版号</div>
-    <div class="evidence">2月版号146款国产+6款进口，鹰角《终末地》2周2.4亿。</div>
-    <div class="verdict"><strong>常态化。</strong>头部厂商储备充足，新品表现亮眼。</div>
-  </div>
-  <div class="m-card">
-    <div class="dim">流量竞争</div>
-    <div class="evidence">春节AI红包大战90亿，豆包/元宝/千问日活破亿。</div>
-    <div class="verdict"><strong>AI应用分流注意力。</strong>头部厂商不计成本抢用户，游戏获客成本承压。</div>
-  </div>
-</div>
-
-</section>
-
-<!-- ══════════ APPENDIX ══════════ -->
-<section class="section">
-<div class="appendix">
-  <h3>进阶判断：游戏获客部门行动建议</h3>
-  <p>基于以上AI行业、渠道动向、游戏行业三维信号，建议：</p>
-  <ul>
-    <li><strong>Agent驱动投放自动化：</strong>Opus 4.6 Agent Teams意味着投放链路可由多Agent编排自动完成。立即启动POC，目标单人产能提升5-10倍。</li>
-    <li><strong>AI素材工厂：</strong>Gemini 3.1 Flash Image已支持文本→视频/图片素材日产千量级A/B测试变体。</li>
-    <li><strong>手机厂商AI入口布局：</strong>华为意图框架、小布记忆、超级小爱正成为新分发入口。提前建立"AI助手推荐位"合作。</li>
-    <li><strong>短视频合规买量：</strong>平台严打低质AI内容，从"批量矩阵"转向"质量单点"。</li>
-    <li><strong>游戏AI NPC联动：</strong>《逆水寒》沈秋索证明AI情感陪伴可行。评估与头部游戏的AI NPC联动获客。</li>
-  </ul>
-</div>
-</section>
-
-<footer>
-  AI Signal Brief · Compiled 2026.03.03 · 信息基于公开来源，判断仅供内部讨论，不构成投资建议。
+<footer class="footer">
+  <p class="footer-brand">AI Daily Brief</p>
+  <p>每日更新 · 数据来源覆盖 Tavily · GitHub Trending · TechCrunch · 东方财富 · 新浪科技 等 20+ 源</p>
 </footer>
 
 </div>
+
+<script>
+// ========== 日报数据 ==========
+// 每天新增一条，格式如下：
+const BRIEFS = [
+  {
+    date: '2026-03-05',
+    weekday: '周四',
+    summary: '两会政府工作报告首提"<strong>智能经济</strong>"，深化"人工智能+"、支持开源社区建设；荣耀 MWC 开源 MagicAgent（30B MoE，6项测试超 GPT-5.2）；阿里明确 Qwen 为集团第一优先级，MAU 达 2.03 亿；Claude Code 推出语音编程模式，年化收入破 25 亿美元；苹果发布搭载 M5 芯片的 MacBook Air，AI 性能提升 6 倍；Samsung Galaxy S26 携定制高通芯片亮相 MWC；字节豆包 Seedance 2.0 视频生成 API 定价公布。',
+    tags: ['两会·智能经济', '荣耀MagicAgent', 'Claude Code', 'MacBook Air M5', 'Galaxy S26'],
+    url: 'brief/2026-03-05.html'
+  }
+  // 之后每天在这里添加新条目即可，最新的放在最前面
+];
+
+// ========== 渲染逻辑 ==========
+function renderTimeline() {
+  const container = document.getElementById('timeline');
+  const totalEl = document.getElementById('totalCount');
+  const daysEl = document.getElementById('totalDays');
+
+  totalEl.textContent = BRIEFS.length;
+
+  if (BRIEFS.length > 1) {
+    const first = new Date(BRIEFS[BRIEFS.length - 1].date);
+    const last = new Date(BRIEFS[0].date);
+    const diff = Math.ceil((last - first) / (1000 * 60 * 60 * 24)) + 1;
+    daysEl.textContent = diff;
+  }
+
+  // Group by month
+  const groups = {};
+  BRIEFS.forEach(brief => {
+    const d = new Date(brief.date);
+    const monthKey = `${d.getFullYear()}年${d.getMonth() + 1}月`;
+    if (!groups[monthKey]) groups[monthKey] = [];
+    groups[monthKey].push(brief);
+  });
+
+  let html = '';
+  const tagColors = ['brief-tag-1', 'brief-tag-2', 'brief-tag-3', 'brief-tag-4', 'brief-tag-5'];
+
+  for (const [month, briefs] of Object.entries(groups)) {
+    html += `<div class="month-group">`;
+    html += `<div class="month-label">${month}</div>`;
+
+    briefs.forEach(brief => {
+      const day = new Date(brief.date).getDate();
+      const tagsHtml = (brief.tags || []).map((t, i) =>
+        `<span class="brief-tag ${tagColors[i % tagColors.length]}">${t}</span>`
+      ).join('');
+
+      html += `
+        <a class="brief-card" href="${brief.url}">
+          <div class="brief-card-header">
+            <div class="brief-date">
+              <span class="day">${day}</span>
+              <span class="weekday">${brief.weekday}</span>
+            </div>
+            <div class="brief-arrow">→</div>
+          </div>
+          <div class="brief-summary">${brief.summary}</div>
+          <div class="brief-tags">${tagsHtml}</div>
+        </a>
+      `;
+    });
+
+    html += `</div>`;
+  }
+
+  container.innerHTML = html;
+}
+
+renderTimeline();
+
+// Theme
+function toggleTheme() {
+  const root = document.documentElement;
+  const btn = document.querySelector('.theme-toggle');
+  if (root.getAttribute('data-theme') === 'dark') {
+    root.removeAttribute('data-theme');
+    btn.textContent = '☀️';
+    localStorage.setItem('theme', 'light');
+  } else {
+    root.setAttribute('data-theme', 'dark');
+    btn.textContent = '🌙';
+    localStorage.setItem('theme', 'dark');
+  }
+}
+
+(function() {
+  const saved = localStorage.getItem('theme');
+  if (saved === 'dark') {
+    document.documentElement.setAttribute('data-theme', 'dark');
+    document.querySelector('.theme-toggle').textContent = '🌙';
+  }
+})();
+</script>
 
 </body>
 </html>
