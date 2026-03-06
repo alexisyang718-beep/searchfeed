@@ -38,10 +38,7 @@ ENV_PATH = (
 
 BROWSERWING_BASE = "http://localhost:8082/api/v1/executor"
 
-TAVILY_API_KEY = os.environ.get(
-    "TAVILY_API_KEY",
-    "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",
-)
+TAVILY_API_KEY = os.environ.get("TAVILY_API_KEY", "")
 
 
 def get_env():
