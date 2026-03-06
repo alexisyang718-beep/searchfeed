@@ -1,0 +1,944 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Daily Brief | 2026年3月6日</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Serif+SC:wght@400;600;700&display=swap');
+
+  :root {
+    --bg: #FAF9F5;
+    --bg-warm: #F5F0E8;
+    --card: #FFFFFF;
+    --border: #E8E2D9;
+    --border-light: #F0EBE3;
+    --accent: #C96442;
+    --accent-hover: #B5573A;
+    --accent-soft: rgba(201, 100, 66, 0.08);
+    --accent-border: rgba(201, 100, 66, 0.2);
+    --text: #1A1A1A;
+    --text-secondary: #6B6560;
+    --text-tertiary: #9B9590;
+    --tag-red: #C96442;
+    --tag-red-bg: rgba(201, 100, 66, 0.08);
+    --tag-green: #5A8F6B;
+    --tag-green-bg: rgba(90, 143, 107, 0.08);
+    --tag-blue: #4A7B9D;
+    --tag-blue-bg: rgba(74, 123, 157, 0.08);
+    --tag-purple: #7B6B9D;
+    --tag-purple-bg: rgba(123, 107, 157, 0.08);
+    --tag-orange: #B8863B;
+    --tag-orange-bg: rgba(184, 134, 59, 0.08);
+    --tag-teal: #4A8F8F;
+    --tag-teal-bg: rgba(74, 143, 143, 0.08);
+    --shadow-sm: 0 1px 3px rgba(0,0,0,0.04);
+    --shadow-md: 0 4px 12px rgba(0,0,0,0.06);
+    --shadow-hover: 0 6px 20px rgba(0,0,0,0.08);
+    --radius: 16px;
+    --radius-sm: 10px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Inter', -apple-system, 'SF Pro Text', 'PingFang SC', 'Noto Sans SC', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.8;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  .container {
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+
+  /* ===== Header ===== */
+  .header {
+    padding: 60px 0 40px;
+    text-align: center;
+  }
+
+  .header-logo {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    background: var(--accent);
+    border-radius: 12px;
+    margin-bottom: 20px;
+  }
+
+  .header-logo svg {
+    width: 26px;
+    height: 26px;
+    fill: white;
+  }
+
+  .header h1 {
+    font-family: 'Noto Serif SC', 'Georgia', serif;
+    font-size: 32px;
+    font-weight: 700;
+    color: var(--text);
+    letter-spacing: -0.5px;
+    margin-bottom: 8px;
+  }
+
+  .header .date {
+    color: var(--text-tertiary);
+    font-size: 14px;
+    font-weight: 400;
+    letter-spacing: 0.3px;
+  }
+
+  .header .divider {
+    width: 40px;
+    height: 2px;
+    background: var(--accent);
+    margin: 24px auto;
+    border-radius: 1px;
+  }
+
+  .summary-card {
+    background: var(--bg-warm);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 24px 28px;
+    margin-top: 8px;
+    text-align: left;
+    font-size: 15px;
+    line-height: 1.9;
+    color: var(--text-secondary);
+  }
+
+  .summary-card strong {
+    color: var(--text);
+    font-weight: 600;
+  }
+
+  /* ===== TOC ===== */
+  .toc {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 24px 28px;
+    margin: 32px 0;
+    box-shadow: var(--shadow-sm);
+  }
+
+  .toc h3 {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-tertiary);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 16px;
+  }
+
+  .toc ul {
+    list-style: none;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px 24px;
+  }
+
+  .toc li a {
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 400;
+    transition: color 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .toc li a:hover {
+    color: var(--accent);
+  }
+
+  .toc li a .toc-icon {
+    font-size: 16px;
+    flex-shrink: 0;
+  }
+
+  /* ===== Section ===== */
+  .section {
+    margin-bottom: 40px;
+  }
+
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .section-header .icon {
+    font-size: 20px;
+    flex-shrink: 0;
+  }
+
+  .section-header h2 {
+    font-family: 'Noto Serif SC', 'Georgia', serif;
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--text);
+    letter-spacing: -0.3px;
+  }
+
+  /* ===== Item Card ===== */
+  .item {
+    background: var(--card);
+    border: 1px solid var(--border-light);
+    border-radius: var(--radius);
+    padding: 20px 24px;
+    margin-bottom: 14px;
+    box-shadow: var(--shadow-sm);
+    transition: box-shadow 0.3s, border-color 0.3s;
+  }
+
+  .item:hover {
+    box-shadow: var(--shadow-hover);
+    border-color: var(--border);
+  }
+
+  .item-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 8px;
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    line-height: 1.5;
+  }
+
+  .tag {
+    display: inline-flex;
+    align-items: center;
+    font-size: 11px;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-weight: 500;
+    white-space: nowrap;
+    flex-shrink: 0;
+    margin-top: 2px;
+    letter-spacing: 0.3px;
+  }
+
+  .tag-hot { background: var(--tag-red-bg); color: var(--tag-red); }
+  .tag-new { background: var(--tag-green-bg); color: var(--tag-green); }
+  .tag-money { background: var(--tag-orange-bg); color: var(--tag-orange); }
+  .tag-chip { background: var(--tag-purple-bg); color: var(--tag-purple); }
+  .tag-agent { background: var(--tag-blue-bg); color: var(--tag-blue); }
+  .tag-phone { background: var(--tag-teal-bg); color: var(--tag-teal); }
+  .tag-policy { background: var(--tag-green-bg); color: var(--tag-green); }
+
+  .item-body {
+    font-size: 14px;
+    color: var(--text-secondary);
+    line-height: 1.85;
+    margin-bottom: 10px;
+  }
+
+  .item-body strong {
+    color: var(--text);
+    font-weight: 600;
+  }
+
+  .item-source {
+    font-size: 12px;
+    color: var(--text-tertiary);
+    padding-top: 8px;
+    border-top: 1px solid var(--border-light);
+  }
+
+  .item-source a {
+    color: var(--accent);
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.2s;
+  }
+
+  .item-source a:hover {
+    color: var(--accent-hover);
+    text-decoration: underline;
+  }
+
+  /* ===== Stats ===== */
+  .stat-row {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin: 10px 0;
+  }
+
+  .stat {
+    background: var(--bg-warm);
+    padding: 5px 14px;
+    border-radius: 20px;
+    font-size: 12px;
+    color: var(--text-secondary);
+    border: 1px solid var(--border-light);
+  }
+
+  .stat em {
+    color: var(--accent);
+    font-style: normal;
+    font-weight: 600;
+  }
+
+  /* ===== GitHub Cards ===== */
+  .github-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+
+  .gh-item {
+    background: var(--card);
+    border: 1px solid var(--border-light);
+    border-radius: var(--radius-sm);
+    padding: 16px 18px;
+    box-shadow: var(--shadow-sm);
+    transition: box-shadow 0.3s, border-color 0.3s;
+  }
+
+  .gh-item:hover {
+    box-shadow: var(--shadow-hover);
+    border-color: var(--border);
+  }
+
+  .gh-name {
+    font-weight: 600;
+    font-size: 13px;
+    margin-bottom: 6px;
+  }
+
+  .gh-name a {
+    color: var(--accent);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+
+  .gh-name a:hover {
+    color: var(--accent-hover);
+    text-decoration: underline;
+  }
+
+  .gh-desc {
+    font-size: 12px;
+    color: var(--text-secondary);
+    line-height: 1.6;
+    margin-bottom: 8px;
+  }
+
+  .gh-star {
+    font-size: 12px;
+    color: var(--tag-orange);
+    font-weight: 500;
+  }
+
+  /* ===== Footer ===== */
+  .footer {
+    text-align: center;
+    padding: 40px 0 50px;
+    border-top: 1px solid var(--border);
+    margin-top: 32px;
+  }
+
+  .footer p {
+    color: var(--text-tertiary);
+    font-size: 12px;
+    line-height: 2;
+  }
+
+  .footer .footer-brand {
+    font-family: 'Noto Serif SC', 'Georgia', serif;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    margin-bottom: 4px;
+  }
+
+  /* ===== Back to Top ===== */
+  .back-to-top {
+    position: fixed;
+    bottom: 32px;
+    right: 32px;
+    width: 40px;
+    height: 40px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: var(--shadow-md);
+    transition: all 0.3s;
+    opacity: 0;
+    pointer-events: none;
+    color: var(--text-secondary);
+    font-size: 18px;
+    text-decoration: none;
+  }
+
+  .back-to-top.visible {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .back-to-top:hover {
+    box-shadow: var(--shadow-hover);
+    color: var(--accent);
+    border-color: var(--accent-border);
+  }
+
+  /* ===== Back to Home ===== */
+  .back-home {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--text-tertiary);
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 500;
+    padding: 6px 14px;
+    border-radius: 20px;
+    border: 1px solid var(--border);
+    background: var(--card);
+    transition: all 0.2s;
+    position: fixed;
+    top: 24px;
+    left: 24px;
+    z-index: 100;
+    box-shadow: var(--shadow-sm);
+  }
+
+  .back-home:hover {
+    color: var(--accent);
+    border-color: var(--accent-border);
+    box-shadow: var(--shadow-md);
+  }
+
+  @media (max-width: 640px) {
+    .back-home { top: 16px; left: 16px; font-size: 12px; padding: 5px 12px; }
+  }
+
+  /* ===== Dark Mode Toggle ===== */
+  .theme-toggle {
+    position: fixed;
+    top: 24px;
+    right: 24px;
+    width: 36px;
+    height: 36px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: var(--shadow-sm);
+    transition: all 0.3s;
+    font-size: 16px;
+    z-index: 100;
+  }
+
+  .theme-toggle:hover {
+    box-shadow: var(--shadow-md);
+    border-color: var(--accent-border);
+  }
+
+  /* ===== Dark Mode ===== */
+  [data-theme="dark"] {
+    --bg: #1C1B18;
+    --bg-warm: #252420;
+    --card: #2A2925;
+    --border: #3D3B36;
+    --border-light: #333230;
+    --accent: #D4845F;
+    --accent-hover: #E0966F;
+    --accent-soft: rgba(212, 132, 95, 0.1);
+    --accent-border: rgba(212, 132, 95, 0.25);
+    --text: #E8E4DE;
+    --text-secondary: #A8A29A;
+    --text-tertiary: #78736C;
+    --tag-red: #D4845F;
+    --tag-red-bg: rgba(212, 132, 95, 0.12);
+    --tag-green: #7DB88D;
+    --tag-green-bg: rgba(125, 184, 141, 0.12);
+    --tag-blue: #6DA0C2;
+    --tag-blue-bg: rgba(109, 160, 194, 0.12);
+    --tag-purple: #9D8DBF;
+    --tag-purple-bg: rgba(157, 141, 191, 0.12);
+    --tag-orange: #D4A95F;
+    --tag-orange-bg: rgba(212, 169, 95, 0.12);
+    --tag-teal: #6DB5B5;
+    --tag-teal-bg: rgba(109, 181, 181, 0.12);
+    --shadow-sm: 0 1px 3px rgba(0,0,0,0.15);
+    --shadow-md: 0 4px 12px rgba(0,0,0,0.2);
+    --shadow-hover: 0 6px 20px rgba(0,0,0,0.25);
+  }
+
+  /* ===== Responsive ===== */
+  @media (max-width: 640px) {
+    .container { padding: 0 16px; }
+    .header { padding: 40px 0 28px; }
+    .header h1 { font-size: 26px; }
+    .toc ul { grid-template-columns: 1fr; }
+    .github-grid { grid-template-columns: 1fr; }
+    .summary-card { padding: 18px 20px; }
+    .item { padding: 16px 18px; }
+    .theme-toggle { top: 16px; right: 16px; }
+    .back-to-top { bottom: 20px; right: 20px; }
+  }
+
+  /* ===== Smooth Scroll ===== */
+  html { scroll-behavior: smooth; }
+
+  /* ===== Selection ===== */
+  ::selection {
+    background: var(--accent-soft);
+    color: var(--accent);
+  }
+</style>
+</head>
+<body>
+
+<a class="back-home" href="../index.html">← 返回存档</a>
+<button class="theme-toggle" onclick="toggleTheme()" title="切换深色/浅色模式" aria-label="切换主题">☀️</button>
+
+<div class="container">
+
+<header class="header">
+  <div class="header-logo">
+    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+  </div>
+  <h1>AI Daily Brief</h1>
+  <div class="date">2026年3月6日 · 周五 · 严格覆盖过去24小时</div>
+  <div class="divider"></div>
+  <div class="summary-card">
+    <strong>今日速览</strong> — OpenAI 发布 GPT-5.4，首个具备原生计算机操作能力的模型，支持 100 万 token 上下文，年化营收突破 250 亿美元；浪潮开源万亿参数多模态大模型 Yuan3.0 Ultra（1010B/68.8B 激活）；Anthropic 重启与五角大楼谈判；美七大科技巨头在白宫签署 AI 数据中心自主供电承诺；工信部部长：大力推动"人工智能+制造"；阿里辟谣千问团队集体离职，重申坚持开源；海外产业资本加速投资中国具身智能。
+  </div>
+</header>
+
+<nav class="toc">
+  <h3>目录</h3>
+  <ul>
+    <li><a href="#model"><span class="toc-icon">🧠</span> 模型发布与架构升级</a></li>
+    <li><a href="#agent"><span class="toc-icon">🤖</span> Agent 与多模态突破</a></li>
+    <li><a href="#chip"><span class="toc-icon">⚡</span> 芯片与算力</a></li>
+    <li><a href="#industry"><span class="toc-icon">🏛️</span> 行业动向与两会</a></li>
+    <li><a href="#robot"><span class="toc-icon">🦾</span> 机器人与具身智能</a></li>
+    <li><a href="#game"><span class="toc-icon">🎮</span> 游戏行业 AI 应用</a></li>
+    <li><a href="#github"><span class="toc-icon">📦</span> GitHub 高增长项目</a></li>
+  </ul>
+</nav>
+
+<!-- ==================== 模型发布与架构升级 ==================== -->
+<section class="section" id="model">
+  <div class="section-header">
+    <span class="icon">🧠</span>
+    <h2>模型发布与架构升级</h2>
+  </div>
+
+  <div class="item">
+    <div class="item-title">
+      <span class="tag tag-hot">重磅</span>
+      OpenAI 发布 GPT-5.4：原生计算机操作，迈向自主智能体
+    </div>
+    <div class="item-body">
+      北京时间 3 月 6 日，OpenAI 正式推出 <strong>GPT-5.4</strong>，提供 Thinking 思维模式，同步上线 ChatGPT、API 及 Codex 平台，并发布面向复杂任务优化的 <strong>GPT-5.4 Pro</strong>。核心亮点：首个具备<strong>原生计算机操作能力</strong>的模型，智能体可跨应用程序操控计算机并执行复杂工作流；API 支持高达 <strong>100 万 token</strong> 上下文窗口，为 OpenAI 迄今最大；专业任务基准中 <strong>83%</strong> 项目达行业专业水平，错误率较 GPT-5.2 下降 18%。用户可在模型响应过程中打断并调整方向。OpenAI 年化营收已突破 <strong>250 亿美元</strong>。
+    </div>
+    <div class="stat-row">
+      <span class="stat">上下文 <em>100万 tokens</em></span>
+      <span class="stat">专业基准 <em>83% 达专家级</em></span>
+      <span class="stat">错误率 <em>↓18%</em></span>
+      <span class="stat">年化营收 <em>$250亿</em></span>
+    </div>
+    <div class="item-source">来源：<a href="https://finance.sina.com.cn/tech/roll/2026-03-06/doc-inhpzeqx2665583.shtml">新浪财经</a> · <a href="https://www.donews.com/news/detail/8/6454484.html">DoNews</a> · <a href="https://www.yicai.com/news/103073071.html">第一财经</a> ｜ 3月6日</div>
+  </div>
+
+  <div class="item">
+    <div class="item-title">
+      <span class="tag tag-new">开源</span>
+      浪潮开源万亿参数多模态大模型 Yuan3.0 Ultra
+    </div>
+    <div class="item-body">
+      3 月 6 日，浪潮旗下 YuanLab.ai 团队正式开源 <strong>Yuan3.0 Ultra</strong>，面向万亿参数规模打造的旗舰模型，成为业界仅有的三个万亿级开源多模态大模型之一。采用 MoE 架构 + <strong>Localized Filtering Attention</strong> 机制，训练参数 <strong>1010B</strong>，激活参数 <strong>68.8B</strong>，预训练算力效率提升 49%。聚焦企业级应用：多模态文档理解、RAG、表格分析及工具调用表现突出，可为 OpenClaw 等智能体框架提供核心能力支撑。开源内容含 16bit/4bit 权重、技术报告及完整训练方法。
+    </div>
+    <div class="stat-row">
+      <span class="stat">总参数 <em>1010B</em></span>
+      <span class="stat">激活参数 <em>68.8B</em></span>
+      <span class="stat">算力效率 <em>↑49%</em></span>
+    </div>
+    <div class="item-source">来源：<a href="https://www.donews.com/news/detail/8/6454665.html">DoNews</a> · <a href="http://www.sohu.com/a/992847519_610300">搜狐</a> · <a href="https://www.tmtpost.com/nictation/7901197.html">钛媒体</a> ｜ 3月6日</div>
+  </div>
+
+  <div class="item">
+    <div class="item-title">
+      <span class="tag tag-new">开源</span>
+      阶跃星辰 Step 3.5 Flash 全链路开源，OpenClaw 调用升至前二
+    </div>
+    <div class="item-body">
+      3 月 4 日，阶跃星辰在此前开源 Step 3.5 Flash 模型基础上，进一步开放<strong>预训练权重、中训练权重及 Steptron 训练框架</strong>，实现模型全链路开源。采用稀疏 MoE 架构，总参数 <strong>1960 亿</strong>，推理仅激活约 <strong>110 亿</strong>参数，代码任务推理速度达 <strong>350 TPS</strong>。专为 Agent 场景设计，Hugging Face 下载量超 30 万次，登顶 OpenRouter Trending 榜首，OpenClaw 排名升至 Top2。
+    </div>
+    <div class="stat-row">
+      <span class="stat">总参数 <em>196B MoE</em></span>
+      <span class="stat">激活参数 <em>11B</em></span>
+      <span class="stat">推理速度 <em>350 TPS</em></span>
+    </div>
+    <div class="item-source">来源：<a href="https://finance.sina.com.cn/tech/2026-03-04/doc-inhpusku4052707.shtml">新浪财经</a> · <a href="https://finance.ifeng.com/c/8rEtv3WzjNJ">凤凰网</a> ｜ 3月4日</div>
+  </div>
+
+  <div class="item">
+    <div class="item-title">
+      <span class="tag tag-hot">战略</span>
+      GPT-5.3 Instant vs Gemini 3.1 Flash-Lite：同日对决回顾
+    </div>
+    <div class="item-body">
+      3 月 4 日，OpenAI 推送 <strong>GPT-5.3 Instant</strong> 覆盖全量 ChatGPT 用户，主打语气自然与对话流畅；Google 同日发布 <strong>Gemini 3.1 Flash-Lite</strong>，定价输入 $0.25/百万 tokens，首 token 响应快 <strong>2.5 倍</strong>，输出速度提升 <strong>45%</strong>。两场发布相差不到两小时，标志大模型竞争进入"快速迭代+极致性价比"新阶段。
+    </div>
+    <div class="item-source">来源：<a href="https://36kr.com/p/3709187437392001">36氪</a> · <a href="https://www.huxiu.com/article/4838951.html">虎嗅</a> ｜ 3月4日</div>
+  </div>
+
+  <div class="item">
+    <div class="item-title">
+      <span class="tag tag-new">数据</span>
+      阿里辟谣千问团队集体离职，Qwen3.5 Small 系列"以小博大"
+    </div>
+    <div class="item-body">
+      阿里针对"千问核心团队集体离职"传言正式辟谣，声明团队稳定、服务正常，重申坚持开源策略。确认林俊旸离职已获批准。与此同时，林俊旸离职前夕发布的 <strong>Qwen3.5 Small 系列</strong>（0.8B/2B/4B/9B）在多项基准中击败大参数对手，<strong>9B 模型性能媲美 120B 级别</strong>，马斯克点赞"智能水平惊人"。千问开源模型已超 400 个，下载量突破 <strong>10 亿次</strong>。
+    </div>
+    <div class="item-source">来源：<a href="http://news.sina.com.cn/zx/ds/2026-03-06/doc-inhpytyw2813020.shtml">新浪科技</a> · <a href="https://www.huxiu.com/article/4839200.html">虎嗅</a> ｜ 3月5-6日</div>
+  </div>
+</section>
+
+<!-- ==================== Agent 与多模态 ==================== -->
+<section class="section" id="agent">
+  <div class="section-header">
+    <span class="icon">🤖</span>
+    <h2>Agent 与多模态突破</h2>
+  </div>
+
+  <div class="item">
+    <div class="item-title">
+      <span class="tag tag-agent">Agent</span>
+      Anthropic 重启与五角大楼谈判，OpenAI "抢单"局面生变
+    </div>
+    <div class="item-body">
+      据报道，Anthropic 已<strong>重启与美国国防部的谈判</strong>，商讨 Claude 模型在美军中的使用方式。此前谈判因公司要求限制 AI 用于大规模监控和自主武器而破裂，五角大楼一度将其列为"供应链风险"。此举引发 Claude 下载量激增，跃居 App Store 第一。若达成新协议，可能影响已与五角大楼合作的 OpenAI。同时有消息称 Anthropic 已正式起诉国防部抗议"风险"标签。
+    </div>
+    <div class="item-source">来源：<a href="http://news.sina.com.cn/zx/ds/2026-03-06/doc-inhpytyw2813020.shtml">新浪科技</a> · <a href="https://techcrunch.com/2026/02/24/anthropic-wont-budge-as-pentagon-escalates-ai-dispute/">TechCrunch</a> ｜ 3月5-6日</div>
+  </div>
+
+  <div class="item">
+    <div class="item-title">
+      <span class="tag tag-agent">Agent</span>
+      OpenAI 正开发双向语音模型 "BiDi"：被打断也不影响对话
+    </div>
+    <div class="item-body">
+      OpenAI 正在开发名为 <strong>"BiDi"</strong> 的双向语音模型，能实时处理语音输入，被打断时可立即调整回应而非停止，体验"更像人"。原计划第一季度发布，现已推迟。该模型在客服等场景有巨大应用潜力。
+    </div>
+    <div class="item-source">来源：<a href="http://news.sina.com.cn/zx/ds/2026-03-06/doc-inhpytyw2813020.shtml">新浪科技 AI 速递</a> ｜ 3月6日</div>
+  </div>
+
+  <div class="item">
+    <div class="item-title">
+      <span class="tag tag-agent">Agent</span>
+      AI Agent 正推动科研进入新范式
+    </div>
+    <div class="item-body">
+      "AI for Discovery" 学术峰会上，专家指出 AI 正从科研辅助工具演变为能参与推理决策的<strong>"科研合伙人"</strong>。OpenClaw 的爆火标志着基础模型能力跃升。上海科学智能研究院发布的<strong>"大圣智能体"</strong>在 RNA 分类与设计准确率高达 <strong>96%</strong>，支撑多项科研成果转化。
+    </div>
+    <div class="item-source">来源：<a href="http://www.sohu.com/a/993077686_260616">搜狐</a> · <a href="https://news.pconline.com.cn/2110/21107952.html">太平洋科技</a> ｜ 3月4-5日</div>
+  </div>
+
+  <div class="item">
+    <div class="item-title">
+      <span class="tag tag-new">新品</span>
+      Amazon Connect Health：AWS 进军医疗 AI Agent
+    </div>
+    <div class="item-body">
+      亚马逊 AWS 推出 <strong>Amazon Connect Health</strong>，这是一个针对医疗保健领域的新 AI Agent 服务，标志着 AI 智能体在垂直行业的深度渗透。
+    </div>
+    <div class="item-source">来源：<a href="https://www.ogirisim.com/">AI News Network</a> ｜ 3月5日</div>
+  </div>
+</section>
+
+<!-- ==================== 芯片与算力 ==================== -->
+<section class="section" id="chip">
+  <div class="section-header">
+    <span class="icon">⚡</span>
+    <h2>芯片与算力</h2>
+  </div>
+
+  <div class="item">
+    <div class="item-title">
+      <span class="tag tag-chip">电力</span>
+      美七大科技巨头在白宫签署 AI 数据中心自主供电承诺
+    </div>
+    <div class="item-body">
+      3 月 4 日，<strong>微软、谷歌、OpenAI、亚马逊、Meta、xAI、甲骨文</strong>七家公司代表齐聚白宫，签署"<strong>电费缴纳者保护承诺</strong>"，承诺通过自建发电设施或采购电力满足新建 AI 数据中心用电需求，避免挤占公共电网、确保居民电价不受影响。国际能源署预测到 2030 年全球数据中心电力需求将增长一倍以上，达约 <strong>945 太瓦时</strong>。
+    </div>
+    <div class="item-source">来源：<a href="http://finance.sina.com.cn/roll/2026-03-05/doc-inhpyccm3112578.shtml">新浪财经</a> · <a href="http://news.10jqka.com.cn/20260305/c675103890.shtml">同花顺</a> ｜ 3月5日</div>
+  </div>
+
+  <div class="item">
+    <div class="item-title">
+      <span class="tag tag-chip">芯片</span>
+      韩国警告：中东危机或致内存 SSD 继续涨价
+    </div>
+    <div class="item-body">
+      韩国方面近期表示，中东持续的地缘政治危机可能扰乱芯片关键原材料——<strong>特种气体氦气</strong>的供应，并导致能源成本飙升，进一步推高已持续涨价一年的内存与 SSD 价格。同时危机也可能影响大型科技公司在中东的 AI 数据中心建设计划。
+    </div>
+    <div class="item-source">来源：<a href="http://news.sina.com.cn/zx/ds/2026-03-06/doc-inhpytyw2813020.shtml">新浪科技 AI 速递</a> ｜ 3月6日</div>
+  </div>
+
+  <div class="item">
+    <div class="item-title">
+      <span class="tag tag-chip">管制</span>
+      美国寻求对芯片出口实施更广泛限制
+    </div>
+    <div class="item-body">
+      据报道，美国正在寻求对芯片出口实施<strong>更广泛的限制</strong>，将影响全球 AI 供应链。这是继 2025 年系列管制措施后的进一步升级，对中国 AI 芯片企业和全球算力格局产生深远影响。
+    </div>
+    <div class="item-source">来源：<a href="https://www.ogirisim.com/">AI News Network</a> ｜ 3月6日</div>
+  </div>
+</section>
+
+<!-- ==================== 行业动向与两会 ==================== -->
+<section class="section" id="industry">
+  <div class="section-header">
+    <span class="icon">🏛️</span>
+    <h2>行业动向与两会</h2>
+  </div>
+
+  <div class="item">
+    <div class="item-title">
+      <span class="tag tag-hot">两会</span>
+      工信部部长：大力推动"人工智能+制造"，AI 核心产业规模超 1.2 万亿
+    </div>
+    <div class="item-body">
+      工信部部长李乐成在首场"部长通道"明确表示：<strong>"人工智能+制造"是必答题，不是选择题</strong>。关键数据：<br>
+      • 2025 年我国 AI 核心产业规模超 <strong>1.2 万亿元</strong>，企业数量超 6200 家<br>
+      • 中国开源大模型下载量<strong>全球第一</strong>，规上制造业 AI 应用普及率超 30%<br>
+      • 人形机器人推出 <strong>300 多款</strong>，超全球半数<br>
+      • 2026 年将推动 AI 电脑/手机/智能家居，全力推进脑机接口、自动驾驶、人形机器人攻关
+    </div>
+    <div class="item-source">来源：<a href="https://china.qianlong.com/2026/0306/8633842.shtml">千龙网</a> · <a href="http://finance.sina.com.cn/jjxw/2026-03-06/doc-inhpytzc2798888.shtml">新浪财经</a> ｜ 3月5-6日</div>
+  </div>
+
+  <div class="item">
+    <div class="item-title">
+      <span class="tag tag-policy">政策</span>
+      政府工作报告首提"算电协同"新基建
+    </div>
+    <div class="item-body">
+      政府工作报告首次将<strong>"算电协同"</strong>列为新基建工程。国务院研究室副主任陈昌盛在吹风会上表示："AI 的尽头是能源，要用好国家电网体系优势，实施超大规模智算集群和算电协同新基建。"专家解读指出，智能经济并非简单"AI+行业"，而是以 AI 为核心、与数据、算力、电力深度绑定的<strong>完整经济体系</strong>。
+    </div>
+    <div class="item-source">来源：<a href="http://sc.stock.cnfol.com/gushiyaowen/20260306/32048819.shtml">中金在线</a> · <a href="http://news.sina.com.cn/zx/ds/2026-03-06/doc-inhpytyw2813020.shtml">新浪科技</a> ｜ 3月5-6日</div>
+  </div>
+
+  <div class="item">
+    <div class="item-title">
+      <span class="tag tag-policy">两会</span>
+      周鸿祎提出 AI "六力模型"，聚焦推理算力与智能体平台
+    </div>
+    <div class="item-body">
+      全国政协委员、360 创始人周鸿祎提出 AI 产业<strong>"六力模型"</strong>：电力→算力→智力→人力→安全力→生产力，协同推进。重点关注推理算力布局优化、<strong>智能体公共服务平台</strong>建设及安全智能体规模应用。
+    </div>
+    <div class="item-source">来源：<a href="https://so.html5.qq.com/page/real/search_news?docid=70000021_51369a7c18713952">腾讯新闻</a> ｜ 3月6日</div>
+  </div>
+
+  <div class="item">
+    <div class="item-title">
+      <span class="tag tag-money">融资</span>
+      近期重要融资与估值动态
+    </div>
+    <div class="item-body">
+      • <strong>星动纪元</strong>：具身智能获 <strong>10 亿元</strong>融资，三星、新加坡电信等海外产业资本入局<br>
+      • <strong>Nominal</strong>：10 个月融 1.55 亿美元，估值达 <strong>10 亿美元</strong><br>
+      • <strong>Decagon</strong>：首次要约收购估值 <strong>45 亿美元</strong><br>
+      • <strong>Science Corp</strong>：获 <strong>2.3 亿美元</strong>融资，加速脑植入产品发布<br>
+      • <strong>Eight Sleep</strong>：估值 15 亿美元，融资 5000 万美元<br>
+      • <strong>Lio</strong>：获 a16z 领投 3000 万美元，专注 AI 采购自动化
+    </div>
+    <div class="item-source">来源：<a href="http://news.sina.com.cn/zx/ds/2026-03-06/doc-inhpytyw2813020.shtml">新浪科技</a> · <a href="https://www.ogirisim.com/">AI News Network</a> ｜ 3月5-6日</div>
+  </div>
+
+  <div class="item">
+    <div class="item-title">
+      <span class="tag tag-new">数据</span>
+      AI 应用爆发背后存"同质化"问题
+    </div>
+    <div class="item-body">
+      进入 2026 年，AI Agent 进入真实消费与产业场景，但同质化问题凸显。分析认为<strong>"小而美"智能体</strong>或成突围关键——聚焦垂直场景、小模型端侧部署，避免"大而全"的资源浪费。阿里春节 AI 活动服务用户超 <strong>1.3 亿</strong>，下单超 2 亿次。
+    </div>
+    <div class="item-source">来源：<a href="https://k.sina.com.cn/article_7857201856_1d45362c001902wos4.html">新浪新闻</a> ｜ 3月6日</div>
+  </div>
+</section>
+
+<!-- ==================== 机器人与具身智能 ==================== -->
+<section class="section" id="robot">
+  <div class="section-header">
+    <span class="icon">🦾</span>
+    <h2>机器人与具身智能</h2>
+  </div>
+
+  <div class="item">
+    <div class="item-title">
+      <span class="tag tag-money">投资</span>
+      海外产业资本加速投资中国具身智能
+    </div>
+    <div class="item-body">
+      2026 年具身智能赛道融资加速，<strong>三星、新加坡电信</strong>等海外产业资本入局中国具身智能企业。投资逻辑：看重中国企业在成本控制、供应链深度及量产速度上的优势。当前竞争焦点已从技术演示转向<strong>订单交付与商业闭环</strong>。
+    </div>
+    <div class="item-source">来源：<a href="http://news.sina.com.cn/zx/ds/2026-03-06/doc-inhpytyw2813020.shtml">新浪科技 AI 速递</a> ｜ 3月6日</div>
+  </div>
+
+  <div class="item">
+    <div class="item-title">
+      <span class="tag tag-new">里程碑</span>
+      首场部长通道亮出"硬核成绩单"
+    </div>
+    <div class="item-body">
+      两会首场"部长通道"亮出科技成绩：我国创新指数全球排名跃升至<strong>第 10 位</strong>，2025 年研发投入超 <strong>3.92 万亿元</strong>，基础研究投入比重首破 <strong>7%</strong>。脑机接口、自动驾驶汽车、人形机器人列为 2026 年重点科技攻关方向。
+    </div>
+    <div class="item-source">来源：<a href="http://news.sina.com.cn/zx/ds/2026-03-06/doc-inhpytyw2813020.shtml">新浪科技</a> ｜ 3月6日</div>
+  </div>
+</section>
+
+<!-- ==================== 游戏行业 ==================== -->
+<section class="section" id="game">
+  <div class="section-header">
+    <span class="icon">🎮</span>
+    <h2>游戏行业 AI 应用</h2>
+  </div>
+
+  <div class="item">
+    <div class="item-title">
+      <span class="tag tag-agent">AI+游戏</span>
+      黄仁勋：英伟达创造了现代电子游戏产业
+    </div>
+    <div class="item-body">
+      NVIDIA CEO 黄仁勋在 3 月行业会议上宣称"<strong>英伟达创造了现代电子游戏产业</strong>"，强调公司通过整合 RTX、DLSS 等核心技术及对游戏引擎的算法贡献，从根本上塑造了当今的游戏体验。此言论引发部分资深玩家和硬件爱好者争议。
+    </div>
+    <div class="item-source">来源：<a href="http://news.sina.com.cn/zx/ds/2026-03-06/doc-inhpytyw2813020.shtml">新浪科技 AI 速递</a> ｜ 3月6日</div>
+  </div>
+
+  <div class="item">
+    <div class="item-title">
+      <span class="tag tag-new">平台</span>
+      Roblox 上线实时 AI 内容审核
+    </div>
+    <div class="item-body">
+      Roblox 上线实时 AI 功能，用于重写聊天内容并屏蔽违禁词汇，以强化平台监管。Meta 也面临 AI 眼镜隐私诉讼，苹果 Apple Music 开始为 AI 生成曲目打标签。AI 内容治理成为 2026 年重要趋势。
+    </div>
+    <div class="item-source">来源：<a href="https://www.ogirisim.com/">AI News Network</a> ｜ 3月5-6日</div>
+  </div>
+</section>
+
+<!-- ==================== GitHub 高增长 ==================== -->
+<section class="section" id="github">
+  <div class="section-header">
+    <span class="icon">📦</span>
+    <h2>GitHub 今日高增长项目</h2>
+  </div>
+  <div class="github-grid">
+    <div class="gh-item">
+      <div class="gh-name"><a href="https://github.com/moeru-ai/airi">moeru-ai/airi</a></div>
+      <div class="gh-desc">自托管 AI 伴侣，实时语音 + 自主玩 Minecraft/Factorio</div>
+      <div class="gh-star">⭐ 今日 +3,006 · 总 27.5k</div>
+    </div>
+    <div class="gh-item">
+      <div class="gh-name"><a href="https://github.com/KeygraphHQ/shannon">KeygraphHQ/shannon</a></div>
+      <div class="gh-desc">Shannon：全自主 AI 渗透测试，XBOW 基准 96.15% 利用率</div>
+      <div class="gh-star">⭐ 今日 +2,930 · 总 31.8k</div>
+    </div>
+    <div class="gh-item">
+      <div class="gh-name"><a href="https://github.com/msitarzewski/agency-agents">msitarzewski/agency-agents</a></div>
+      <div class="gh-desc">一站式 AI 代理机构，多角色专家 Agent 集合</div>
+      <div class="gh-star">⭐ 今日 +1,468 · 总 7.7k</div>
+    </div>
+    <div class="gh-item">
+      <div class="gh-name"><a href="https://github.com/FujiwaraChoki/MoneyPrinterV2">FujiwaraChoki/MoneyPrinterV2</a></div>
+      <div class="gh-desc">自动化在线赚钱流程的 AI 工具</div>
+      <div class="gh-star">⭐ 今日 +511 · 总 14.7k</div>
+    </div>
+    <div class="gh-item">
+      <div class="gh-name"><a href="https://github.com/TheCraigHewitt/seomachine">TheCraigHewitt/seomachine</a></div>
+      <div class="gh-desc">Claude Code 工作区：长篇 SEO 优化博客内容生成</div>
+      <div class="gh-star">⭐ 今日 +310 · 总 1.7k</div>
+    </div>
+    <div class="gh-item">
+      <div class="gh-name"><a href="https://github.com/CodebuffAI/codebuff">CodebuffAI/codebuff</a></div>
+      <div class="gh-desc">终端 AI 编码工具，命令行直接生成代码</div>
+      <div class="gh-star">⭐ 今日 +275 · 总 3.9k</div>
+    </div>
+    <div class="gh-item">
+      <div class="gh-name"><a href="https://github.com/agentscope-ai/ReMe">agentscope-ai/ReMe</a></div>
+      <div class="gh-desc">Agent 记忆管理工具包，可扩展记忆框架</div>
+      <div class="gh-star">⭐ 今日 +194 · 总 1.8k</div>
+    </div>
+    <div class="gh-item">
+      <div class="gh-name"><a href="https://github.com/inclusionAI/AReaL">inclusionAI/AReaL</a></div>
+      <div class="gh-desc">LLM 推理与 Agent 快速强化学习框架</div>
+      <div class="gh-star">⭐ 今日 +173 · 总 4.1k</div>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <p class="footer-brand">AI Daily Brief</p>
+  <p>2026年3月6日 · 严格覆盖范围：过去 24 小时（3月5日-6日）</p>
+  <p>数据来源：Tavily · web_search · GitHub Trending · 新浪科技 · 36氪 · 虎嗅 · DoNews · 第一财经 · TechCrunch · AI News Network 等 20+ 源</p>
+</footer>
+
+</div>
+
+<a href="#" class="back-to-top" id="backToTop" title="回到顶部">↑</a>
+
+<script>
+  // Theme toggle
+  function toggleTheme() {
+    const body = document.documentElement;
+    const btn = document.querySelector('.theme-toggle');
+    if (body.getAttribute('data-theme') === 'dark') {
+      body.removeAttribute('data-theme');
+      btn.textContent = '☀️';
+      localStorage.setItem('theme', 'light');
+    } else {
+      body.setAttribute('data-theme', 'dark');
+      btn.textContent = '🌙';
+      localStorage.setItem('theme', 'dark');
+    }
+  }
+
+  // Restore theme
+  (function() {
+    const saved = localStorage.getItem('theme');
+    if (saved === 'dark') {
+      document.documentElement.setAttribute('data-theme', 'dark');
+      document.querySelector('.theme-toggle').textContent = '🌙';
+    }
+  })();
+
+  // Back to top
+  const backBtn = document.getElementById('backToTop');
+  window.addEventListener('scroll', function() {
+    backBtn.classList.toggle('visible', window.scrollY > 400);
+  });
+</script>
+
+</body>
+</html>

@@ -390,11 +390,11 @@
 
 <div class="stats-bar">
   <div class="stat-item">
-    <div class="stat-num" id="totalCount">1</div>
+    <div class="stat-num" id="totalCount">2</div>
     <div class="stat-label">期数</div>
   </div>
   <div class="stat-item">
-    <div class="stat-num" id="totalDays">1</div>
+    <div class="stat-num" id="totalDays">2</div>
     <div class="stat-label">天</div>
   </div>
   <div class="stat-item">
@@ -419,13 +419,19 @@
 // 每天新增一条，格式如下：
 const BRIEFS = [
   {
+    date: '2026-03-06',
+    weekday: '周五',
+    summary: 'OpenAI 发布 <strong>GPT-5.4</strong>，首个原生计算机操作模型，100万token上下文，年化营收破250亿美元；浪潮开源万亿参数 <strong>Yuan3.0 Ultra</strong>（1010B）；Anthropic 重启五角大楼谈判；美七大科技巨头白宫签署自主供电承诺；工信部：大力推动"人工智能+制造"；阿里辟谣千问团队集体离职；海外资本加速投资中国具身智能。',
+    tags: ['GPT-5.4', 'Yuan3.0 Ultra', 'Anthropic·五角大楼', '算电协同', '具身智能'],
+    url: 'brief/2026-03-06.html'
+  },
+  {
     date: '2026-03-05',
     weekday: '周四',
     summary: '两会政府工作报告首提"<strong>智能经济</strong>"，深化"人工智能+"、支持开源社区建设；荣耀 MWC 开源 MagicAgent（30B MoE，6项测试超 GPT-5.2）；阿里明确 Qwen 为集团第一优先级，MAU 达 2.03 亿；Claude Code 推出语音编程模式，年化收入破 25 亿美元；苹果发布搭载 M5 芯片的 MacBook Air，AI 性能提升 6 倍；Samsung Galaxy S26 携定制高通芯片亮相 MWC；字节豆包 Seedance 2.0 视频生成 API 定价公布。',
     tags: ['两会·智能经济', '荣耀MagicAgent', 'Claude Code', 'MacBook Air M5', 'Galaxy S26'],
     url: 'brief/2026-03-05.html'
   }
-  // 之后每天在这里添加新条目即可，最新的放在最前面
 ];
 
 // ========== 渲染逻辑 ==========
