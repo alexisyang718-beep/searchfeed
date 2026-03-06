@@ -1,0 +1,880 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SearchFeed — 多源情报采集引擎 · 项目介绍</title>
+<style>
+  :root {
+    --accent: #2563EB;
+    --accent-light: #EFF6FF;
+    --accent-dark: #1D4ED8;
+    --orange: #EA580C;
+    --orange-light: #FFF7ED;
+    --green: #059669;
+    --green-light: #ECFDF5;
+    --red: #DC2626;
+    --red-light: #FEF2F2;
+    --purple: #7C3AED;
+    --purple-light: #F5F3FF;
+    --text: #1E293B;
+    --text-secondary: #475569;
+    --text-tertiary: #94A3B8;
+    --bg: #FAFBFC;
+    --card: #FFFFFF;
+    --border: #E2E8F0;
+    --border-light: #F1F5F9;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, "PingFang SC", "Microsoft YaHei", sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.7;
+    padding: 0;
+  }
+
+  /* ===== Cover ===== */
+  .cover {
+    background: linear-gradient(135deg, #1E3A5F 0%, #2563EB 50%, #3B82F6 100%);
+    color: #fff;
+    padding: 80px 40px 60px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .cover::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle at 30% 50%, rgba(255,255,255,0.08) 0%, transparent 50%),
+                radial-gradient(circle at 70% 80%, rgba(255,255,255,0.05) 0%, transparent 40%);
+    pointer-events: none;
+  }
+  .cover h1 {
+    font-size: 42px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    margin-bottom: 12px;
+    position: relative;
+  }
+  .cover .subtitle {
+    font-size: 20px;
+    font-weight: 400;
+    opacity: 0.9;
+    margin-bottom: 28px;
+    position: relative;
+  }
+  .cover .meta {
+    font-size: 14px;
+    opacity: 0.7;
+    position: relative;
+  }
+  .cover .badge-row {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin-top: 24px;
+    position: relative;
+    flex-wrap: wrap;
+  }
+  .cover .badge {
+    background: rgba(255,255,255,0.15);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 20px;
+    padding: 6px 16px;
+    font-size: 13px;
+    font-weight: 500;
+  }
+
+  /* ===== Layout ===== */
+  .container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 40px 24px;
+  }
+
+  /* ===== Section ===== */
+  .section {
+    margin-bottom: 48px;
+  }
+  .section-number {
+    display: inline-block;
+    width: 32px;
+    height: 32px;
+    line-height: 32px;
+    text-align: center;
+    border-radius: 8px;
+    background: var(--accent);
+    color: #fff;
+    font-size: 14px;
+    font-weight: 700;
+    margin-right: 10px;
+    vertical-align: middle;
+  }
+  .section h2 {
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 20px;
+    padding-bottom: 12px;
+    border-bottom: 2px solid var(--accent);
+    display: flex;
+    align-items: center;
+  }
+  .section h3 {
+    font-size: 17px;
+    font-weight: 600;
+    color: var(--text);
+    margin: 20px 0 10px;
+  }
+  .section p, .section li {
+    font-size: 15px;
+    color: var(--text-secondary);
+    line-height: 1.8;
+  }
+  .section ul, .section ol {
+    padding-left: 20px;
+    margin: 8px 0;
+  }
+  .section li {
+    margin-bottom: 6px;
+  }
+
+  /* ===== Pain Card ===== */
+  .pain-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin: 16px 0;
+  }
+  .pain-card {
+    background: var(--red-light);
+    border: 1px solid #FECACA;
+    border-radius: 12px;
+    padding: 18px 20px;
+  }
+  .pain-card .icon {
+    font-size: 24px;
+    margin-bottom: 8px;
+  }
+  .pain-card h4 {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--red);
+    margin-bottom: 6px;
+  }
+  .pain-card p {
+    font-size: 13px;
+    color: #7F1D1D;
+    line-height: 1.6;
+  }
+
+  /* ===== Scenario Block ===== */
+  .scenario-block {
+    background: #FFF8F0;
+    border: 1px solid #FDE6D0;
+    border-radius: 12px;
+    padding: 20px 24px;
+    margin: 20px 0;
+  }
+  .scenario-block h4 {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--orange);
+    margin-bottom: 10px;
+  }
+  .scenario-block p {
+    font-size: 14px;
+    color: #78350F;
+    line-height: 1.8;
+    margin-bottom: 6px;
+  }
+  .scenario-block .quote-line {
+    padding-left: 14px;
+    border-left: 3px solid #FDBA74;
+    margin: 8px 0;
+    font-style: italic;
+  }
+
+  /* ===== Solution Card ===== */
+  .solution-card {
+    background: var(--green-light);
+    border: 1px solid #A7F3D0;
+    border-radius: 12px;
+    padding: 18px 20px;
+    margin-bottom: 12px;
+  }
+  .solution-card h4 {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--green);
+    margin-bottom: 6px;
+  }
+  .solution-card p {
+    font-size: 13px;
+    color: #064E3B;
+    line-height: 1.6;
+  }
+
+  /* ===== Comparison Table ===== */
+  .comparison-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    margin: 16px 0;
+    font-size: 13px;
+  }
+  .comparison-table th {
+    background: var(--accent);
+    color: #fff;
+    font-weight: 600;
+    padding: 12px 16px;
+    text-align: left;
+  }
+  .comparison-table td {
+    padding: 10px 16px;
+    border-bottom: 1px solid var(--border-light);
+    color: var(--text-secondary);
+  }
+  .comparison-table tr:last-child td { border-bottom: none; }
+  .comparison-table tr:nth-child(even) td { background: #F8FAFC; }
+  .comparison-table .tag-yes {
+    display: inline-block;
+    background: var(--green-light);
+    color: var(--green);
+    border-radius: 4px;
+    padding: 2px 8px;
+    font-size: 12px;
+    font-weight: 600;
+  }
+  .comparison-table .tag-no {
+    display: inline-block;
+    background: var(--red-light);
+    color: var(--red);
+    border-radius: 4px;
+    padding: 2px 8px;
+    font-size: 12px;
+    font-weight: 600;
+  }
+  .comparison-table .tag-partial {
+    display: inline-block;
+    background: var(--orange-light);
+    color: var(--orange);
+    border-radius: 4px;
+    padding: 2px 8px;
+    font-size: 12px;
+    font-weight: 600;
+  }
+
+  /* ===== Channel Grid ===== */
+  .channel-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 12px;
+    margin: 16px 0;
+  }
+  .channel-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px 16px;
+    transition: box-shadow 0.2s;
+  }
+  .channel-card:hover {
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  }
+  .channel-card .ch-name {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 4px;
+  }
+  .channel-card .ch-platform {
+    font-size: 12px;
+    color: var(--text-tertiary);
+    margin-bottom: 8px;
+  }
+  .channel-card .ch-tools {
+    font-size: 12px;
+    color: var(--text-secondary);
+    line-height: 1.5;
+  }
+  .channel-card .ch-tools .tool-primary {
+    color: var(--accent);
+    font-weight: 600;
+  }
+  .channel-card .ch-tools .tool-arrow {
+    color: var(--text-tertiary);
+    margin: 0 2px;
+  }
+
+  /* ===== Value ===== */
+  .value-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 16px;
+    margin: 16px 0;
+  }
+  .value-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+    text-align: center;
+  }
+  .value-card .big-num {
+    font-size: 36px;
+    font-weight: 700;
+    color: var(--accent);
+    margin-bottom: 4px;
+  }
+  .value-card .unit {
+    font-size: 14px;
+    color: var(--text-tertiary);
+    margin-bottom: 12px;
+  }
+  .value-card p {
+    font-size: 13px;
+    color: var(--text-secondary);
+    line-height: 1.5;
+  }
+
+  /* ===== Use Case ===== */
+  .usecase-list {
+    margin: 16px 0;
+  }
+  .usecase-item {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 16px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 18px 20px;
+    align-items: flex-start;
+  }
+  .usecase-item .uc-icon {
+    font-size: 28px;
+    flex-shrink: 0;
+    width: 40px;
+    text-align: center;
+  }
+  .usecase-item h4 {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 4px;
+  }
+  .usecase-item p {
+    font-size: 13px;
+    color: var(--text-secondary);
+    line-height: 1.6;
+  }
+
+  /* ===== Before/After ===== */
+  .before-after {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    gap: 0;
+    margin: 20px 0;
+    align-items: stretch;
+  }
+  .ba-card {
+    border-radius: 12px;
+    padding: 20px 22px;
+  }
+  .ba-card.before {
+    background: var(--red-light);
+    border: 1px solid #FECACA;
+  }
+  .ba-card.after {
+    background: var(--green-light);
+    border: 1px solid #A7F3D0;
+  }
+  .ba-card h4 {
+    font-size: 14px;
+    font-weight: 700;
+    margin-bottom: 12px;
+  }
+  .ba-card.before h4 { color: var(--red); }
+  .ba-card.after h4 { color: var(--green); }
+  .ba-card li {
+    font-size: 13px;
+    line-height: 1.7;
+    margin-bottom: 6px;
+  }
+  .ba-card.before li { color: #7F1D1D; }
+  .ba-card.after li { color: #064E3B; }
+  .ba-arrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    color: var(--accent);
+    padding: 0 16px;
+  }
+
+  /* ===== Profile Table ===== */
+  .profile-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin: 16px 0;
+  }
+  .profile-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px;
+  }
+  .profile-card h4 {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--accent);
+    margin-bottom: 4px;
+  }
+  .profile-card .desc {
+    font-size: 13px;
+    color: var(--text-secondary);
+    margin-bottom: 8px;
+  }
+  .profile-card .meta-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .profile-card .meta-tag {
+    font-size: 11px;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-weight: 500;
+  }
+  .meta-tag.tier { background: var(--accent-light); color: var(--accent); }
+  .meta-tag.depth { background: var(--orange-light); color: var(--orange); }
+  .meta-tag.time { background: var(--green-light); color: var(--green); }
+  .meta-tag.concur { background: var(--purple-light); color: var(--purple); }
+
+  /* ===== Callout ===== */
+  .callout {
+    background: var(--accent-light);
+    border-left: 4px solid var(--accent);
+    border-radius: 0 10px 10px 0;
+    padding: 16px 20px;
+    margin: 16px 0;
+  }
+  .callout.orange {
+    background: var(--orange-light);
+    border-left-color: var(--orange);
+  }
+  .callout p {
+    font-size: 14px;
+    color: var(--text-secondary);
+    line-height: 1.7;
+  }
+  .callout strong {
+    color: var(--text);
+  }
+
+  /* ===== Footer ===== */
+  .doc-footer {
+    text-align: center;
+    padding: 40px 24px;
+    color: var(--text-tertiary);
+    font-size: 13px;
+    border-top: 1px solid var(--border);
+    margin-top: 20px;
+  }
+  .doc-footer a {
+    color: var(--accent);
+    text-decoration: none;
+  }
+
+  /* ===== Code Block ===== */
+  code {
+    background: #F1F5F9;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-family: "SF Mono", "Fira Code", monospace;
+    font-size: 13px;
+    color: var(--orange);
+  }
+
+  /* ===== Print ===== */
+  @media print {
+    .cover { padding: 40px 20px 30px; }
+    .container { padding: 20px; }
+    .section { margin-bottom: 24px; }
+    .pain-grid, .channel-grid, .value-grid, .profile-grid { grid-template-columns: 1fr 1fr; }
+  }
+
+  @media (max-width: 680px) {
+    .pain-grid, .value-grid, .profile-grid, .before-after { grid-template-columns: 1fr; }
+    .ba-arrow { transform: rotate(90deg); padding: 8px 0; }
+    .cover h1 { font-size: 28px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ===== Cover ===== -->
+<div class="cover">
+  <h1>SearchFeed</h1>
+  <div class="subtitle">多源情报采集引擎 · Multi-Source Intelligence Pipeline</div>
+  <div class="meta">项目介绍 & 价值说明 · 2026 年 3 月</div>
+  <div class="badge-row">
+    <span class="badge">14 采集渠道</span>
+    <span class="badge">200+ 信源实体</span>
+    <span class="badge">自动工具降级</span>
+    <span class="badge">结构化输出</span>
+    <span class="badge">GitHub 开源</span>
+  </div>
+</div>
+
+<div class="container">
+
+<!-- ===== 1. 痛点：我们到底遇到了什么问题？ ===== -->
+<div class="section">
+  <h2><span class="section-number">1</span> 我们到底遇到了什么问题？</h2>
+
+  <p>做 AI 行业研究、写日报、做竞品分析的同学，应该都有过这样的经历：</p>
+
+  <div class="scenario-block">
+    <h4>🎬 场景一：搜不到</h4>
+    <p class="quote-line">"昨天 OpenAI 发了个新模型，我在 Google 搜了半天，搜出来的全是去年的旧闻。"</p>
+    <p class="quote-line">"DeepSeek 在 X/Twitter 上官宣了更新，但它没有博客、没有新闻稿，你不刷推根本不知道。"</p>
+    <p class="quote-line">"GitHub 上突然火了一个开源项目，等科技媒体报道的时候已经过了三天了。"</p>
+    <p>信息散落在十几个平台，搜索引擎的索引有延迟，很多第一手消息根本不在网页上——在 X 上、在 GitHub 上、在小红书上。<strong>你不是不会搜，而是有些东西搜索引擎压根搜不到。</strong></p>
+  </div>
+
+  <div class="scenario-block">
+    <h4>🎬 场景二：搜出来的信息是过时的</h4>
+    <p class="quote-line">"我让 AI 帮我查某个模型的最新价格，结果它给我的是三个月前的数据。"</p>
+    <p class="quote-line">"Perplexity 搜出来的结果看着挺权威，但仔细一看引用的文章是半年前的。"</p>
+    <p>AI 行业变化以小时计，模型更新、API 降价、公司战略调整……<strong>你用的 AI 搜索，给你的"最新信息"可能已经过期了，而你根本无法判断。</strong></p>
+  </div>
+
+  <div class="scenario-block">
+    <h4>🎬 场景三：搜错了你也不知道</h4>
+    <p class="quote-line">"ChatGPT Search 给了我一个很自信的回答，但它引用的来源是个野鸡博客。"</p>
+    <p class="quote-line">"Perplexity 的结果看起来像模像样，但它搜了哪些源、漏了哪些源，我完全不知道。"</p>
+    <p>通用 AI 搜索是个<strong>黑盒</strong>——你看不到它的信源列表，不知道它漏掉了什么，也无法验证结果的权威性。它搜错了、搜漏了，你根本察觉不到，<strong>拿着错误的信息去做决策，比没有信息更危险。</strong></p>
+  </div>
+
+  <div class="scenario-block">
+    <h4>🎬 场景四：人肉采集，累死也做不全</h4>
+    <p class="quote-line">"我每天早上要花 2 小时翻 20 多个网站，才能把 AI 圈昨天发生了什么搞清楚。"</p>
+    <p class="quote-line">"RSS 订阅经常断，X/Twitter 要翻墙，小红书要手动搜……一个环节出问题就漏信息。"</p>
+    <p>即使你足够勤快，靠人工一个一个平台去看，<strong>效率极低、覆盖不全、而且完全不可持续。</strong>一旦你请假两天，信息就断了。</p>
+  </div>
+
+  <div class="pain-grid">
+    <div class="pain-card">
+      <div class="icon">🔍</div>
+      <h4>搜不到：信息散落在 10+ 平台</h4>
+      <p>第一手消息在 X/Twitter、GitHub、小红书上，传统搜索引擎和 AI 搜索根本覆盖不到这些平台。</p>
+    </div>
+    <div class="pain-card">
+      <div class="icon">⏳</div>
+      <h4>搜出来是旧的：时效性差</h4>
+      <p>搜索引擎索引延迟数小时到数天，AI 搜索的训练数据更是落后数月。AI 行业的"最新信息"可能在几小时后就不准了。</p>
+    </div>
+    <div class="pain-card">
+      <div class="icon">❌</div>
+      <h4>搜错了不知道：信源黑盒</h4>
+      <p>通用 AI 搜索不告诉你它搜了哪些源。它可能引用了一个野鸡博客、漏掉了官方公告，你完全无法验证。</p>
+    </div>
+    <div class="pain-card">
+      <div class="icon">💥</div>
+      <h4>单点故障：一断全断</h4>
+      <p>RSS 过期、网站改版、API 限流、反爬升级——依赖任何单一采集方式，随时可能信息断流。</p>
+    </div>
+  </div>
+
+  <div class="callout">
+    <p><strong>核心问题：</strong>在 AI 行业，信息质量直接决定决策质量。但现在的搜索工具——不管是传统搜索引擎还是 AI 搜索——都做不到"搜得全、搜得准、搜得快、搜得稳"。</p>
+  </div>
+</div>
+
+<!-- ===== 2. 核心价值 ===== -->
+<div class="section">
+  <h2><span class="section-number">2</span> SearchFeed 带来了什么价值？</h2>
+
+  <p>SearchFeed 是一个<strong>多源情报采集引擎</strong>。一句话说清楚它做的事：<strong>同时从 14 个平台采集信息，如果一个工具挂了自动换下一个，输出的是结构化数据而不是一段话。</strong></p>
+
+  <div class="value-grid">
+    <div class="value-card">
+      <div class="big-num">14</div>
+      <div class="unit">采集渠道</div>
+      <p>网页、RSS、X/Twitter、YouTube、GitHub、B站、Reddit、小红书、抖音、LinkedIn……主流信息平台一网打尽</p>
+    </div>
+    <div class="value-card">
+      <div class="big-num">200+</div>
+      <div class="unit">预置信源</div>
+      <p>OpenAI、DeepMind、Anthropic 等 66 家 AI 公司官方 + 110 家科技媒体 + 社区，开箱即用</p>
+    </div>
+    <div class="value-card">
+      <div class="big-num">90%↑</div>
+      <div class="unit">效率提升</div>
+      <p>人工每天 2-3 小时的信息扫描，SearchFeed 5-30 分钟自动完成，而且覆盖更全</p>
+    </div>
+  </div>
+
+  <h3>直接解决上面每一个痛点</h3>
+
+  <div class="before-after">
+    <div class="ba-card before">
+      <h4>❌ 之前</h4>
+      <ul>
+        <li>搜不到 X/Twitter 上的第一手消息</li>
+        <li>GitHub 新项目要等媒体报道才知道</li>
+        <li>小红书、B站 上的行业讨论完全覆盖不到</li>
+        <li>AI 搜索是黑盒，搜了啥漏了啥不知道</li>
+        <li>搜到的信息经常是过期的</li>
+        <li>RSS 断了、网站被反爬就没辙了</li>
+        <li>每天 2-3 小时手工扫描，周末断更</li>
+      </ul>
+    </div>
+    <div class="ba-arrow">→</div>
+    <div class="ba-card after">
+      <h4>✅ 用 SearchFeed 之后</h4>
+      <ul>
+        <li>14 个渠道同时采集，X/GitHub/小红书全覆盖</li>
+        <li>RSS/API 直接拉取，分钟级时效</li>
+        <li>信源列表完全透明，你决定搜哪些</li>
+        <li>输出结构化 JSON，谁提供的、什么时间、原文链接一目了然</li>
+        <li>每个渠道 2-6 个备用工具，一个挂了自动切下一个</li>
+        <li>一行命令跑完，5 分钟出结果</li>
+        <li>已实际支撑 AI Daily Brief 日报每日发布</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 3. 它是怎么做到的？ ===== -->
+<div class="section">
+  <h2><span class="section-number">3</span> 它是怎么做到的？</h2>
+
+  <p>SearchFeed 的核心设计理念是<strong>"宽覆盖 + 自动降级 + 结构化"</strong>：</p>
+
+  <div class="solution-card">
+    <h4>🔄 自动工具降级链 — 永不断流</h4>
+    <p>每个采集渠道内置 2-6 个工具。首选工具失败（超时、反爬、限流）会<strong>自动</strong>切换到下一个，整个过程无需人工干预。比如抓网页：x-reader 被反爬 → 自动降级到 Jina Reader → 再失败降级到 Firecrawl → Crawl4AI → Tavily → httpx。<strong>6 道保险，确保信息不断流。</strong></p>
+  </div>
+
+  <div class="solution-card">
+    <h4>🏢 以"公司/人物"为单位管理信源</h4>
+    <p>不是一条一条管 RSS 链接，而是以实体为中心。比如 "OpenAI" 这个实体下自动关联它的博客、4 个 X 账号、GitHub 组织——<strong>追踪一个公司，就是追踪它在所有平台上的动态。</strong></p>
+  </div>
+
+  <div class="solution-card">
+    <h4>📊 一行命令切换深度 — 快扫 5 分钟，深研 2 小时</h4>
+    <p>不需要改代码。<code>quick_scan</code> 只拉核心源标题（5 分钟），<code>daily_digest</code> 全天汇总（15 分钟），<code>deep_research</code> 全量全文（2 小时）。按需选择，同一套基础设施。</p>
+  </div>
+
+  <div class="solution-card">
+    <h4>📦 输出是结构化数据，不是一段话</h4>
+    <p>每条采集结果都包含：来源名、原文链接、标题、摘要、全文、发布时间、语言、采集方式。可以直接喂给 LLM 生成摘要，也可以存数据库做趋势分析。<strong>是可编程的数据，不是不可验证的自然语言。</strong></p>
+  </div>
+
+  <h3>14 个采集渠道及工具降级链</h3>
+  <p style="margin-bottom:8px;color:var(--text-tertiary);font-size:13px;">每个渠道都有多个工具互为备份，首选失败自动切换到下一个 ↓</p>
+  <div class="channel-grid">
+    <div class="channel-card">
+      <div class="ch-name">🌐 Web</div>
+      <div class="ch-platform">通用网页</div>
+      <div class="ch-tools"><span class="tool-primary">x-reader</span> <span class="tool-arrow">→</span> Jina <span class="tool-arrow">→</span> Firecrawl <span class="tool-arrow">→</span> Crawl4AI <span class="tool-arrow">→</span> Tavily <span class="tool-arrow">→</span> httpx</div>
+    </div>
+    <div class="channel-card">
+      <div class="ch-name">📡 RSS</div>
+      <div class="ch-platform">RSS / Atom 订阅</div>
+      <div class="ch-tools"><span class="tool-primary">feedparser</span> <span class="tool-arrow">→</span> x-reader <span class="tool-arrow">→</span> Jina Reader</div>
+    </div>
+    <div class="channel-card">
+      <div class="ch-name">🐦 Twitter / X</div>
+      <div class="ch-platform">推文与时间线</div>
+      <div class="ch-tools"><span class="tool-primary">feedparser (RSSHub)</span> <span class="tool-arrow">→</span> xreach <span class="tool-arrow">→</span> x-reader</div>
+    </div>
+    <div class="channel-card">
+      <div class="ch-name">▶️ YouTube</div>
+      <div class="ch-platform">视频元数据 + 字幕</div>
+      <div class="ch-tools"><span class="tool-primary">yt-dlp</span> <span class="tool-arrow">→</span> x-reader</div>
+    </div>
+    <div class="channel-card">
+      <div class="ch-name">🐙 GitHub</div>
+      <div class="ch-platform">Repo / Issue / Release</div>
+      <div class="ch-tools"><span class="tool-primary">gh CLI</span> <span class="tool-arrow">→</span> GitHub API <span class="tool-arrow">→</span> Jina Reader</div>
+    </div>
+    <div class="channel-card">
+      <div class="ch-name">📺 Bilibili</div>
+      <div class="ch-platform">B站视频</div>
+      <div class="ch-tools"><span class="tool-primary">yt-dlp</span> <span class="tool-arrow">→</span> bilibili-api <span class="tool-arrow">→</span> x-reader</div>
+    </div>
+    <div class="channel-card">
+      <div class="ch-name">💬 Reddit</div>
+      <div class="ch-platform">帖子与讨论</div>
+      <div class="ch-tools"><span class="tool-primary">JSON API</span> <span class="tool-arrow">→</span> PRAW <span class="tool-arrow">→</span> Exa <span class="tool-arrow">→</span> Jina</div>
+    </div>
+    <div class="channel-card">
+      <div class="ch-name">📕 小红书</div>
+      <div class="ch-platform">笔记与搜索</div>
+      <div class="ch-tools"><span class="tool-primary">mcporter MCP</span> <span class="tool-arrow">→</span> x-reader</div>
+    </div>
+    <div class="channel-card">
+      <div class="ch-name">🎵 抖音</div>
+      <div class="ch-platform">短视频解析</div>
+      <div class="ch-tools"><span class="tool-primary">mcporter MCP</span></div>
+    </div>
+    <div class="channel-card">
+      <div class="ch-name">💼 LinkedIn</div>
+      <div class="ch-platform">职场动态</div>
+      <div class="ch-tools"><span class="tool-primary">mcporter MCP</span> <span class="tool-arrow">→</span> Jina Reader</div>
+    </div>
+    <div class="channel-card">
+      <div class="ch-name">🔎 Search</div>
+      <div class="ch-platform">搜索引擎聚合</div>
+      <div class="ch-tools"><span class="tool-primary">Tavily</span> <span class="tool-arrow">→</span> Exa <span class="tool-arrow">→</span> Multi-Search</div>
+    </div>
+    <div class="channel-card">
+      <div class="ch-name">🔗 API</div>
+      <div class="ch-platform">JSON 端点</div>
+      <div class="ch-tools"><span class="tool-primary">httpx API</span> <span class="tool-arrow">→</span> httpx Web</div>
+    </div>
+    <div class="channel-card">
+      <div class="ch-name">💻 Browser</div>
+      <div class="ch-platform">浏览器自动化（兜底）</div>
+      <div class="ch-tools"><span class="tool-primary">nodriver</span> <span class="tool-arrow">→</span> BrowserWing</div>
+    </div>
+    <div class="channel-card">
+      <div class="ch-name">💼 BOSS 直聘</div>
+      <div class="ch-platform">招聘信息</div>
+      <div class="ch-tools"><span class="tool-primary">mcporter MCP</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 4. 与通用 AI 搜索的对比 ===== -->
+<div class="section">
+  <h2><span class="section-number">4</span> 和 Perplexity / ChatGPT Search 比有什么不同？</h2>
+
+  <p>这不是要替代 AI 搜索，而是解决 AI 搜索<strong>做不到</strong>的事情：</p>
+
+  <table class="comparison-table">
+    <thead>
+      <tr>
+        <th>能力维度</th>
+        <th>通用 AI 搜索<br><small>（Perplexity / ChatGPT Search）</small></th>
+        <th>SearchFeed</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>信源控制</strong></td>
+        <td><span class="tag-no">黑盒</span> 搜了啥漏了啥不知道</td>
+        <td><span class="tag-yes">完全透明</span> 你定义信源列表</td>
+      </tr>
+      <tr>
+        <td><strong>平台覆盖</strong></td>
+        <td><span class="tag-partial">仅网页</span> X/GitHub/小红书搜不到</td>
+        <td><span class="tag-yes">14 渠道</span> 含 X、小红书、抖音、B站、GitHub 等</td>
+      </tr>
+      <tr>
+        <td><strong>时效性</strong></td>
+        <td><span class="tag-partial">有延迟</span> 数小时到数天</td>
+        <td><span class="tag-yes">分钟级</span> RSS/API 直接拉取</td>
+      </tr>
+      <tr>
+        <td><strong>失败处理</strong></td>
+        <td><span class="tag-no">静默丢失</span> 搜不到也不告诉你</td>
+        <td><span class="tag-yes">自动降级</span> 每个渠道 2-6 个备选工具</td>
+      </tr>
+      <tr>
+        <td><strong>结果可信度</strong></td>
+        <td><span class="tag-no">不可验证</span> 不知道引用是否权威</td>
+        <td><span class="tag-yes">可追溯</span> 每条结果标注来源和时间</td>
+      </tr>
+      <tr>
+        <td><strong>输出格式</strong></td>
+        <td><span class="tag-partial">自然语言</span> 无法直接入库</td>
+        <td><span class="tag-yes">结构化 JSON</span> 可直接喂 LLM / 存数据库</td>
+      </tr>
+      <tr>
+        <td><strong>深度控制</strong></td>
+        <td><span class="tag-no">不可调</span></td>
+        <td><span class="tag-yes">可配置</span> 核心源全文 / 辅助源仅标题</td>
+      </tr>
+      <tr>
+        <td><strong>可编程性</strong></td>
+        <td><span class="tag-no">无 API</span></td>
+        <td><span class="tag-yes">CLI + Python API</span> 可嵌入任意流水线</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- ===== 5. 已验证的应用场景 ===== -->
+<div class="section">
+  <h2><span class="section-number">5</span> 已经在用了——实际验证的应用场景</h2>
+
+  <div class="usecase-list">
+    <div class="usecase-item">
+      <div class="uc-icon">📰</div>
+      <div>
+        <h4>AI 行业日报 · 已上线运行</h4>
+        <p>每天自动采集 200+ 信源 → LLM 生成中文摘要 → 输出 HTML 日报 → 同步推送 GitHub Pages 网站 + 微信公众号。<strong>这不是 Demo，是每天都在跑的生产系统。</strong></p>
+      </div>
+    </div>
+    <div class="usecase-item">
+      <div class="uc-icon">🔬</div>
+      <div>
+        <h4>竞品监控与行业研究</h4>
+        <p>以公司为单位追踪所有平台动态。比如同时追踪 OpenAI 的博客、X 账号、GitHub 仓库——任何一个渠道有更新就能第一时间捕获。配合关键词过滤，快速聚焦特定技术方向。</p>
+      </div>
+    </div>
+    <div class="usecase-item">
+      <div class="uc-icon">🤖</div>
+      <div>
+        <h4>增强 AI Agent 的信息采集能力</h4>
+        <p>作为 AI Agent 的"眼睛和耳朵"——Agent 不再依赖不可控的通用搜索，而是通过 SearchFeed 获得可控、可靠、多源的实时信息输入。</p>
+      </div>
+    </div>
+    <div class="usecase-item">
+      <div class="uc-icon">📊</div>
+      <div>
+        <h4>数据管道与趋势分析</h4>
+        <p>结构化输出可直接存入数据库，建立时序数据集。用于技术趋势分析、热度跟踪、舆情监控等下游应用。</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 6. 总结 ===== -->
+<div class="section">
+  <h2><span class="section-number">6</span> 总结</h2>
+
+  <div class="callout orange">
+    <p>在 AI 行业做研究和决策，<strong>信息的质量直接决定决策的质量</strong>。</p>
+    <p style="margin-top:8px;">但现在的工具——传统搜索引擎搜不全、AI 搜索搜不准、人工采集搜不动。</p>
+    <p style="margin-top:8px;"><strong>SearchFeed</strong> 解决的就是这个问题：14 个渠道覆盖所有主流平台、自动降级保证永不断流、结构化输出让每条信息可追溯可验证。不是另一个爬虫框架，而是<strong>面向 AI 工作流设计的情报基础设施</strong>。</p>
+    <p style="margin-top:8px;">已在实际生产中验证——支撑 AI Daily Brief 日报的每日发布。现已开源至 GitHub。</p>
+  </div>
+</div>
+
+</div>
+
+<div class="doc-footer">
+  <p>SearchFeed · <a href="https://github.com/alexisyang718-beep/searchfeed" target="_blank">github.com/alexisyang718-beep/searchfeed</a></p>
+  <p style="margin-top:4px;">MIT License · 2026</p>
+</div>
+
+</body>
+</html>
