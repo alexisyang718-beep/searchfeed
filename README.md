@@ -1,6 +1,8 @@
-# AI Signal Collector
+# SearchFeed
 
-A multi-source intelligence pipeline for tracking AI developments. Collects signals across 14 platform channels simultaneously, with automatic tool fallback, structured output, and configurable task profiles for everything from quick scans to deep research.
+[中文文档](./README_CN.md)
+
+A multi-source intelligence pipeline that supercharges AI model search capabilities. Collects signals across 14 platform channels simultaneously, with automatic tool fallback, structured output, and configurable task profiles for everything from quick scans to deep research.
 
 ---
 
@@ -8,7 +10,7 @@ A multi-source intelligence pipeline for tracking AI developments. Collects sign
 
 Standard AI search tools (Perplexity, ChatGPT Search, etc.) work fine for general queries. But for systematic daily intelligence work, they have real limitations:
 
-| | AI Search | AI Signal Collector |
+| | AI Search | SearchFeed |
 |---|---|---|
 | Source control | Black box | You define the exact source list |
 | Platform coverage | Web pages only | X/Twitter, Xiaohongshu, Douyin, Bilibili, LinkedIn, GitHub, Reddit, WeChat, and more |
@@ -18,7 +20,7 @@ Standard AI search tools (Perplexity, ChatGPT Search, etc.) work fine for genera
 | Deduplication | Opaque | Explicit URL-based dedup |
 | Depth control | Uniform | Per-source: full text for core sources, title-only for auxiliary |
 
-The core trade-off: AI search gives you answers quickly with no setup. This system gives you control — over what you monitor, how deeply, and with what reliability.
+The core trade-off: AI search gives you answers quickly with no setup. SearchFeed gives you control — over what you monitor, how deeply, and with what reliability.
 
 ---
 
