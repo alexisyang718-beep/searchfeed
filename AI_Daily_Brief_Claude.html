@@ -1,0 +1,926 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Daily Brief | 2026年3月5日</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Serif+SC:wght@400;600;700&display=swap');
+
+  :root {
+    --bg: #FAF9F5;
+    --bg-warm: #F5F0E8;
+    --card: #FFFFFF;
+    --border: #E8E2D9;
+    --border-light: #F0EBE3;
+    --accent: #C96442;
+    --accent-hover: #B5573A;
+    --accent-soft: rgba(201, 100, 66, 0.08);
+    --accent-border: rgba(201, 100, 66, 0.2);
+    --text: #1A1A1A;
+    --text-secondary: #6B6560;
+    --text-tertiary: #9B9590;
+    --tag-red: #C96442;
+    --tag-red-bg: rgba(201, 100, 66, 0.08);
+    --tag-green: #5A8F6B;
+    --tag-green-bg: rgba(90, 143, 107, 0.08);
+    --tag-blue: #4A7B9D;
+    --tag-blue-bg: rgba(74, 123, 157, 0.08);
+    --tag-purple: #7B6B9D;
+    --tag-purple-bg: rgba(123, 107, 157, 0.08);
+    --tag-orange: #B8863B;
+    --tag-orange-bg: rgba(184, 134, 59, 0.08);
+    --tag-teal: #4A8F8F;
+    --tag-teal-bg: rgba(74, 143, 143, 0.08);
+    --shadow-sm: 0 1px 3px rgba(0,0,0,0.04);
+    --shadow-md: 0 4px 12px rgba(0,0,0,0.06);
+    --shadow-hover: 0 6px 20px rgba(0,0,0,0.08);
+    --radius: 16px;
+    --radius-sm: 10px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Inter', -apple-system, 'SF Pro Text', 'PingFang SC', 'Noto Sans SC', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.8;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  .container {
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+
+  /* ===== Header ===== */
+  .header {
+    padding: 60px 0 40px;
+    text-align: center;
+  }
+
+  .header-logo {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    background: var(--accent);
+    border-radius: 12px;
+    margin-bottom: 20px;
+  }
+
+  .header-logo svg {
+    width: 26px;
+    height: 26px;
+    fill: white;
+  }
+
+  .header h1 {
+    font-family: 'Noto Serif SC', 'Georgia', serif;
+    font-size: 32px;
+    font-weight: 700;
+    color: var(--text);
+    letter-spacing: -0.5px;
+    margin-bottom: 8px;
+  }
+
+  .header .date {
+    color: var(--text-tertiary);
+    font-size: 14px;
+    font-weight: 400;
+    letter-spacing: 0.3px;
+  }
+
+  .header .divider {
+    width: 40px;
+    height: 2px;
+    background: var(--accent);
+    margin: 24px auto;
+    border-radius: 1px;
+  }
+
+  .summary-card {
+    background: var(--bg-warm);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 24px 28px;
+    margin-top: 8px;
+    text-align: left;
+    font-size: 15px;
+    line-height: 1.9;
+    color: var(--text-secondary);
+  }
+
+  .summary-card strong {
+    color: var(--text);
+    font-weight: 600;
+  }
+
+  /* ===== TOC ===== */
+  .toc {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 24px 28px;
+    margin: 32px 0;
+    box-shadow: var(--shadow-sm);
+  }
+
+  .toc h3 {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-tertiary);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 16px;
+  }
+
+  .toc ul {
+    list-style: none;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px 24px;
+  }
+
+  .toc li a {
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 400;
+    transition: color 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .toc li a:hover {
+    color: var(--accent);
+  }
+
+  .toc li a .toc-icon {
+    font-size: 16px;
+    flex-shrink: 0;
+  }
+
+  /* ===== Section ===== */
+  .section {
+    margin-bottom: 40px;
+  }
+
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .section-header .icon {
+    font-size: 20px;
+    flex-shrink: 0;
+  }
+
+  .section-header h2 {
+    font-family: 'Noto Serif SC', 'Georgia', serif;
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--text);
+    letter-spacing: -0.3px;
+  }
+
+  /* ===== Item Card ===== */
+  .item {
+    background: var(--card);
+    border: 1px solid var(--border-light);
+    border-radius: var(--radius);
+    padding: 20px 24px;
+    margin-bottom: 14px;
+    box-shadow: var(--shadow-sm);
+    transition: box-shadow 0.3s, border-color 0.3s;
+  }
+
+  .item:hover {
+    box-shadow: var(--shadow-hover);
+    border-color: var(--border);
+  }
+
+  .item-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 8px;
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    line-height: 1.5;
+  }
+
+  .tag {
+    display: inline-flex;
+    align-items: center;
+    font-size: 11px;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-weight: 500;
+    white-space: nowrap;
+    flex-shrink: 0;
+    margin-top: 2px;
+    letter-spacing: 0.3px;
+  }
+
+  .tag-hot { background: var(--tag-red-bg); color: var(--tag-red); }
+  .tag-new { background: var(--tag-green-bg); color: var(--tag-green); }
+  .tag-money { background: var(--tag-orange-bg); color: var(--tag-orange); }
+  .tag-chip { background: var(--tag-purple-bg); color: var(--tag-purple); }
+  .tag-agent { background: var(--tag-blue-bg); color: var(--tag-blue); }
+  .tag-phone { background: var(--tag-teal-bg); color: var(--tag-teal); }
+  .tag-policy { background: var(--tag-green-bg); color: var(--tag-green); }
+
+  .item-body {
+    font-size: 14px;
+    color: var(--text-secondary);
+    line-height: 1.85;
+    margin-bottom: 10px;
+  }
+
+  .item-body strong {
+    color: var(--text);
+    font-weight: 600;
+  }
+
+  .item-source {
+    font-size: 12px;
+    color: var(--text-tertiary);
+    padding-top: 8px;
+    border-top: 1px solid var(--border-light);
+  }
+
+  .item-source a {
+    color: var(--accent);
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.2s;
+  }
+
+  .item-source a:hover {
+    color: var(--accent-hover);
+    text-decoration: underline;
+  }
+
+  /* ===== Stats ===== */
+  .stat-row {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin: 10px 0;
+  }
+
+  .stat {
+    background: var(--bg-warm);
+    padding: 5px 14px;
+    border-radius: 20px;
+    font-size: 12px;
+    color: var(--text-secondary);
+    border: 1px solid var(--border-light);
+  }
+
+  .stat em {
+    color: var(--accent);
+    font-style: normal;
+    font-weight: 600;
+  }
+
+  /* ===== GitHub Cards ===== */
+  .github-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+
+  .gh-item {
+    background: var(--card);
+    border: 1px solid var(--border-light);
+    border-radius: var(--radius-sm);
+    padding: 16px 18px;
+    box-shadow: var(--shadow-sm);
+    transition: box-shadow 0.3s, border-color 0.3s;
+  }
+
+  .gh-item:hover {
+    box-shadow: var(--shadow-hover);
+    border-color: var(--border);
+  }
+
+  .gh-name {
+    font-weight: 600;
+    font-size: 13px;
+    margin-bottom: 6px;
+  }
+
+  .gh-name a {
+    color: var(--accent);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+
+  .gh-name a:hover {
+    color: var(--accent-hover);
+    text-decoration: underline;
+  }
+
+  .gh-desc {
+    font-size: 12px;
+    color: var(--text-secondary);
+    line-height: 1.6;
+    margin-bottom: 8px;
+  }
+
+  .gh-star {
+    font-size: 12px;
+    color: var(--tag-orange);
+    font-weight: 500;
+  }
+
+  /* ===== Footer ===== */
+  .footer {
+    text-align: center;
+    padding: 40px 0 50px;
+    border-top: 1px solid var(--border);
+    margin-top: 32px;
+  }
+
+  .footer p {
+    color: var(--text-tertiary);
+    font-size: 12px;
+    line-height: 2;
+  }
+
+  .footer .footer-brand {
+    font-family: 'Noto Serif SC', 'Georgia', serif;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    margin-bottom: 4px;
+  }
+
+  /* ===== Back to Top ===== */
+  .back-to-top {
+    position: fixed;
+    bottom: 32px;
+    right: 32px;
+    width: 40px;
+    height: 40px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: var(--shadow-md);
+    transition: all 0.3s;
+    opacity: 0;
+    pointer-events: none;
+    color: var(--text-secondary);
+    font-size: 18px;
+    text-decoration: none;
+  }
+
+  .back-to-top.visible {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .back-to-top:hover {
+    box-shadow: var(--shadow-hover);
+    color: var(--accent);
+    border-color: var(--accent-border);
+  }
+
+  /* ===== Back to Home ===== */
+  .back-home {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--text-tertiary);
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 500;
+    padding: 6px 14px;
+    border-radius: 20px;
+    border: 1px solid var(--border);
+    background: var(--card);
+    transition: all 0.2s;
+    position: fixed;
+    top: 24px;
+    left: 24px;
+    z-index: 100;
+    box-shadow: var(--shadow-sm);
+  }
+
+  .back-home:hover {
+    color: var(--accent);
+    border-color: var(--accent-border);
+    box-shadow: var(--shadow-md);
+  }
+
+  @media (max-width: 640px) {
+    .back-home { top: 16px; left: 16px; font-size: 12px; padding: 5px 12px; }
+  }
+
+  /* ===== Dark Mode Toggle ===== */
+  .theme-toggle {
+    position: fixed;
+    top: 24px;
+    right: 24px;
+    width: 36px;
+    height: 36px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: var(--shadow-sm);
+    transition: all 0.3s;
+    font-size: 16px;
+    z-index: 100;
+  }
+
+  .theme-toggle:hover {
+    box-shadow: var(--shadow-md);
+    border-color: var(--accent-border);
+  }
+
+  /* ===== Dark Mode ===== */
+  [data-theme="dark"] {
+    --bg: #1C1B18;
+    --bg-warm: #252420;
+    --card: #2A2925;
+    --border: #3D3B36;
+    --border-light: #333230;
+    --accent: #D4845F;
+    --accent-hover: #E0966F;
+    --accent-soft: rgba(212, 132, 95, 0.1);
+    --accent-border: rgba(212, 132, 95, 0.25);
+    --text: #E8E4DE;
+    --text-secondary: #A8A29A;
+    --text-tertiary: #78736C;
+    --tag-red: #D4845F;
+    --tag-red-bg: rgba(212, 132, 95, 0.12);
+    --tag-green: #7DB88D;
+    --tag-green-bg: rgba(125, 184, 141, 0.12);
+    --tag-blue: #6DA0C2;
+    --tag-blue-bg: rgba(109, 160, 194, 0.12);
+    --tag-purple: #9D8DBF;
+    --tag-purple-bg: rgba(157, 141, 191, 0.12);
+    --tag-orange: #D4A95F;
+    --tag-orange-bg: rgba(212, 169, 95, 0.12);
+    --tag-teal: #6DB5B5;
+    --tag-teal-bg: rgba(109, 181, 181, 0.12);
+    --shadow-sm: 0 1px 3px rgba(0,0,0,0.15);
+    --shadow-md: 0 4px 12px rgba(0,0,0,0.2);
+    --shadow-hover: 0 6px 20px rgba(0,0,0,0.25);
+  }
+
+  /* ===== Responsive ===== */
+  @media (max-width: 640px) {
+    .container { padding: 0 16px; }
+    .header { padding: 40px 0 28px; }
+    .header h1 { font-size: 26px; }
+    .toc ul { grid-template-columns: 1fr; }
+    .github-grid { grid-template-columns: 1fr; }
+    .summary-card { padding: 18px 20px; }
+    .item { padding: 16px 18px; }
+    .theme-toggle { top: 16px; right: 16px; }
+    .back-to-top { bottom: 20px; right: 20px; }
+  }
+
+  /* ===== Smooth Scroll ===== */
+  html { scroll-behavior: smooth; }
+
+  /* ===== Selection ===== */
+  ::selection {
+    background: var(--accent-soft);
+    color: var(--accent);
+  }
+</style>
+</head>
+<body>
+
+<a class="back-home" href="../index.html">← 返回存档</a>
+<button class="theme-toggle" onclick="toggleTheme()" title="切换深色/浅色模式" aria-label="切换主题">☀️</button>
+
+<div class="container">
+
+<header class="header">
+  <div class="header-logo">
+    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+  </div>
+  <h1>AI Daily Brief</h1>
+  <div class="date">2026年3月5日 · 周四 · 严格覆盖过去24小时</div>
+  <div class="divider"></div>
+  <div class="summary-card">
+    <strong>今日速览</strong> — 两会政府工作报告首提"智能经济"，深化"人工智能+"、支持开源社区建设；荣耀 MWC 开源 MagicAgent（30B MoE，6项测试超 GPT-5.2）；阿里明确 Qwen 为集团第一优先级，MAU 达 2.03 亿；Claude Code 推出语音编程模式，年化收入破 25 亿美元；苹果发布搭载 M5 芯片的 MacBook Air，AI 性能提升 6 倍；Samsung Galaxy S26 携定制高通芯片亮相 MWC；字节豆包 Seedance 2.0 视频生成 API 定价公布。
+  </div>
+</header>
+
+<nav class="toc">
+  <h3>目录</h3>
+  <ul>
+    <li><a href="#model"><span class="toc-icon">🧠</span> 模型发布与架构升级</a></li>
+    <li><a href="#agent"><span class="toc-icon">🤖</span> Agent 与多模态突破</a></li>
+    <li><a href="#phone"><span class="toc-icon">📱</span> 手机厂商 AI 动态</a></li>
+    <li><a href="#chip"><span class="toc-icon">⚡</span> 芯片与算力</a></li>
+    <li><a href="#game"><span class="toc-icon">🎮</span> 游戏行业 AI 应用</a></li>
+    <li><a href="#industry"><span class="toc-icon">🏛️</span> 行业动向</a></li>
+    <li><a href="#github"><span class="toc-icon">📦</span> GitHub 高增长项目</a></li>
+  </ul>
+</nav>
+
+<!-- ==================== 模型发布与架构升级 ==================== -->
+<section class="section" id="model">
+  <div class="section-header">
+    <span class="icon">🧠</span>
+    <h2>模型发布与架构升级</h2>
+  </div>
+
+  <div class="item">
+    <div class="item-title">
+      <span class="tag tag-new">开源</span>
+      荣耀 MagicAgent 全球开源，300亿参数超越 GPT-5.2
+    </div>
+    <div class="item-body">
+      荣耀在 MWC 2026 发布行业首个支持<strong>全场景泛化规划 + 异构任务编排</strong>的智能体基础模型 MagicAgent，与复旦大学联合研发。首个 MoE 架构大模型，300 亿参数（轻量级），六大核心测试全面领先 GPT-5.2、Kimi-K2、GLM-4.7 等千亿级模型。包含 MagicAgent-32B、MagicAgent-30B-A3B 等版本，面向全球开源。
+    </div>
+    <div class="stat-row">
+      <span class="stat">参数 <em>30B MoE</em></span>
+      <span class="stat">逻辑图编排 <em>超 GPT-5.2 51%</em></span>
+      <span class="stat">工具调用 <em>领先 10%</em></span>
+    </div>
+    <div class="item-source">来源：<a href="https://www.tmtpost.com/nictation/7897848.html">钛媒体</a> · <a href="https://www.sohu.com/a/992033309_115831">搜狐</a> · <a href="http://finance.eastmoney.com/a/202603033660306766.html">东方财富</a> ｜ MWC 2026（3月3-4日）</div>
+  </div>
+
+  <div class="item">
+    <div class="item-title">
+      <span class="tag tag-hot">战略</span>
+      阿里 Qwen 战略调整：集团第一优先级
+    </div>
+    <div class="item-body">
+      CEO 吴泳铭在内部明确表态 <strong>Qwen（千问）是阿里第一优先级</strong>。负责人林俊旸卸任旨在优化资源配置。千问 MAU 达 <strong>2.03 亿</strong>，增速 553%。Qwen 模型已开始涨价。新加坡国家AI计划 Sea-Lion 项目已从 Meta 体系转向基于 Qwen 架构构建，标志中国开源AI模型全球影响力扩张。
+    </div>
+    <div class="item-source">来源：<a href="https://news.sina.cn/2026-03-05/detail-inhpwrac3418275.d.html">新浪科技</a> ｜ 3月5日</div>
+  </div>
+
+  <div class="item">
+    <div class="item-title">
+      <span class="tag tag-new">定价</span>
+      字节豆包 Seedance 2.0 视频生成 API 定价公布
+    </div>
+    <div class="item-body">
+      火山引擎公布豆包 Seedance 2.0 API 定价：纯视频生成 <strong>46 元/百万 tokens</strong>，15 秒视频约 30.9 万 tokens，折合成本约 <strong>1 元/秒</strong>。API 暂未对外开放。
+    </div>
+    <div class="item-source">来源：<a href="https://news.sina.cn/2026-03-05/detail-inhpwrac3418275.d.html">新浪科技</a> ｜ 3月5日</div>
+  </div>
+</section>
+
+<!-- ==================== Agent 与多模态 ==================== -->
+<section class="section" id="agent">
+  <div class="section-header">
+    <span class="icon">🤖</span>
+    <h2>Agent 与多模态突破</h2>
+  </div>
+
+  <div class="item">
+    <div class="item-title">
+      <span class="tag tag-agent">Agent</span>
+      Claude Code 推出语音模式，年化收入破 25 亿美元
+    </div>
+    <div class="item-body">
+      Anthropic 为 Claude Code 推出 <strong>Voice Mode</strong>（语音编程），开发者可通过语音指令与 AI 编程助手交互。Claude Code 年化收入已超 <strong>25 亿美元</strong>，较年初翻倍；周活跃用户自 1 月以来翻倍。目前 5% 用户可用，将逐步全量。
+    </div>
+    <div class="item-source">来源：<a href="https://techcrunch.com/2026/03/03/claude-code-rolls-out-a-voice-mode-capability/">TechCrunch</a> ｜ 3月3日</div>
+  </div>
+
+  <div class="item">
+    <div class="item-title">
+      <span class="tag tag-agent">Agent</span>
+      Anthropic 开放 Claude 记忆导入功能
+    </div>
+    <div class="item-body">
+      Claude 向免费用户开放<strong>记忆导入工具</strong>，用户可从 ChatGPT 等竞品导入对话记录和记忆数据，大幅降低迁移门槛。
+    </div>
+    <div class="item-source">来源：<a href="https://finance.eastmoney.com/a/202603043661069159.html">东方财富 AI早报</a> ｜ 3月4日</div>
+  </div>
+
+  <div class="item">
+    <div class="item-title">
+      <span class="tag tag-agent">Agent</span>
+      华为发布 Agentic Core 方案，加速运营商 Agent 网络商用
+    </div>
+    <div class="item-body">
+      华为在 MWC 2026 发布 <strong>Agentic Core</strong> 方案，基于三大引擎（NE智能、网络智能、业务智能）应对 AI 时代流量激增。随着 AI Agent 手机普及，连接实体将扩展十倍，从"人"延伸到物理 AI（具身机器人、自动驾驶），需引入<strong>数字身份、Agent 注册发现、A2A 会话管理</strong>等能力。
+    </div>
+    <div class="item-source">来源：<a href="https://totaltele.com/huawei-will-release-the-agentic-core-solution-to-accelerate-the-commercial-use-of-agent-networks/">Total Telecom</a> ｜ MWC 3月4日</div>
+  </div>
+
+  <div class="item">
+    <div class="item-title">
+      <span class="tag tag-new">里程碑</span>
+      Mastercard × Santander：欧洲首次 AI Agent 实时支付
+    </div>
+    <div class="item-body">
+      Mastercard 与桑坦德银行完成<strong>欧洲首笔 AI Agent 实时支付</strong>交易，标志着 Agentic AI 正式进入金融交易实操阶段。
+    </div>
+    <div class="item-source">来源：<a href="https://www.fintechfutures.com/ai-in-fintech/ai-and-modernisation-financial-services-reach-a-tipping-point">FinTech Futures</a> ｜ 3月4日</div>
+  </div>
+</section>
+
+<!-- ==================== 手机厂商 AI ==================== -->
+<section class="section" id="phone">
+  <div class="section-header">
+    <span class="icon">📱</span>
+    <h2>手机厂商 AI 动态</h2>
+  </div>
+
+  <div class="item">
+    <div class="item-title">
+      <span class="tag tag-phone">苹果</span>
+      苹果发布 MacBook Air M5：AI 性能提升 6 倍
+    </div>
+    <div class="item-body">
+      苹果 3 月 4 日在纽约、伦敦、上海三地同步举办新品体验活动，发布搭载 <strong>M5 芯片</strong>的 MacBook Air。M5 采用台积电第三代 3nm 工艺，<strong>10 核 CPU + 10 核 GPU + 16 核神经网络引擎</strong>，每个 GPU 核心内置独立神经引擎，支持扩散模型图像生成和大语言模型推理。相比 M1，<strong>AI 处理能力提升 6 倍</strong>。起价 RMB 8499。同步发布 iPhone 17e 等新品。
+    </div>
+    <div class="stat-row">
+      <span class="stat">工艺 <em>3nm 三代</em></span>
+      <span class="stat">神经引擎 <em>16核</em></span>
+      <span class="stat">AI性能 <em>vs M1 提升6x</em></span>
+    </div>
+    <div class="item-source">来源：<a href="https://www.apple.com/cn/macbook-air/specs/">Apple 官网</a> · <a href="https://k.sina.com.cn/article_7857201856_1d45362c001902tqoo.html">新浪</a> ｜ 3月4日</div>
+  </div>
+
+  <div class="item">
+    <div class="item-title">
+      <span class="tag tag-phone">三星</span>
+      Samsung Galaxy S26：定制高通芯片 + 三大 AI 模型
+    </div>
+    <div class="item-body">
+      三星在 MWC 发布 Galaxy S26 旗舰，搭载高通为三星定制的芯片（NPU 性能提升 <strong>39%</strong>、GPU +24%、CPU +19%）。Galaxy AI 升级：确认接入 <strong>Perplexity</strong>，加上 Google Gemini 和 Bixby 三大 AI 引擎。同时宣布 2030 年前将全球工厂转型为"AI 驱动工厂"。
+    </div>
+    <div class="item-source">来源：<a href="https://www.telecoms.com/mobile-devices/samsung-galaxy-s26-crams-in-more-ai-and-a-custom-qualcomm-chip">Telecoms</a> · <a href="https://news.samsung.com/my/samsung-electronics-announces-strategy-to-transition-global-manufacturing-into-ai-driven-factories-by-2030">Samsung Newsroom</a> ｜ MWC 3月3-4日</div>
+  </div>
+
+  <div class="item">
+    <div class="item-title">
+      <span class="tag tag-phone">AR眼镜</span>
+      Rokid 海外版 AR 眼镜首发支持 Gemini
+    </div>
+    <div class="item-body">
+      乐奇 Rokid Glasses 海外版接入 <strong>Gemini、ChatGPT、DeepSeek、通义千问</strong>四大模型，成为行业首款支持 Gemini 的 AI 眼镜，支持跨模型切换和多模态交互。
+    </div>
+    <div class="item-source">来源：<a href="https://finance.eastmoney.com/a/202603043661069159.html">东方财富 AI早报</a> ｜ 3月4日</div>
+  </div>
+
+  <div class="item">
+    <div class="item-title">
+      <span class="tag tag-phone">数据</span>
+      Apple Intelligence 使用率低迷，90% AI 算力闲置
+    </div>
+    <div class="item-body">
+      苹果 AI 战略受挫：Apple Intelligence 使用率远低于预期，约 <strong>90% 的 AI 算力处于闲置</strong>。应对措施：暂借 Google Gemini 驱动下一代 Siri，同时加速自研 <strong>"Baltra"芯片</strong>打造自有 AI 服务器。
+    </div>
+    <div class="item-source">来源：<a href="https://news.sina.cn/2026-03-05/detail-inhpwrac3418275.d.html">新浪科技</a> ｜ 3月5日</div>
+  </div>
+</section>
+
+<!-- ==================== 芯片与算力 ==================== -->
+<section class="section" id="chip">
+  <div class="section-header">
+    <span class="icon">⚡</span>
+    <h2>芯片与算力</h2>
+  </div>
+
+  <div class="item">
+    <div class="item-title">
+      <span class="tag tag-chip">芯片</span>
+      亚洲芯片巨头 2026 年资本支出超 1360 亿美元
+    </div>
+    <div class="item-body">
+      台积电、三星、SK 海力士领衔的亚洲芯片厂商 2026 年资本支出预计超 <strong>1360 亿美元</strong>，同比增长 25%。HBM（高带宽内存）成为高端 GPU 成本主力，中国 AI 芯片厂商正探索降低内存依赖的路线。
+    </div>
+    <div class="item-source">来源：<a href="https://news.sina.cn/2026-03-05/detail-inhpwrac3418275.d.html">新浪科技</a> ｜ 3月5日</div>
+  </div>
+
+  <div class="item">
+    <div class="item-title">
+      <span class="tag tag-chip">节能</span>
+      NVIDIA "反常识"方案：让服务器慢点跑，1 分钟降耗 1/3
+    </div>
+    <div class="item-body">
+      NVIDIA 在 Blackwell Ultra 集群（96 GPU）上测试 Emerald AI 软件，通过动态调节算力负载，使数据中心可在 <strong>1 分钟内</strong>降耗约三分之一，5 天内成功响应 200+ 电力调节指令，模拟 22 次电网事件，100% 达标。
+    </div>
+    <div class="item-source">来源：<a href="https://finance.sina.com.cn/tech/roll/2026-03-04/doc-inhpvihk6787922.shtml">新浪财经</a> ｜ 3月4日</div>
+  </div>
+
+  <div class="item">
+    <div class="item-title">
+      <span class="tag tag-chip">电力</span>
+      美国 AI 面临电力瓶颈，变压器 80% 依赖进口
+    </div>
+    <div class="item-body">
+      数据中心电力供应成为 AI 算力扩张的核心制约。美国关键设备变压器进口依赖度高达 <strong>80%</strong>，而这恰好是中国的优势产业链方向。
+    </div>
+    <div class="item-source">来源：<a href="https://news.sina.cn/2026-03-05/detail-inhpwrac3418275.d.html">新浪科技</a> ｜ 3月5日</div>
+  </div>
+</section>
+
+<!-- ==================== 游戏行业 ==================== -->
+<section class="section" id="game">
+  <div class="section-header">
+    <span class="icon">🎮</span>
+    <h2>游戏行业 AI 应用</h2>
+  </div>
+
+  <div class="item">
+    <div class="item-title">
+      <span class="tag tag-agent">AI+游戏</span>
+      Samsung 将 Agentic AI 带入工业制造，游戏化数字孪生
+    </div>
+    <div class="item-body">
+      三星在 MWC 2026 展示基于<strong>数字孪生</strong>的制造创新，Agent AI 可在虚拟环境中实时理解运营上下文并独立执行最优决策。这套 Agentic AI 工业架构与游戏引擎中的 AI NPC 决策树有高度技术同源性。
+    </div>
+    <div class="item-source">来源：<a href="https://news.samsung.com/my/samsung-electronics-announces-strategy-to-transition-global-manufacturing-into-ai-driven-factories-by-2030">Samsung Newsroom</a> ｜ MWC 3月3-4日</div>
+  </div>
+
+  <div class="item">
+    <div class="item-title">
+      <span class="tag tag-new">开源</span>
+      moeru-ai/airi：自托管 AI 伴侣，可玩 Minecraft 和 Factorio
+    </div>
+    <div class="item-body">
+      GitHub 今日热榜项目（+1454 星），一个自托管的 AI 虚拟伴侣，支持实时语音聊天并能自主玩 <strong>Minecraft</strong> 和 <strong>Factorio</strong>，目标达到 Neuro-sama 水平。体现了 AI Agent + 游戏融合的社区热度。
+    </div>
+    <div class="item-source">来源：<a href="https://github.com/trending?since=daily">GitHub Trending</a> ｜ 3月5日</div>
+  </div>
+</section>
+
+<!-- ==================== 行业动向 ==================== -->
+<section class="section" id="industry">
+  <div class="section-header">
+    <span class="icon">🏛️</span>
+    <h2>行业动向</h2>
+  </div>
+
+  <div class="item">
+    <div class="item-title">
+      <span class="tag tag-hot">两会</span>
+      政府工作报告首提"智能经济"，深化"人工智能+"
+    </div>
+    <div class="item-body">
+      3月5日，十四届全国人大四次会议开幕。政府工作报告首次提出<strong>"打造智能经济新形态"</strong>，具体部署：<br>
+      • 深化拓展<strong>"人工智能+"</strong>，促进新一代智能终端和<strong>智能体</strong>加快推广<br>
+      • 推动重点行业领域 AI <strong>商业化规模化</strong>应用，培育智能原生新业态<br>
+      • <strong>支持人工智能开源社区建设</strong>，促进开源生态繁荣<br>
+      • 实施<strong>超大规模智算集群、算电协同</strong>等新基建工程<br>
+      • 加强全国一体化算力监测调度，支持公共云发展<br>
+      报告同时肯定："国产大模型引领全球开源生态"，芯片自主研发有了新突破，工业机器人产量增长 28%。
+    </div>
+    <div class="item-source">来源：<a href="http://news.10jqka.com.cn/20260305/c675086919.shtml">同花顺</a> · <a href="http://www.ce.cn/xwzx/gnsz/szyw/202603/t20260305_2806088.shtml">中国经济网</a> ｜ 3月5日</div>
+  </div>
+
+  <div class="item">
+    <div class="item-title">
+      <span class="tag tag-new">数据</span>
+      国内 AI 应用格局："千豆"双雄并立
+    </div>
+    <div class="item-body">
+      全球 MAU 前三：ChatGPT 领先，<strong>豆包 MAU 3.15 亿</strong>、<strong>千问 MAU 2.03 亿</strong>（增速 553%）。国内 AI 应用已形成字节 vs 阿里的两强格局。AI 人才争夺战升级，部分应届生年薪超 <strong>200 万元</strong>。
+    </div>
+    <div class="item-source">来源：<a href="https://finance.eastmoney.com/a/202603043661069159.html">东方财富</a> · <a href="https://news.sina.cn/2026-03-05/detail-inhpwrac3418275.d.html">新浪科技</a> ｜ 3月4-5日</div>
+  </div>
+
+  <div class="item">
+    <div class="item-title">
+      <span class="tag tag-new">机器人</span>
+      智元机器人海外独立站上线 + 赛那德机器人融资
+    </div>
+    <div class="item-body">
+      智元机器人 (AGIBOT) 在 MWC 发布海外独立站 store.agibot.com，推出<strong>"机器人即服务"</strong>租赁模式，覆盖 17 国。赛那德具身装卸货机器人完成 2 亿元融资。全国人大发言人点赞国产人形机器人。
+    </div>
+    <div class="item-source">来源：<a href="https://finance.eastmoney.com/a/202603043661069159.html">东方财富 AI早报</a> ｜ 3月4日</div>
+  </div>
+
+  <div class="item">
+    <div class="item-title">
+      <span class="tag tag-money">融资</span>
+      近期重要融资动态
+    </div>
+    <div class="item-body">
+      • <strong>深度智耀 (DIP)</strong>：AI 制药独角兽完成 4000 万美元新一轮融资<br>
+      • <strong>赛那德</strong>：具身装卸货机器人完成超 <strong>2 亿元</strong>融资（阿里、达晨等）<br>
+      • <strong>Anduril</strong>：国防科技独角兽筹备新一轮融资，目标估值 <strong>600 亿美元</strong>（3月3日报道）
+    </div>
+    <div class="item-source">来源：<a href="https://www.jiemian.com/article/14066736.html">界面新闻</a> · <a href="https://techcrunch.com/2026/03/03/anduril-aims-at-60-billion-valuation-in-new-funding-round/">TechCrunch</a> ｜ 3月3-5日</div>
+  </div>
+</section>
+
+<!-- ==================== GitHub 高增长 ==================== -->
+<section class="section" id="github">
+  <div class="section-header">
+    <span class="icon">📦</span>
+    <h2>GitHub 今日高增长项目</h2>
+  </div>
+  <div class="github-grid">
+    <div class="gh-item">
+      <div class="gh-name"><a href="https://github.com/msitarzewski/agency-agents">msitarzewski/agency-agents</a></div>
+      <div class="gh-desc">一站式 AI 代理机构：前端向导、Reddit 社区忍者、现实检验者等专家角色集合</div>
+      <div class="gh-star">⭐ 今日 +2,209</div>
+    </div>
+    <div class="gh-item">
+      <div class="gh-name"><a href="https://github.com/KeygraphHQ/shannon">KeygraphHQ/shannon</a></div>
+      <div class="gh-desc">Shannon Lite：全自动 AI 渗透测试，XBOW 基准 96.15% 漏洞利用率</div>
+      <div class="gh-star">⭐ 今日 +1,854</div>
+    </div>
+    <div class="gh-item">
+      <div class="gh-name"><a href="https://github.com/moeru-ai/airi">moeru-ai/airi</a></div>
+      <div class="gh-desc">自托管 AI 伴侣，实时语音 + 自主玩 Minecraft/Factorio</div>
+      <div class="gh-star">⭐ 今日 +1,454</div>
+    </div>
+    <div class="gh-item">
+      <div class="gh-name"><a href="https://github.com/ItzCrazyKns/Perplexica">ItzCrazyKns/Perplexica</a></div>
+      <div class="gh-desc">开源 AI 答案引擎，类 Perplexity.ai 替代方案</div>
+      <div class="gh-star">⭐ 今日 +1,090</div>
+    </div>
+    <div class="gh-item">
+      <div class="gh-name"><a href="https://github.com/K-Dense-AI/claude-scientific-skills">K-Dense-AI/claude-scientific-skills</a></div>
+      <div class="gh-desc">Claude 科研 Agent 技能包：研究、工程、金融、写作</div>
+      <div class="gh-star">⭐ 今日 +940</div>
+    </div>
+    <div class="gh-item">
+      <div class="gh-name"><a href="https://github.com/alibaba/OpenSandbox">alibaba/OpenSandbox</a></div>
+      <div class="gh-desc">阿里开源：AI 应用通用沙箱平台，多语言 SDK + Docker/K8s 运行时</div>
+      <div class="gh-star">⭐ 今日 +788</div>
+    </div>
+    <div class="gh-item">
+      <div class="gh-name"><a href="https://github.com/agentscope-ai/agentscope">agentscope-ai/agentscope</a></div>
+      <div class="gh-desc">构建可视化、可解释、可信赖的 AI Agent</div>
+      <div class="gh-star">⭐ 今日 +427</div>
+    </div>
+    <div class="gh-item">
+      <div class="gh-name"><a href="https://github.com/FlowiseAI/Flowise">FlowiseAI/Flowise</a></div>
+      <div class="gh-desc">可视化构建 AI Agents 工作流</div>
+      <div class="gh-star">⭐ 今日 +145</div>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <p class="footer-brand">AI Daily Brief</p>
+  <p>2026年3月5日 · 严格覆盖范围：过去 24 小时（3月4日-5日）</p>
+  <p>数据来源：Tavily · web_search · GitHub Trending · 东方财富 · 新浪科技 · Apple 官网 · TechCrunch · Samsung Newsroom 等 20+ 源</p>
+</footer>
+
+</div>
+
+<a href="#" class="back-to-top" id="backToTop" title="回到顶部">↑</a>
+
+<script>
+  // Theme toggle
+  function toggleTheme() {
+    const body = document.documentElement;
+    const btn = document.querySelector('.theme-toggle');
+    if (body.getAttribute('data-theme') === 'dark') {
+      body.removeAttribute('data-theme');
+      btn.textContent = '☀️';
+      localStorage.setItem('theme', 'light');
+    } else {
+      body.setAttribute('data-theme', 'dark');
+      btn.textContent = '🌙';
+      localStorage.setItem('theme', 'dark');
+    }
+  }
+
+  // Restore theme
+  (function() {
+    const saved = localStorage.getItem('theme');
+    if (saved === 'dark') {
+      document.documentElement.setAttribute('data-theme', 'dark');
+      document.querySelector('.theme-toggle').textContent = '🌙';
+    }
+  })();
+
+  // Back to top
+  const backBtn = document.getElementById('backToTop');
+  window.addEventListener('scroll', function() {
+    backBtn.classList.toggle('visible', window.scrollY > 400);
+  });
+</script>
+
+</body>
+</html>

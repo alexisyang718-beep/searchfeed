@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>深度报告 | AI芯片与算力深度研究</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Serif+SC:wght@400;600;700&display=swap');
+  :root{--bg:#FAF9F5;--bg-warm:#F5F0E8;--card:#FFF;--border:#E8E2D9;--border-light:#F0EBE3;--accent:#C96442;--accent-soft:rgba(201,100,66,.08);--accent-border:rgba(201,100,66,.2);--text:#1A1A1A;--text-secondary:#6B6560;--text-tertiary:#9B9590;--tag-red:#C96442;--tag-red-bg:rgba(201,100,66,.08);--tag-green:#5A8F6B;--tag-green-bg:rgba(90,143,107,.08);--tag-blue:#4A7B9D;--tag-blue-bg:rgba(74,123,157,.08);--tag-purple:#7B6B9D;--tag-purple-bg:rgba(123,107,157,.08);--tag-orange:#B8863B;--tag-orange-bg:rgba(184,134,59,.08);--tag-teal:#4A8F8F;--tag-teal-bg:rgba(74,143,143,.08);--shadow-sm:0 1px 3px rgba(0,0,0,.04);--shadow-md:0 4px 12px rgba(0,0,0,.06);--radius:16px;--radius-sm:10px;--price-up:#C94242;--price-down:#4A9D5A}
+  [data-theme="dark"]{--bg:#1A1816;--bg-warm:#242220;--card:#2A2826;--border:#3A3836;--border-light:#333130;--text:#E8E2D9;--text-secondary:#A09890;--text-tertiary:#6B6560;--shadow-sm:0 1px 3px rgba(0,0,0,.2);--shadow-md:0 4px 12px rgba(0,0,0,.3)}
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:'Inter',-apple-system,'PingFang SC','Noto Sans SC',sans-serif;background:var(--bg);color:var(--text);line-height:1.8;-webkit-font-smoothing:antialiased}
+  .container{max-width:900px;margin:0 auto;padding:0 24px}
+  .header{background:linear-gradient(135deg,#2D5A3D,#1A3A28);color:#fff;padding:48px 0 40px;margin-bottom:32px}
+  .header h1{font-family:'Noto Serif SC',serif;font-size:28px;font-weight:700;margin-bottom:8px}
+  .header .subtitle{font-size:15px;opacity:.85;margin-bottom:16px}
+  .header .meta{font-size:13px;opacity:.7} .header .meta span{margin-right:16px}
+  .theme-toggle{position:fixed;top:16px;right:16px;z-index:100;width:40px;height:40px;border-radius:50%;background:var(--card);border:1px solid var(--border);cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center;box-shadow:var(--shadow-md)}
+  .toc{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:24px 28px;margin-bottom:28px;box-shadow:var(--shadow-sm)}
+  .toc h3{font-size:15px;color:var(--accent);margin-bottom:12px;font-weight:600}
+  .toc ol{padding-left:20px} .toc li{margin-bottom:6px;font-size:14px;color:var(--text-secondary)}
+  .toc a{color:var(--text-secondary);text-decoration:none} .toc a:hover{color:var(--accent)}
+  .section{margin-bottom:36px}
+  .section-title{font-family:'Noto Serif SC',serif;font-size:20px;font-weight:700;color:var(--accent);margin-bottom:16px;padding-bottom:10px;border-bottom:2px solid var(--accent-border)}
+  .card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:24px;margin-bottom:16px;box-shadow:var(--shadow-sm)}
+  .card h4{font-size:16px;font-weight:600;margin-bottom:10px;color:var(--text)}
+  .card p,.card li{font-size:14px;color:var(--text-secondary);line-height:1.75}
+  .card ul,.card ol{padding-left:18px;margin-top:8px} .card li{margin-bottom:4px}
+  .highlight{color:var(--accent);font-weight:600}
+  .hl-row td{background:var(--accent-soft)!important}
+  table{width:100%;border-collapse:collapse;font-size:13px;margin:16px 0;background:var(--card);border-radius:var(--radius-sm);overflow:hidden}
+  th{background:var(--bg-warm);color:var(--text);font-weight:600;padding:10px 12px;text-align:left;border-bottom:2px solid var(--border);font-size:12px}
+  td{padding:9px 12px;border-bottom:1px solid var(--border-light);color:var(--text-secondary);vertical-align:top}
+  tr:hover td{background:var(--accent-soft)}
+  .table-wrap{overflow-x:auto;border:1px solid var(--border);border-radius:var(--radius-sm);margin:16px 0}
+  .tag{display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600;margin-right:4px}
+  .tag-red{background:var(--tag-red-bg);color:var(--tag-red)} .tag-green{background:var(--tag-green-bg);color:var(--tag-green)}
+  .tag-blue{background:var(--tag-blue-bg);color:var(--tag-blue)} .tag-orange{background:var(--tag-orange-bg);color:var(--tag-orange)}
+  .tag-teal{background:var(--tag-teal-bg);color:var(--tag-teal)}
+  .verdict-box{background:linear-gradient(135deg,var(--accent-soft),rgba(201,100,66,.03));border:1px solid var(--accent-border);border-radius:var(--radius);padding:20px 24px;margin:16px 0}
+  .verdict-box h5{color:var(--accent);font-size:14px;margin-bottom:8px}
+  .verdict-box p{font-size:13px;color:var(--text-secondary)}
+  .key-insight{background:var(--bg-warm);border-left:3px solid var(--accent);padding:14px 18px;margin:14px 0;border-radius:0 var(--radius-sm) var(--radius-sm) 0;font-size:13px;color:var(--text-secondary)}
+  .warning-box{background:rgba(201,100,66,.06);border:1px solid var(--accent-border);border-radius:var(--radius-sm);padding:16px 20px;margin:14px 0}
+  .warning-box h5{color:var(--accent);font-size:13px;margin-bottom:6px}
+  .warning-box p{font-size:13px;color:var(--text-secondary)}
+  .price-board{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin:16px 0}
+  .price-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius-sm);padding:14px;text-align:center}
+  .price-card .chip-name{font-size:12px;font-weight:600;color:var(--text);margin-bottom:2px}
+  .price-card .price-current{font-size:20px;font-weight:700;margin:4px 0}
+  .price-card .price-change{font-size:11px;font-weight:600}
+  .price-card .price-meta{font-size:11px;color:var(--text-tertiary);margin-top:2px}
+  .price-up{color:var(--price-up)} .price-down{color:var(--price-down)} .price-stable{color:var(--tag-blue)}
+  .spark-bar{display:flex;align-items:flex-end;justify-content:center;gap:2px;height:28px;margin:6px 0 2px}
+  .spark-bar span{display:block;width:7px;border-radius:2px 2px 0 0}
+  .footer{text-align:center;padding:40px 0;color:var(--text-tertiary);font-size:12px;border-top:1px solid var(--border);margin-top:40px}
+  @media(max-width:640px){.header h1{font-size:22px}.container{padding:0 16px}.card{padding:18px}th,td{padding:7px 8px;font-size:12px}.price-board{grid-template-columns:repeat(2,1fr)}}
+</style>
+</head>
+<body>
+<button class="theme-toggle" onclick="document.documentElement.dataset.theme=document.documentElement.dataset.theme==='dark'?'':'dark'">🌓</button>
+
+<div class="header"><div class="container">
+  <h1>AI芯片与算力深度研究报告</h1>
+  <div class="subtitle">芯片选型 · 价格监控 · 训练成本 · CUDA生态突围 · GLM-5算力合伙人 · 供应链采购指南</div>
+  <div class="meta"><span>📅 2026年3月5日</span><span>📊 深度分析报告</span><span>🎯 面向决策层 · 采购战略导向</span></div>
+</div></div>
+
+<div class="container">
+
+<div class="toc"><h3>📑 目录</h3><ol>
+  <li><a href="#exec">核心结论与决策要点</a></li>
+  <li><a href="#nvidia">NVIDIA 主流芯片选型（重点高亮）</a></li>
+  <li><a href="#price-board">GPU 价格监控看板</a></li>
+  <li><a href="#training-cost">大模型训练成本估算（核心·前移）</a></li>
+  <li><a href="#cuda">CUDA 生态垄断与国产软件栈突围</a></li>
+  <li><a href="#glm5">GLM-5 多芯片适配：为何意义重大</a></li>
+  <li><a href="#zhipu-partner">智谱"算力合伙人"深度解读</a></li>
+  <li><a href="#cn-chips">国产芯片阵营（含上市公司财报）</a></li>
+  <li><a href="#amd">AMD 竞争方案</a></li>
+  <li><a href="#supply">供应链采购指南（战略洞察）</a></li>
+  <li><a href="#distill">蒸馏与小模型算力</a></li>
+  <li><a href="#recommend">采购选型决策矩阵</a></li>
+</ol></div>
+
+<!-- 一、核心结论 -->
+<div class="section" id="exec"><h2 class="section-title">一、核心结论与决策要点</h2>
+<div class="verdict-box"><h5>⚡ 七个关键判断</h5><p>
+<strong>1.</strong> <span class="highlight">NVIDIA 仍是 AI 训练绝对霸主</span>，当前主流为 H100（数据中心标配）和 H200（升级），B200/GB200 出货但产能紧。<span class="highlight">采购关注：显存、互联带宽、供货稳定性。</span><br>
+<strong>2.</strong> <span class="highlight">GPU 价格波动剧烈</span>：H100 租赁价 10 个月降 50%，但制裁致中国溢价 50-100%。需价格监控。<br>
+<strong>3.</strong> <span class="highlight">训练成本跨度极大</span>：7B~$27.6万，70B~$170万，175B~$1,200万，405B~$4,685万。DeepSeek-V3 以 $557.6万训 685B，证明工程优化影响达 10 倍。<br>
+<strong>4.</strong> <span class="highlight">CUDA 占全球 AI 软件栈 90%</span>，是最大壁垒。国产方案（CANN/DTK/MUSA/BANG）在追赶，GLM-5 证明突破可行。<br>
+<strong>5.</strong> <span class="highlight">GLM-5 完成 7 大国产芯片全栈适配</span>，不只是"能跑"——证明了脱离 CUDA、在国产芯上训练+推理顶级大模型的可行性。<br>
+<strong>6.</strong> <span class="highlight">国产芯片 2025 年业绩爆发</span>：寒武纪 64.97 亿（+453%）首盈利；海光 143.76 亿（+57%）；摩尔线程 15.06 亿（+243%）。<br>
+<strong>7.</strong> <span class="highlight">供应链是采购核心</span>：云租赁/自建/二手/国产替代需多源体系。
+</p></div></div>
+
+<!-- 二、NVIDIA 主流芯片 -->
+<div class="section" id="nvidia"><h2 class="section-title">二、NVIDIA 主流芯片选型（重点高亮）</h2>
+
+<div class="card"><h4>2.1 市面主流芯片与关注重点</h4>
+<div class="key-insight"><strong>核心判断：</strong>当前真正大规模部署的 NVIDIA AI 芯片为 <span class="highlight">3 款主力 + 2 款新品</span>：<br>
+• <strong>A100</strong>（存量最大，二手活跃）• <strong>H100 SXM ★ 最重要</strong>（数据中心主力，2024 出货约 300 万片）• <strong>H200</strong>（升级版）<br>
+• <strong>B200 / GB200</strong>（Blackwell 新品，产能紧）• RTX 4090/L40S 仅用于边缘推理，不在训练选型范围。<br><br>
+<strong>采购时重点关注 3 个参数（表中 ★ 标注列高亮）：</strong><br>
+1️⃣ <strong>显存容量</strong>：70B 模型 FP16 需 ~140GB，单张 H100(80GB) 不够，需 2 卡或 H200(141GB)<br>
+2️⃣ <strong>互联带宽（NVLink）</strong>：多卡训练通信速度，NVLink4(900GB/s) 比 NVLink3(600GB/s) 快 50%<br>
+3️⃣ <strong>供货稳定性</strong>：制裁下 H100/B200 正规渠道无法采购
+</div>
+
+<div class="table-wrap"><table>
+<tr><th>参数</th><th>A100 80GB</th><th style="background:var(--accent-soft)">H100 SXM ★</th><th>H200</th><th>B200</th><th>GB200</th></tr>
+<tr><td><strong>架构</strong></td><td>Ampere</td><td style="background:var(--accent-soft)"><strong>Hopper</strong></td><td>Hopper</td><td>Blackwell</td><td>Blackwell+Grace</td></tr>
+<tr><td><strong>显存 ★</strong></td><td>80GB HBM2e</td><td style="background:var(--accent-soft)"><strong>80GB HBM3</strong></td><td style="background:rgba(90,143,107,.1)"><strong>141GB HBM3e</strong></td><td>192GB HBM3e</td><td>384GB HBM3e</td></tr>
+<tr><td><strong>显存带宽 ★</strong></td><td>2 TB/s</td><td style="background:var(--accent-soft)"><strong>3.35 TB/s</strong></td><td style="background:rgba(90,143,107,.1)"><strong>4.8 TB/s</strong></td><td>8 TB/s</td><td>16 TB/s</td></tr>
+<tr><td><strong>FP16 算力</strong></td><td>312 TFLOPS</td><td style="background:var(--accent-soft)"><strong>989 TFLOPS</strong></td><td>~989 TFLOPS</td><td>~2,250 TFLOPS</td><td>~4,500 TFLOPS</td></tr>
+<tr><td><strong>FP8 算力</strong></td><td>—</td><td style="background:var(--accent-soft)"><strong>~2,000 TFLOPS</strong></td><td>~2,000 TFLOPS</td><td>~4,500 TFLOPS</td><td>~9,000 TFLOPS</td></tr>
+<tr><td><strong>互联 ★</strong></td><td>600GB/s NVLink3</td><td style="background:var(--accent-soft)"><strong>900GB/s NVLink4</strong></td><td>900GB/s NVLink4</td><td>1.8TB/s NVLink5</td><td>1.8TB/s NVLink5</td></tr>
+<tr><td><strong>TDP</strong></td><td>400W</td><td style="background:var(--accent-soft)"><strong>700W</strong></td><td>700W</td><td>1,000W</td><td>2,700W(整机)</td></tr>
+<tr><td><strong>单卡市场价</strong></td><td>~$10,000</td><td style="background:var(--accent-soft)"><strong>$22,000-30,000</strong></td><td>$30,000-35,000</td><td>$40,000+</td><td>$70,000+</td></tr>
+<tr><td><strong>中国现状</strong></td><td>二手可购</td><td style="background:var(--accent-soft)"><strong>禁售·灰色溢价50-100%</strong></td><td>禁售</td><td>禁售</td><td>禁售</td></tr>
+</table></div>
+
+<div class="key-insight"><strong>代际跃迁：</strong>H100→B200 算力+2.3×，显存翻倍；A100→GB200 推理+30×，能耗 1/25（官方）。</div>
+</div>
+
+<div class="card"><h4>2.2 场景选型矩阵</h4>
+<div class="table-wrap"><table>
+<tr><th>场景</th><th>推荐芯片</th><th>理由</th><th>所需卡数</th></tr>
+<tr class="hl-row"><td><strong>7B-13B 训练</strong></td><td>H100 / A100</td><td>性价比最优</td><td>128-512</td></tr>
+<tr class="hl-row"><td><strong>70B 训练</strong></td><td>H200 / B200</td><td>需大显存+高互联</td><td>2,048+</td></tr>
+<tr><td>175B+ 训练</td><td>B200 / GB200 NVL72</td><td>超大集群</td><td>10,000+</td></tr>
+<tr><td>推理（高并发）</td><td>H100 / H200</td><td>成本敏感</td><td>按 QPS</td></tr>
+<tr><td>边缘推理</td><td>L40S / RTX 4090</td><td>低功耗单机</td><td>1-8</td></tr>
+<tr><td>蒸馏/微调</td><td>A100 / 昇腾910B</td><td>成本优先，国产可替代</td><td>8-64</td></tr>
+</table></div></div>
+</div>
+
+<!-- 三、GPU 价格监控看板 -->
+<div class="section" id="price-board"><h2 class="section-title">三、GPU 价格监控看板</h2>
+<div class="card"><h4>3.1 实时行情（2026年3月）</h4>
+<p style="font-size:12px;color:var(--text-tertiary)">来源：中关村在线、新浪财经、微博行业人士、IDC 报价。中国市场因制裁存在显著溢价。</p>
+<div class="price-board">
+  <div class="price-card"><div class="chip-name">H100 SXM 80G</div>
+    <div class="spark-bar"><span style="height:50%;background:var(--price-up)"></span><span style="height:70%;background:var(--price-up)"></span><span style="height:100%;background:var(--price-up)"></span><span style="height:85%;background:var(--accent)"></span><span style="height:70%;background:var(--price-down)"></span><span style="height:60%;background:var(--price-down)"></span></div>
+    <div class="price-current price-stable">$22,000</div><div class="price-change price-down">▼ 国际趋稳</div><div class="price-meta">中国灰色 ¥30-47万</div></div>
+  <div class="price-card"><div class="chip-name">H100 PCIe 80G</div>
+    <div class="spark-bar"><span style="height:60%;background:var(--price-up)"></span><span style="height:80%;background:var(--price-up)"></span><span style="height:70%;background:var(--accent)"></span><span style="height:60%;background:var(--price-down)"></span><span style="height:55%;background:var(--price-down)"></span><span style="height:52%;background:var(--price-down)"></span></div>
+    <div class="price-current price-stable">¥19.6万</div><div class="price-change price-down">▼ 国内有现货</div><div class="price-meta">中关村实体报价</div></div>
+  <div class="price-card"><div class="chip-name">A100 80GB</div>
+    <div class="spark-bar"><span style="height:40%;background:var(--tag-blue)"></span><span style="height:100%;background:var(--price-up)"></span><span style="height:80%;background:var(--price-up)"></span><span style="height:55%;background:var(--price-down)"></span><span style="height:45%;background:var(--price-down)"></span><span style="height:40%;background:var(--price-down)"></span></div>
+    <div class="price-current price-down">~$10,000</div><div class="price-change price-down">▼ 二手持续下滑</div><div class="price-meta">曾高点 ¥17万(2025初)</div></div>
+  <div class="price-card"><div class="chip-name">B200 192GB</div>
+    <div class="spark-bar"><span style="height:30%;background:var(--tag-teal)"></span><span style="height:55%;background:var(--price-up)"></span><span style="height:80%;background:var(--price-up)"></span><span style="height:100%;background:var(--price-up)"></span><span style="height:100%;background:var(--price-up)"></span><span style="height:95%;background:var(--price-up)"></span></div>
+    <div class="price-current price-up">$40,000+</div><div class="price-change price-up">▲ 新品溢价</div><div class="price-meta">中国完全禁售</div></div>
+  <div class="price-card"><div class="chip-name">RTX 4090 24G</div>
+    <div class="spark-bar"><span style="height:50%;background:var(--tag-blue)"></span><span style="height:100%;background:var(--price-up)"></span><span style="height:85%;background:var(--price-up)"></span><span style="height:70%;background:var(--price-down)"></span><span style="height:65%;background:var(--price-down)"></span><span style="height:62%;background:var(--price-down)"></span></div>
+    <div class="price-current price-stable">¥1.9-2.4万</div><div class="price-change price-up">▲ 波动大</div><div class="price-meta">4090D ¥1.55万</div></div>
+  <div class="price-card"><div class="chip-name">昇腾 910B</div>
+    <div class="spark-bar"><span style="height:75%;background:var(--tag-green)"></span><span style="height:78%;background:var(--tag-green)"></span><span style="height:80%;background:var(--tag-green)"></span><span style="height:80%;background:var(--tag-green)"></span><span style="height:82%;background:var(--tag-green)"></span><span style="height:82%;background:var(--tag-green)"></span></div>
+    <div class="price-current" style="color:var(--tag-green)">~¥12万</div><div class="price-change" style="color:var(--tag-green)">— 稳定供应</div><div class="price-meta">国内正规直购</div></div>
+</div></div>
+
+<div class="card"><h4>3.2 价格历史波动</h4>
+<div class="table-wrap"><table>
+<tr><th>芯片</th><th>2023年中</th><th>2024年初</th><th>2025年初</th><th>2026年初</th><th>趋势</th></tr>
+<tr><td><strong>A100 80G</strong></td><td>¥15万</td><td>¥10万</td><td>¥17万</td><td>¥7-10万</td><td><span class="tag tag-orange">先涨后跌</span></td></tr>
+<tr><td><strong>H100 SXM(国际)</strong></td><td>$25-30K</td><td>$22K</td><td>$22K</td><td>$22K</td><td><span class="tag tag-blue">趋稳</span></td></tr>
+<tr><td><strong>H100(中国灰色)</strong></td><td>¥25万</td><td>¥30万</td><td>¥47万</td><td>¥30-40万</td><td><span class="tag tag-red">制裁溢价</span></td></tr>
+<tr><td><strong>云租赁 H100</strong></td><td>$3.5/h</td><td>$2.5/h</td><td>$2.0/h</td><td>$1.5-2.0/h</td><td><span class="tag tag-green">持续降</span></td></tr>
+<tr><td><strong>RTX 4090</strong></td><td>¥1.3万</td><td>¥1.6万</td><td>¥2.4万</td><td>¥1.9万</td><td><span class="tag tag-orange">波动大</span></td></tr>
+</table></div>
+<div class="key-insight"><strong>驱动因素：</strong>① NVIDIA 产品周期（新品→上代降价）② 制裁政策（中国溢价 50-100%）③ 租赁市场（5 年降 80%）④ 需求波动（ChatGPT 爆发期涨 37%）</div>
+</div>
+
+<div class="card"><h4>3.3 购买渠道一览</h4>
+<div class="table-wrap"><table>
+<tr><th>渠道</th><th>代表平台</th><th>芯片</th><th>价格</th><th>备注</th></tr>
+<tr><td><strong>海外云</strong></td><td>AWS/Azure/GCP/CoreWeave/Lambda</td><td>H100/H200/B200</td><td>$1.5-3.0/h</td><td>无制裁限制；数据跨境合规风险</td></tr>
+<tr><td><strong>国内云</strong></td><td>华为云/阿里云/火山引擎/腾讯云</td><td>昇腾/A100/4090</td><td>¥2-7/h</td><td>合规但高端 NVIDIA 受限</td></tr>
+<tr><td><strong>专业 IDC</strong></td><td>苏州胜网/万国数据/白山云</td><td>A100/H100库存/4090</td><td>裸金属月租 ¥4.4-7万</td><td>有质保运维</td></tr>
+<tr><td><strong>服务器 OEM</strong></td><td>浪潮/曙光/超聚变/新华三</td><td>昇腾/海光/寒武纪整机</td><td>整机报价</td><td>正规渠道有质保</td></tr>
+<tr><td><strong>华为直采</strong></td><td>华为/超聚变/宝德/华鲲振宇/神州数码</td><td>昇腾 910B/C</td><td>¥12-20万/卡</td><td>供应稳定，完整方案</td></tr>
+<tr><td><strong>灰色/二手</strong></td><td>中关村/淘宝/闲鱼</td><td>H100/A100 拆机/转售</td><td>溢价 50-100%</td><td>风险高：拆机件、无质保、合规</td></tr>
+</table></div></div>
+</div>
+
+<!-- 四、训练成本（前移） -->
+<div class="section" id="training-cost"><h2 class="section-title">四、大模型训练成本估算（核心）</h2>
+<div class="card"><h4>4.1 计算公式</h4>
+<div class="key-insight"><strong>训练时间(秒) = 总计算量 ÷ (GPU数 × 单GPU峰值FLOPS × GPU利用率)</strong><br>
+• 不开激活重计算：每 token 计算量 = 6 × 参数量<br>• 开激活重计算：= 8 × 参数量<br>• GPU 利用率通常 30%-50%</div></div>
+
+<div class="card"><h4>4.2 各规模训练成本</h4>
+<div class="table-wrap"><table>
+<tr><th>规模</th><th>数据</th><th>GPU</th><th>卡数</th><th>时间</th><th>成本(USD)</th><th>代表</th></tr>
+<tr><td><strong>7B</strong></td><td>1T tok</td><td>A100</td><td>128-256</td><td>~21天</td><td class="highlight">~$276,000</td><td>LLaMA-7B</td></tr>
+<tr><td><strong>13B</strong></td><td>1T tok</td><td>A100</td><td>256-512</td><td>~25天</td><td class="highlight">~$500,000</td><td>LLaMA-13B</td></tr>
+<tr class="hl-row"><td><strong>65-70B</strong></td><td>1.4T tok</td><td>A100</td><td>2,048</td><td>~21天</td><td class="highlight">~$1,700,000</td><td>LLaMA-65B</td></tr>
+<tr><td><strong>175B</strong></td><td>300B tok</td><td>A100</td><td>10,000</td><td>~34天</td><td class="highlight">~$12,000,000</td><td>GPT-3</td></tr>
+<tr class="hl-row"><td><strong>405B MoE</strong></td><td>15.6T tok</td><td>H100</td><td>16,000</td><td>~61天</td><td class="highlight">~$46,850,000</td><td>LLaMA3.1-405B</td></tr>
+<tr style="background:rgba(90,143,107,.08)"><td><strong>685B MoE</strong></td><td>14.8T tok</td><td>H800</td><td>2,048</td><td>~60天</td><td class="highlight" style="color:var(--tag-green)">~$5,576,000</td><td>DeepSeek-V3 ★</td></tr>
+<tr><td><strong>744B MoE</strong></td><td>28.5T tok</td><td>昇腾+NVIDIA</td><td>—</td><td>—</td><td>（未公开）</td><td>GLM-5</td></tr>
+</table></div>
+<div class="warning-box"><h5>★ DeepSeek-V3 成本奇迹</h5><p>685B 参数(MoE,37B激活)，仅花 <span class="highlight">$557.6万</span>。关键：MoE 降低激活参数 + H800 便宜 + 极致工程优化。<strong>证明训练成本不仅取决于模型大小，工程优化影响可达 10 倍。</strong></p></div></div>
+
+<div class="card"><h4>4.3 云租赁 vs 自建集群</h4>
+<div class="table-wrap"><table>
+<tr><th>方案</th><th>单卡/h</th><th>100卡×30天</th><th>适用</th></tr>
+<tr><td><strong>云 H100</strong></td><td>~$2.0</td><td>~$144,000</td><td>短期 POC</td></tr>
+<tr><td><strong>云 A100</strong></td><td>~$1.5</td><td>~$108,000</td><td>中小模型</td></tr>
+<tr><td><strong>自建 H100</strong></td><td>~$0.8</td><td>~$57,600</td><td>长期(100张≈$300万前期)</td></tr>
+<tr style="background:rgba(90,143,107,.08)"><td><strong>自建昇腾910B</strong></td><td>~$0.35</td><td>~$25,200</td><td>国产化(100张≈$165万)</td></tr>
+</table></div>
+<div class="key-insight">• 月训练量 &lt; 1,000 GPU·天 → 云租赁<br>• &gt; 1,000 GPU·天 → 自建(18-24月回本)<br>• 有国产化要求 → 昇腾，比 NVIDIA 低 40-60%</div>
+</div></div>
+
+<!-- 五、CUDA 生态 -->
+<div class="section" id="cuda"><h2 class="section-title">五、CUDA 生态垄断与国产软件栈突围</h2>
+<div class="card"><h4>5.1 为什么 CUDA 是最大壁垒？</h4>
+<p>NVIDIA CUDA 诞生于 2006 年。<span class="highlight">目前全球 AI 软件栈中 CUDA 占约 90% 份额</span>，PyTorch/TensorFlow/JAX 都优先支持 CUDA。</p>
+<div class="key-insight"><strong>三层壁垒：</strong><br>
+1️⃣ <strong>库层</strong>：cuBLAS/cuDNN/TensorRT 等数千优化库，积累 18 年<br>
+2️⃣ <strong>开发者层</strong>：全球数百万 CUDA 开发者，社区/教程/工具链完善<br>
+3️⃣ <strong>模型层</strong>：几乎所有开源模型的官方代码基于 CUDA，迁移需重写算子</div></div>
+
+<div class="card"><h4>5.2 国产替代软件栈对比</h4>
+<div class="table-wrap"><table>
+<tr><th>软件栈</th><th>厂商</th><th>芯片</th><th>对标 CUDA</th><th>成熟度</th></tr>
+<tr class="hl-row"><td><strong>CANN</strong></td><td>华为</td><td>昇腾910</td><td>AscendCL + MindSpore</td><td><span class="tag tag-orange">中等</span> 1000+算子</td></tr>
+<tr><td><strong>DTK/ROCK</strong></td><td>海光</td><td>DCU</td><td>兼容 ROCm(AMD路线)</td><td><span class="tag tag-orange">中等</span></td></tr>
+<tr><td><strong>BANG</strong></td><td>寒武纪</td><td>思元590/690</td><td>CNToolkit + MagicMind</td><td><span class="tag tag-red">早期</span></td></tr>
+<tr class="hl-row"><td><strong>MUSA</strong></td><td>摩尔线程</td><td>MTT S5000</td><td>兼容 PyTorch/vLLM/SGLang</td><td><span class="tag tag-orange">中等偏上</span></td></tr>
+<tr><td><strong>ROCm</strong></td><td>AMD</td><td>MI300X</td><td>开源 CUDA 替代</td><td><span class="tag tag-orange">中等</span></td></tr>
+</table></div></div>
+
+<div class="card"><h4>5.3 突破路径：DeepSeek 的 PTX 启示</h4>
+<p>DeepSeek 训练 V3 时<span class="highlight">绕过 CUDA，直接用 GPU 硬件指令 PTX 编程</span>（接近汇编）。开发难度几何级增长，但不依赖 CUDA 高层 API，可快速迁移到任何 GPU。</p>
+<div class="key-insight">对一般企业：PTX 路线门槛太高。更现实的路径是依赖 CANN/MUSA 等封装好的软件栈，等待生态逐步成熟。</div>
+</div></div>
+
+<!-- 六、GLM-5 适配 -->
+<div class="section" id="glm5"><h2 class="section-title">六、GLM-5 多芯片适配：为何意义重大</h2>
+<div class="card"><h4>6.1 适配概况</h4>
+<p>2026年2月，GLM-5（744B MoE，激活40B）完成 <span class="highlight">7 大国产芯片平台</span>深度适配。</p>
+<div class="table-wrap"><table>
+<tr><th>芯片</th><th>厂商</th><th>软件栈</th><th>适配程度</th><th>关键技术</th></tr>
+<tr class="hl-row"><td><strong>昇腾910</strong></td><td>华为</td><td>CANN</td><td>全栈(训练+推理)</td><td>算子级优化</td></tr>
+<tr class="hl-row"><td><strong>MTT S5000</strong></td><td>摩尔线程</td><td>MUSA</td><td>Day-0 全流程</td><td>FP8加速，千卡训练验证</td></tr>
+<tr><td><strong>海光DCU</strong></td><td>海光</td><td>DTK</td><td>推理</td><td>ROCm兼容</td></tr>
+<tr><td><strong>思元590/690</strong></td><td>寒武纪</td><td>BANG</td><td>推理</td><td>MLU架构</td></tr>
+<tr><td><strong>昆仑芯2代</strong></td><td>昆仑芯</td><td>XRE SDK</td><td>推理</td><td>百度生态</td></tr>
+<tr><td><strong>MXN系列</strong></td><td>沐曦</td><td>MXMACA</td><td>推理</td><td>ROCm兼容</td></tr>
+<tr><td><strong>邃思系列</strong></td><td>燧原</td><td>TopsRider</td><td>推理</td><td>自研GCU</td></tr>
+</table></div></div>
+
+<div class="card"><h4>6.2 四重意义</h4>
+<div class="verdict-box"><h5>GLM-5 适配为何不只是"能跑"</h5><p>
+<strong>1. 打破 CUDA 垄断的工程验证</strong>：GLM-5 是全球首个在 7 种非 NVIDIA 芯片上<span class="highlight">算子级优化</span>的 744B 模型——为每种芯片重写核心算子（Flash Attention、MoE Routing 等），证明 CUDA 不是唯一选择。<br><br>
+<strong>2. 供应链去风险</strong>：企业可用<span class="highlight">华为训练 + 摩尔/海光/寒武纪推理</span>，完全脱离 NVIDIA 供应链。<br><br>
+<strong>3. 国产芯片从"推理"跨入"训练"</strong>：2026 年前国产芯片主要做推理。GLM-5 的昇腾全栈训练 + 摩尔千卡验证标志着<span class="highlight">"国产芯片训练落地元年"</span>（钛媒体评价）。<br><br>
+<strong>4. 多芯片方案 = 议价权</strong>：7 种可选意味着多源供应和议价能力，不被单一供应商锁定。
+</p></div></div>
+</div>
+
+<!-- 七、算力合伙人 -->
+<div class="section" id="zhipu-partner"><h2 class="section-title">七、智谱"算力合伙人"深度解读</h2>
+<div class="card"><h4>7.1 背景</h4>
+<p>2026年2月16日，智谱公告称 GLM-5 发布后<span class="highlight">全球需求激增，并发突破规划上限</span>，启动"算力合伙人"招募：</p>
+<ul>
+<li><strong>芯片厂商</strong>：开放核心技术接口，联合底层优化，打造"软硬一体化性能标杆"</li>
+<li><strong>算力伙伴与推理服务商</strong>：共建"更高并发、更低延迟的推理网络"</li>
+</ul>
+<p style="font-size:12px;color:var(--text-tertiary)">来源：<a href="https://www.tmtpost.com/nictation/7882144.html" style="color:var(--accent)">钛媒体 2026-02-16</a></p></div>
+
+<div class="card"><h4>7.2 芯片厂商合作——代表公司与双方职责</h4>
+<div class="table-wrap"><table>
+<tr><th>芯片厂商</th><th>产品</th><th>智谱做什么</th><th>芯片厂做什么</th></tr>
+<tr class="hl-row"><td><strong>华为昇腾</strong></td><td>910B/C</td><td>开放模型架构和算子接口</td><td>定制 CANN 算子 + 硬件调度优化</td></tr>
+<tr class="hl-row"><td><strong>摩尔线程</strong></td><td>MTT S5000</td><td>提供训练框架适配需求</td><td>FP8 算子优化 + MUSA 编译器</td></tr>
+<tr><td><strong>海光</strong></td><td>DCU K100</td><td>推理 kernel 代码</td><td>DTK 运行时优化</td></tr>
+<tr><td><strong>寒武纪</strong></td><td>思元590/690</td><td>模型算子定义</td><td>MLU 架构适配</td></tr>
+<tr><td><strong>沐曦</strong></td><td>MXN</td><td>推理需求</td><td>MXMACA 优化</td></tr>
+</table></div>
+<div class="key-insight"><strong>"软硬一体化"具体指：</strong><br>
+• <strong>软件侧(智谱)</strong>：开放权重格式、算子定义(Attention/FFN/MoE路由)、KV Cache 策略、FP8/INT8 量化方案<br>
+• <strong>硬件侧(芯片厂)</strong>：定制硬件加速算子(如 Flash Attention 的 CANN/MUSA 实现)、优化 HBM 带宽利用、定制通信原语<br>
+• <strong>目标</strong>：在特定芯片上接近 CUDA 级的推理吞吐和延迟</div></div>
+
+<div class="card"><h4>7.3 算力伙伴——代表公司</h4>
+<div class="table-wrap"><table>
+<tr><th>类别</th><th>代表</th><th>合作模式</th></tr>
+<tr><td><strong>云巨头</strong></td><td>华为云、阿里云、火山引擎、腾讯云</td><td>弹性算力池按需扩容</td></tr>
+<tr><td><strong>异构调度</strong></td><td>无问芯穹(Infini-AI)、趋动科技</td><td>统一管理多芯片推理负载</td></tr>
+<tr><td><strong>IDC 服务</strong></td><td>万国数据、苏州胜网、白山云</td><td>裸金属 GPU 租赁</td></tr>
+<tr><td><strong>国家智算</strong></td><td>武汉人工智能计算中心、鹏城实验室</td><td>公共算力资源</td></tr>
+<tr><td><strong>推理分发</strong></td><td>硅基流动(SiliconFlow)、Lepton AI</td><td>负载均衡+多节点推理</td></tr>
+</table></div></div>
+
+<div class="card"><h4>7.4 共建推理网络的难点</h4>
+<div class="table-wrap"><table>
+<tr><th>难点</th><th>描述</th><th>解决方向</th></tr>
+<tr><td><strong>异构调度</strong></td><td>7 种芯片性能差异大，如何智能路由？</td><td>异构调度引擎(如 Infini-AI)</td></tr>
+<tr><td><strong>KV Cache 一致性</strong></td><td>跨节点共享 KV Cache，不同芯片内存格式不同</td><td>统一格式 + 高速传输</td></tr>
+<tr><td><strong>算子性能对齐</strong></td><td>同一模型在 CANN vs MUSA vs BANG 性能差 2-5×</td><td>每种芯片独立优化核心算子</td></tr>
+<tr><td><strong>网络延迟</strong></td><td>跨 IDC 通信延迟</td><td>数据本地化 + 边缘节点</td></tr>
+<tr><td><strong>精度一致</strong></td><td>FP8/INT8 在不同芯片精度差异导致输出不一致</td><td>统一量化标准 + 校验</td></tr>
+</table></div>
+<div class="warning-box"><h5>⚠️ 信息完整性说明</h5><p>智谱"算力合伙人"的全网评论暂时较少，X/Twitter 搜索未返回相关讨论。<br><strong>建议人工搜索：</strong>智谱公众号评论区、知乎"GLM-5 算力合伙人"、雪球(02513.HK 讨论区)、V2EX。</p></div></div>
+</div>
+
+<!-- 八、国产芯片 -->
+<div class="section" id="cn-chips"><h2 class="section-title">八、国产芯片阵营（含上市公司财报）</h2>
+<div class="card"><h4>8.1 上市公司 2025 年业绩</h4>
+<p style="font-size:12px;color:var(--text-tertiary)">来源：各公司 2025 年度业绩快报。</p>
+<div class="table-wrap"><table>
+<tr><th>公司</th><th>代码</th><th>2025营收</th><th>同比</th><th>2025净利</th><th>同比</th><th>核心产品</th></tr>
+<tr class="hl-row"><td><strong>寒武纪</strong></td><td>688256</td><td class="highlight">64.97亿</td><td class="highlight">+453%</td><td style="color:var(--tag-green)"><strong>20.59亿(首盈)</strong></td><td>扭亏</td><td>思元590/690</td></tr>
+<tr class="hl-row"><td><strong>海光信息</strong></td><td>688041</td><td class="highlight">143.76亿</td><td>+57%</td><td>25.42亿</td><td>+32%</td><td>DCU K100</td></tr>
+<tr><td><strong>摩尔线程</strong></td><td>688795</td><td>15.06亿</td><td>+243%</td><td style="color:var(--price-up)">-10.24亿</td><td>亏损收窄37%</td><td>MTT S5000</td></tr>
+<tr><td><strong>沐曦</strong></td><td>688802</td><td>16.44亿</td><td>+121%</td><td style="color:var(--price-up)">-7.81亿</td><td>大幅收窄</td><td>MXN GPU</td></tr>
+</table></div>
+<div class="key-insight"><strong>关键解读：</strong><br>
+• <span class="highlight">寒武纪首次全年盈利</span>，核心驱动：思元 590/690 在大模型训练/推理规模化落地<br>
+• <span class="highlight">海光稳健增长</span>，2026Q1 预增 63%-76%，DCU 份额持续扩大<br>
+• 摩尔线程 MTT S5000 量产，已完成 GLM-5、Qwen3.5 适配<br>
+• 三家均录得三位数营收增长，标志<span class="highlight">国产算力从技术攻坚转向规模化落地</span></div></div>
+
+<div class="card"><h4>8.2 国产芯片核心参数</h4>
+<div class="table-wrap"><table>
+<tr><th>厂商</th><th>产品</th><th>FP16算力</th><th>显存</th><th>带宽</th><th>互联</th><th>软件栈</th><th>估价</th></tr>
+<tr class="hl-row"><td><strong>华为</strong></td><td>910B/910C</td><td>320/640T</td><td>64/96GB HBM</td><td>—</td><td>HCCS 392GB/s</td><td>CANN</td><td>¥12-20万</td></tr>
+<tr><td><strong>海光</strong></td><td>DCU K100</td><td>192T</td><td>64GB HBM2e</td><td>—</td><td>—</td><td>DTK</td><td>~¥8万</td></tr>
+<tr><td><strong>寒武纪</strong></td><td>思元590/690</td><td>—</td><td>—</td><td>—</td><td>—</td><td>BANG</td><td>—</td></tr>
+<tr class="hl-row"><td><strong>摩尔线程</strong></td><td>MTT S5000</td><td><span class="highlight">1PFLOPS(FP8)</span></td><td>80GB</td><td>1.6TB/s</td><td>784GB/s</td><td>MUSA</td><td>—</td></tr>
+<tr><td><strong>沐曦</strong></td><td>MXN</td><td>—</td><td>—</td><td>—</td><td>—</td><td>MXMACA</td><td>—</td></tr>
+<tr><td><strong>燧原</strong></td><td>邃思</td><td>—</td><td>—</td><td>—</td><td>—</td><td>TopsRider</td><td>—</td></tr>
+</table></div>
+<div class="warning-box"><h5>⚠️ 数据说明</h5><p>"—"为暂无公开数据。建议向厂商索取 datasheet 或查阅天风/中信证券 AI 芯片研报获取。</p></div></div></div>
+
+<!-- 九、AMD -->
+<div class="section" id="amd"><h2 class="section-title">九、AMD 竞争方案</h2>
+<div class="card"><h4>Instinct 系列</h4>
+<div class="table-wrap"><table>
+<tr><th>参数</th><th>MI300X</th><th>MI325X(预计)</th><th>MI350(预计)</th></tr>
+<tr><td><strong>显存</strong></td><td>192GB HBM3</td><td>256GB HBM3e</td><td>256GB+</td></tr>
+<tr><td><strong>带宽</strong></td><td>5.3 TB/s</td><td>6 TB/s</td><td>8 TB/s</td></tr>
+<tr><td><strong>FP16</strong></td><td>~1,300T</td><td>—</td><td>—</td></tr>
+<tr><td><strong>估价</strong></td><td>~$15,000</td><td>~$20,000</td><td>—</td></tr>
+</table></div>
+<div class="key-insight">MI300X 显存 192GB(H100 的 2.4×)，价格约 H100 的 50%。<strong>但</strong> ROCm 生态远不如 CUDA，训练稳定性差，对华出口部分受限。</div></div></div>
+
+<!-- 十、供应链 -->
+<div class="section" id="supply"><h2 class="section-title">十、供应链采购指南（战略洞察）</h2>
+<div class="card"><h4>10.1 出口管制时间线</h4>
+<div class="table-wrap"><table>
+<tr><th>时间</th><th>管制内容</th><th>影响</th></tr>
+<tr><td>2022.10</td><td>限制 A100/H100 对华出口</td><td>高端训练卡禁售</td></tr>
+<tr><td>2023.10</td><td>A800/H800 也被禁</td><td>存量 H800 成"最后一批"</td></tr>
+<tr><td>2024</td><td>L40S 等中低端受限</td><td>几乎所有数据中心 GPU 禁售</td></tr>
+<tr><td>2025-26</td><td>NVIDIA 封杀国产兼容 CUDA</td><td>国产替代加速，昇腾份额 60%+</td></tr>
+</table></div></div>
+
+<div class="card"><h4>10.2 潜在供应商全景</h4>
+<div class="table-wrap"><table>
+<tr><th>类型</th><th>代表</th><th>芯片</th><th>价格</th><th>交期</th><th>备注</th></tr>
+<tr class="hl-row"><td><strong>华为生态</strong></td><td>华为/超聚变/宝德/华鲲振宇/拓维/神州数码</td><td>昇腾910B/C</td><td>¥12-20万/卡</td><td>4-8周</td><td>中国移动191亿招标100%昇腾中标</td></tr>
+<tr><td><strong>曙光系</strong></td><td>中科曙光(控股海光)</td><td>海光DCU K100</td><td>~¥8万/卡</td><td>2-6周</td><td>高性能服务器A股市占第一(40%)</td></tr>
+<tr><td><strong>寒武纪</strong></td><td>寒武纪</td><td>思元590/690</td><td>询价</td><td>4-8周</td><td>2025首次盈利</td></tr>
+<tr><td><strong>摩尔线程</strong></td><td>摩尔线程</td><td>MTT S5000</td><td>询价</td><td>—</td><td>GLM-5/Qwen3.5适配完成</td></tr>
+<tr><td><strong>OEM整机</strong></td><td>浪潮/新华三/联想/工业富联</td><td>搭载各家芯片</td><td>整机报价</td><td>2-8周</td><td>浪潮国内第一</td></tr>
+<tr><td><strong>云厂商</strong></td><td>华为云/阿里云/腾讯云/火山引擎</td><td>昇腾/A100/4090</td><td>¥2-7/h</td><td>即时</td><td>灵活无前期</td></tr>
+<tr><td><strong>海外云</strong></td><td>AWS/Azure/GCP/CoreWeave</td><td>H100/H200/B200</td><td>$1.5-3/h</td><td>即时</td><td>注意数据跨境合规</td></tr>
+</table></div></div>
+
+<div class="card"><h4>10.3 供应链策略建议</h4>
+<div class="verdict-box"><h5>🎯 四条战略建议</h5><p>
+<strong>1. "双轨制"供应</strong>：训练=华为昇腾(国内)+海外云(H100/B200)。推理=昇腾+海光/摩尔多源，避免单一依赖。<br><br>
+<strong>2. 锁定国产产能</strong>：昇腾市占60%+但需求暴增，建议尽早与华为/超聚变签框架协议锁 2026-27 交付。<br><br>
+<strong>3. 关注二手窗口</strong>：A100 从 ¥17万降至 ¥7-10万，性价比窗口。注意验货、质保、合规。<br><br>
+<strong>4. 预算分阶段</strong>：短期(6月) POC→云租赁；中期(6-18月)→自建昇腾+海外云；长期(18+月)→混合集群+新锐供应商。
+</p></div></div></div>
+
+<!-- 十一、蒸馏 -->
+<div class="section" id="distill"><h2 class="section-title">十一、蒸馏与小模型算力</h2>
+<div class="card"><h4>蒸馏 vs 从头训练</h4>
+<div class="table-wrap"><table>
+<tr><th>方式</th><th>目标</th><th>GPU</th><th>时间</th><th>成本(USD)</th></tr>
+<tr><td>从头训练 7B</td><td>7B</td><td>128-256×A100</td><td>~21天</td><td>~$276,000</td></tr>
+<tr style="background:rgba(90,143,107,.08)"><td><strong>蒸馏 70B→7B</strong></td><td>7B</td><td>8-16×H100</td><td>3-5天</td><td class="highlight" style="color:var(--tag-green)">$10,000-20,000</td></tr>
+<tr style="background:rgba(90,143,107,.08)"><td><strong>蒸馏 70B→13B</strong></td><td>13B</td><td>16-32</td><td>5-7天</td><td>~$20,000</td></tr>
+<tr><td>微调 LoRA/QLoRA</td><td>任意</td><td>1-8</td><td>数小时-2天</td><td>$500-5,000</td></tr>
+</table></div>
+<div class="key-insight"><strong>蒸馏成本降 93-96%。</strong>蒸馏/微调场景，国产芯片（昇腾910B）完全够用且成本优势大。只有超大规模预训练才需 NVIDIA 最新一代。</div></div></div>
+
+<!-- 十二、决策矩阵 -->
+<div class="section" id="recommend"><h2 class="section-title">十二、采购选型决策矩阵</h2>
+<div class="card"><h4>三种方案对比</h4>
+<div class="table-wrap"><table>
+<tr><th>方案</th><th>适用</th><th>芯片</th><th>预算</th><th>优势</th><th>劣势</th></tr>
+<tr class="hl-row"><td><strong>纯国产 ⭐⭐⭐⭐⭐</strong></td><td>国产化合规/长期训练</td><td>昇腾910B/C</td><td>¥384-5,120万</td><td>供应稳定、不受制裁、成本低40-60%</td><td>单卡性能差 H100 约 35%，CANN 生态待完善</td></tr>
+<tr><td><strong>混合方案 ⭐⭐⭐⭐</strong></td><td>追求最强性能</td><td>NVIDIA(海外云)+昇腾(国内)</td><td>弹性</td><td>训练用全球最强，推理用国产低成本</td><td>数据跨境合规、运维复杂</td></tr>
+<tr><td><strong>轻量化 ⭐⭐⭐</strong></td><td>蒸馏/微调为主</td><td>昇腾910B 或 A100二手</td><td>¥96-192万</td><td>投入小、够用</td><td>不支持大规模预训练</td></tr>
+</table></div></div>
+
+<div class="card"><h4>决策流程</h4>
+<div class="key-insight">
+<strong>Step 1：训练规模</strong>→ 预训练 175B+? → 方案二 ｜ 预训练 7B-70B? → 方案一/二 ｜ 仅蒸馏/微调? → 方案三<br>
+<strong>Step 2：合规要求</strong>→ 有国产化要求? → 方案一 ｜ 无限制? → 方案二<br>
+<strong>Step 3：预算</strong>→ &lt;200万 → 方案三 ｜ 200-2000万 → 方案一 ｜ &gt;2000万 → 方案一或二
+</div></div></div>
+
+<div class="footer"><p>
+本报告由 AI 辅助生成 · 数据来源：NVIDIA/AMD/华为官方、中关村在线、新浪财经、钛媒体、新快网、企鹅号、SemiAnalysis、天风证券<br>
+上市公司数据来自 2025 年度业绩快报（寒武纪/海光/摩尔线程/沐曦）· 价格为市场估算，实际以供应商报价为准<br>
+数据截至 2026年3月5日 · 仅供内部决策参考
+</p></div>
+
+</div>
+</body>
+</html>

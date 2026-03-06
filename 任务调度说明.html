@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Signal Brief - Layer 3 任务调度</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #f5f5f5; padding: 20px; max-width: 1500px; margin: 0 auto; color: #333; }
+h1 { text-align: center; margin-bottom: 5px; font-size: 26px; color: #1a1a2e; }
+.subtitle { text-align: center; color: #888; font-size: 14px; margin-bottom: 25px; }
+h2 { font-size: 20px; color: #1a1a2e; margin: 30px 0 15px; padding-left: 12px; border-left: 4px solid #2ecc71; }
+h3 { font-size: 16px; color: #2c3e50; margin: 20px 0 10px; }
+.arch-box { background: white; border-radius: 8px; padding: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); margin-bottom: 20px; }
+.arch-flow { display: flex; align-items: center; justify-content: center; gap: 10px; flex-wrap: wrap; margin: 15px 0; }
+.arch-node { background: #1a1a2e; color: white; padding: 12px 20px; border-radius: 8px; text-align: center; font-size: 13px; min-width: 150px; }
+.arch-node.layer3 { background: #2ecc71; color: #fff; }
+.arch-arrow { font-size: 24px; color: #999; }
+.arch-desc { font-size: 13px; color: rgba(255,255,255,0.7); margin-top: 5px; }
+.stats-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; margin-bottom: 25px; }
+.stat-card { background: white; border-radius: 8px; padding: 15px; text-align: center; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+.stat-num { font-size: 28px; font-weight: bold; }
+.stat-label { font-size: 12px; color: #888; margin-top: 4px; }
+.density-card { background: white; border-radius: 10px; margin-bottom: 20px; box-shadow: 0 2px 6px rgba(0,0,0,0.08); overflow: hidden; }
+.density-header { padding: 18px 22px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; }
+.density-header:hover { filter: brightness(0.97); }
+.density-title { font-size: 18px; font-weight: 700; }
+.density-badges { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
+.badge { padding: 3px 10px; border-radius: 12px; font-size: 11px; font-weight: 500; }
+.badge-time { background: #e8f5e9; color: #2e7d32; }
+.badge-depth { background: #e3f2fd; color: #1565c0; }
+.badge-source { background: #f3e5f5; color: #7b1fa2; }
+.badge-cost { background: #fff3e0; color: #e65100; }
+.density-body { padding: 0 22px 22px; display: none; }
+.density-card.open .density-body { display: block; }
+.density-card.open .toggle-icon { transform: rotate(180deg); }
+.toggle-icon { transition: transform 0.2s; font-size: 12px; color: #999; }
+.example-block { background: #f8fffe; border: 1px solid #b2dfdb; border-radius: 8px; padding: 14px 16px; margin: 10px 0; }
+.example-query { font-size: 15px; font-weight: 600; color: #00695c; margin-bottom: 8px; }
+.example-query::before { content: '\1F5E3\FE0F  '; }
+.example-detail { font-size: 13px; color: #555; line-height: 1.7; }
+.example-detail strong { color: #333; }
+.flow-chart { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; margin: 12px 0; }
+.flow-step { background: #f1f3f5; padding: 6px 14px; border-radius: 6px; font-size: 12px; font-weight: 500; white-space: nowrap; }
+.flow-step.active { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+.flow-step.optional { background: #fff3cd; color: #856404; border: 1px dashed #ffc107; }
+.flow-arrow { color: #adb5bd; font-size: 11px; }
+table { width: 100%; border-collapse: collapse; font-size: 13px; margin: 10px 0; }
+th { background: #f1f3f5; padding: 8px 10px; text-align: left; font-weight: 600; font-size: 12px; color: #555; border-bottom: 2px solid #dee2e6; position: sticky; top: 0; z-index: 2; }
+td { padding: 8px 10px; border-bottom: 1px solid #eee; vertical-align: top; }
+tr:hover { background: #f8f9fa; }
+code { background: #f1f3f5; padding: 2px 6px; border-radius: 3px; font-size: 12px; font-family: 'SF Mono', Menlo, monospace; }
+.source-eval { background: white; border-radius: 8px; padding: 18px; margin-bottom: 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+.eval-filter { margin-bottom: 12px; display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+.eval-filter select, .eval-filter input { padding: 6px 12px; border: 1px solid #ddd; border-radius: 4px; font-size: 13px; }
+.eval-filter input { width: 220px; }
+.eval-tag { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 11px; margin: 1px 2px; }
+.eval-high { background: #d4edda; color: #155724; }
+.eval-mid { background: #fff3cd; color: #856404; }
+.eval-low { background: #f8d7da; color: #721c24; }
+.eval-info { background: #cce5ff; color: #004085; }
+.info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 10px 0; }
+.info-box { background: #f8f9fa; border-radius: 6px; padding: 12px; font-size: 13px; }
+.info-box h4 { font-size: 12px; color: #888; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
+.info-box ul { padding-left: 16px; }
+.info-box li { margin-bottom: 4px; line-height: 1.5; }
+.info-box.strategy { border-left: 3px solid #2ecc71; }
+.info-box.output { border-left: 3px solid #f39c12; }
+.info-box.risk { border-left: 3px solid #e74c3c; }
+.info-box.sources { border-left: 3px solid #3498db; }
+.info-grid.full { grid-template-columns: 1fr; }
+.density-L1 { border-left: 5px solid #4caf50; }
+.density-L2 { border-left: 5px solid #ff9800; }
+.density-L3 { border-left: 5px solid #2196f3; }
+.density-L4 { border-left: 5px solid #9c27b0; }
+.density-L5 { border-left: 5px solid #f44336; }
+.note { color: #888; font-size: 12px; font-style: italic; }
+.matrix-cell-yes { background: #e8f5e9; color: #2e7d32; text-align: center; font-weight: 600; }
+.matrix-cell-no { background: #fafafa; color: #ccc; text-align: center; }
+.matrix-cell-opt { background: #fff8e1; color: #f57f17; text-align: center; }
+</style>
+</head>
+<body>
+
+<h1>AI Signal Brief - Layer 3 任务调度</h1>
+<p class="subtitle">5 级信息密度 · 按需求驱动 · 信源评价 × 采集策略 × 后处理流水线</p>
+
+<!-- 架构总览 -->
+<div class="arch-box">
+<h3 style="margin-top:0">三层架构</h3>
+<div class="arch-flow">
+  <div class="arch-node"><div>Layer 1</div><div class="arch-desc">信源管理</div><div class="arch-desc">201 实体 · 261 Feed</div></div>
+  <div class="arch-arrow">→</div>
+  <div class="arch-node"><div>Layer 2</div><div class="arch-desc">采集引擎</div><div class="arch-desc">14 渠道 · 35+ 工具</div></div>
+  <div class="arch-arrow">→</div>
+  <div class="arch-node layer3"><div><strong>Layer 3</strong></div><div class="arch-desc">任务调度</div><div class="arch-desc">5 级信息密度</div></div>
+</div>
+<p style="font-size:13px;color:#666;margin-top:10px"><strong>核心理念</strong>：任务调度不按<em>行业</em>分类，而按<strong>信息密度</strong>分级。同一个行业（AI/手机/游戏/汽车），不同的问题需要完全不同的采集深度和信源范围。用户的一句话就能确定该走哪级密度。</p>
+</div>
+
+<!-- 统计 -->
+<div class="stats-row">
+  <div class="stat-card"><div class="stat-num" style="color:#4caf50">L1</div><div class="stat-label">点查 · 秒级回答</div></div>
+  <div class="stat-card"><div class="stat-num" style="color:#ff9800">L2</div><div class="stat-label">快讯 · 今日动态</div></div>
+  <div class="stat-card"><div class="stat-num" style="color:#2196f3">L3</div><div class="stat-label">专题 · 定向聚焦</div></div>
+  <div class="stat-card"><div class="stat-num" style="color:#9c27b0">L4</div><div class="stat-label">报告 · 全景扫描</div></div>
+  <div class="stat-card"><div class="stat-num" style="color:#f44336">L5</div><div class="stat-label">深研 · 长周期追踪</div></div>
+</div>
+
+<h2>信息密度分级详解</h2>
+
+<!-- L1 -->
+<div class="density-card open density-L1" data-level="L1">
+<div class="density-header" onclick="toggleDensity(this)">
+  <div><span class="density-title" style="color:#4caf50">L1 · 点查（Point Query）</span><span style="color:#888;font-size:13px;margin-left:8px">— 一个事实，一个答案</span></div>
+  <div class="density-badges"><span class="badge badge-time">⏱ 10秒~1分钟</span><span class="badge badge-depth">标题扫描</span><span class="badge badge-source">1~3 源</span><span class="badge badge-cost">零成本</span><span class="toggle-icon">▼</span></div>
+</div>
+<div class="density-body">
+  <p style="font-size:13px;color:#555;margin-bottom:12px">用户想确认<strong>一个具体事实</strong>：某款模型叫什么、某个功能上线了没、某条新闻是否真实。不需要全文抓取，不需要多信源交叉验证——快速找到答案即可。</p>
+  <h3>典型案例</h3>
+  <div class="example-block"><div class="example-query">"GPT 最新的模型是什么？"</div><div class="example-detail"><strong>采集策略</strong>：读取 OpenAI 官方 Twitter/博客最新条目 → 返回模型名+发布日期<br><strong>信源</strong>：OpenAI (T1P1) → 官方博客 RSS / @OpenAI Twitter<br><strong>输出</strong>：一句话回答</div></div>
+  <div class="example-block"><div class="example-query">"华为昇腾 910C 量产了吗？"</div><div class="example-detail"><strong>采集策略</strong>：Tavily Search → 取 Top 1 结果<br><strong>信源</strong>：搜索引擎（无固定信源）<br><strong>输出</strong>：是/否 + 来源链接</div></div>
+  <div class="example-block"><div class="example-query">"三星 S26 什么时候发布的？"</div><div class="example-detail"><strong>采集策略</strong>：web_search 快速查询<br><strong>输出</strong>：日期 + 来源</div></div>
+  <h3>执行流程</h3>
+  <div class="flow-chart"><span class="flow-step active">① 识别目标实体</span><span class="flow-arrow">→</span><span class="flow-step active">② 匹配信源或搜索</span><span class="flow-arrow">→</span><span class="flow-step active">③ 读取最新条目标题</span><span class="flow-arrow">→</span><span class="flow-step active">④ 返回事实答案</span></div>
+  <div class="info-grid">
+    <div class="info-box strategy"><h4>采集参数</h4><ul><li><strong>采集深度</strong>：title_only</li><li><strong>信源范围</strong>：目标实体的官方源 / 搜索 Top 1-3</li><li><strong>并发数</strong>：1~3</li><li><strong>最大条目</strong>：1~5</li><li><strong>API 消耗</strong>：0~1 次搜索</li></ul></div>
+    <div class="info-box output"><h4>输出形式</h4><ul><li>一句话回答 + 来源 URL</li><li>无需格式化报告</li><li>直接在对话中返回</li></ul></div>
+  </div>
+</div></div>
+
+<!-- L2 -->
+<div class="density-card density-L2" data-level="L2">
+<div class="density-header" onclick="toggleDensity(this)">
+  <div><span class="density-title" style="color:#ff9800">L2 · 快讯（Daily Scan）</span><span style="color:#888;font-size:13px;margin-left:8px">— 今天发生了什么</span></div>
+  <div class="density-badges"><span class="badge badge-time">⏱ 2~10分钟</span><span class="badge badge-depth">标题+摘要</span><span class="badge badge-source">10~50 源</span><span class="badge badge-cost">低成本</span><span class="toggle-icon">▼</span></div>
+</div>
+<div class="density-body">
+  <p style="font-size:13px;color:#555;margin-bottom:12px">用户想了解<strong>某个领域/公司/行业今天的动态</strong>，需要扫描多个信源的最新标题，按相关性筛选，输出一份简短的列表。</p>
+  <h3>典型案例</h3>
+  <div class="example-block"><div class="example-query">"AI 行业今天有什么新闻？"</div><div class="example-detail"><strong>采集策略</strong>：Tier 1-2 全部 RSS → feedparser 批量抓标题 → 按时间排序 → 取今日条目<br><strong>信源</strong>：Tier 1 AI公司(30) + Tier 2 科技媒体(20+) + 聚合站(HN/Techmeme)<br><strong>输出</strong>：10~30 条新闻标题列表，按类别分组</div></div>
+  <div class="example-block"><div class="example-query">"华为今天有什么消息？"</div><div class="example-detail"><strong>采集策略</strong>：① 华为相关信源 RSS ② Tavily "华为 today" → 取今日结果<br><strong>信源</strong>：36氪(T3) + 微信搜索 + 百度新闻 + Tavily<br><strong>输出</strong>：5~15 条新闻</div></div>
+  <div class="example-block"><div class="example-query">"游戏行业最近一周有什么大事？"</div><div class="example-detail"><strong>采集策略</strong>：游戏专题信源 RSS → 关键词过滤 → 按时间取最近7天<br><strong>信源</strong>：GamesIndustry.biz, IGN, GameSpot, Game Developer<br><strong>输出</strong>：按天分组的新闻列表</div></div>
+  <h3>执行流程</h3>
+  <div class="flow-chart"><span class="flow-step active">① 确定领域/关键词</span><span class="flow-arrow">→</span><span class="flow-step active">② 选信源集合</span><span class="flow-arrow">→</span><span class="flow-step active">③ feedparser 批量抓标题</span><span class="flow-arrow">→</span><span class="flow-step active">④ 时间+关键词过滤</span><span class="flow-arrow">→</span><span class="flow-step active">⑤ 去重+排序</span><span class="flow-arrow">→</span><span class="flow-step active">⑥ 输出列表</span></div>
+  <div class="info-grid">
+    <div class="info-box strategy"><h4>采集参数</h4><ul><li><strong>采集深度</strong>：title_only</li><li><strong>信源范围</strong>：领域相关 Tier 1-2 + 搜索补充</li><li><strong>并发数</strong>：15~20</li><li><strong>最大条目</strong>：50~200</li><li><strong>API 消耗</strong>：0~3 次搜索</li></ul></div>
+    <div class="info-box output"><h4>输出形式</h4><ul><li>新闻列表（标题 + 一句话摘要 + 来源 + 时间）</li><li>按类别或时间分组</li><li>JSON / Markdown / 对话内直接输出</li></ul></div>
+  </div>
+  <p class="note">对应代码 Profile: <code>quick_scan</code> / <code>daily_digest</code></p>
+</div></div>
+
+<!-- L3 -->
+<div class="density-card density-L3" data-level="L3">
+<div class="density-header" onclick="toggleDensity(this)">
+  <div><span class="density-title" style="color:#2196f3">L3 · 专题（Topic Focus）</span><span style="color:#888;font-size:13px;margin-left:8px">— 围绕一个主题，全面了解</span></div>
+  <div class="density-badges"><span class="badge badge-time">⏱ 10~30分钟</span><span class="badge badge-depth">标题+部分全文</span><span class="badge badge-source">20~100 源</span><span class="badge badge-cost">中等成本</span><span class="toggle-icon">▼</span></div>
+</div>
+<div class="density-body">
+  <p style="font-size:13px;color:#555;margin-bottom:12px">用户需要<strong>围绕一个特定主题/产品/公司全面收集信息</strong>，需要从多角度（官方/媒体/社区/分析）获取内容。核心信源要读全文，辅助信源标题即可。</p>
+  <h3>典型案例</h3>
+  <div class="example-block"><div class="example-query">"帮我总结三星 S26 手机的全部信息"</div><div class="example-detail"><strong>采集策略</strong>：<br>&nbsp;&nbsp;① Tavily Search "Samsung Galaxy S26" → Top 10<br>&nbsp;&nbsp;② 科技媒体 RSS(The Verge/Ars Technica) → 关键词过滤<br>&nbsp;&nbsp;③ 核心评测文章 → x-reader 全文抓取<br>&nbsp;&nbsp;④ Reddit r/Android → 社区反馈<br>&nbsp;&nbsp;⑤ YouTube → yt-dlp 评测视频字幕<br><strong>输出</strong>：结构化专题报告（规格/价格/评价/对比）</div></div>
+  <div class="example-block"><div class="example-query">"AI Agent 最近有什么进展？整理一下"</div><div class="example-detail"><strong>采集策略</strong>：Tier 1 AI公司源关键词过滤 + Tavily Search + arXiv 论文 + 核心博客全文<br><strong>输出</strong>：专题摘要（产品进展/学术突破/业界观点）</div></div>
+  <div class="example-block"><div class="example-query">"帮我看看 Cursor 和 Windsurf 最近都更新了什么"</div><div class="example-detail"><strong>采集策略</strong>：官方 changelog/blog 全文 + Twitter 动态 + HN 讨论<br><strong>输出</strong>：对比式更新日志</div></div>
+  <h3>执行流程</h3>
+  <div class="flow-chart"><span class="flow-step active">① 解析主题关键词</span><span class="flow-arrow">→</span><span class="flow-step active">② 匹配信源</span><span class="flow-arrow">→</span><span class="flow-step active">③ RSS+搜索</span><span class="flow-arrow">→</span><span class="flow-step active">④ 关键词过滤</span><span class="flow-arrow">→</span><span class="flow-step active">⑤ 核心文章全文</span><span class="flow-arrow">→</span><span class="flow-step optional">⑥ 社区/视频补充</span><span class="flow-arrow">→</span><span class="flow-step active">⑦ 结构化输出</span></div>
+  <div class="info-grid">
+    <div class="info-box strategy"><h4>采集参数</h4><ul><li><strong>采集深度</strong>：混合 — 核心源 full_text + 辅助源 title_only</li><li><strong>全文抓取</strong>：5~15 篇核心文章</li><li><strong>并发数</strong>：10</li><li><strong>API 消耗</strong>：3~10 次搜索 + 5~15 次网页抓取</li></ul></div>
+    <div class="info-box output"><h4>输出形式</h4><ul><li>结构化专题报告（分章节）</li><li>关键发现 + 详情 + 来源引用</li><li>HTML / Markdown</li></ul></div>
+  </div>
+  <p class="note">对应代码 Profile: <code>topic_focus</code> / <code>signal_brief</code></p>
+</div></div>
+
+<!-- L4 -->
+<div class="density-card density-L4" data-level="L4">
+<div class="density-header" onclick="toggleDensity(this)">
+  <div><span class="density-title" style="color:#9c27b0">L4 · 报告（Full Report）</span><span style="color:#888;font-size:13px;margin-left:8px">— 全景扫描 + 分析研判</span></div>
+  <div class="density-badges"><span class="badge badge-time">⏱ 30分~2小时</span><span class="badge badge-depth">全文采集</span><span class="badge badge-source">50~200 源</span><span class="badge badge-cost">较高成本</span><span class="toggle-icon">▼</span></div>
+</div>
+<div class="density-body">
+  <p style="font-size:13px;color:#555;margin-bottom:12px">用户需要一份<strong>完整的调研报告</strong>，覆盖某个行业/领域的全貌。需要广泛采集、深度阅读、交叉验证、分析研判。</p>
+  <h3>典型案例</h3>
+  <div class="example-block"><div class="example-query">"做一份关于海外休闲游戏的调研报告"</div><div class="example-detail"><strong>采集策略</strong>：<br>&nbsp;&nbsp;① 游戏专题信源 RSS 全扫 → 关键词过滤<br>&nbsp;&nbsp;② Tavily Research "海外休闲游戏市场 2026" → 深度搜索<br>&nbsp;&nbsp;③ 核心报道 20~30 篇全文抓取<br>&nbsp;&nbsp;④ Exa AI → 行业报告/数据<br>&nbsp;&nbsp;⑤ Reddit r/gamedev → 开发者视角<br>&nbsp;&nbsp;⑥ Product Hunt → 新游戏产品<br>&nbsp;&nbsp;⑦ YouTube → 行业分析视频字幕<br><strong>输出</strong>：完整调研报告（市场概况/竞品/趋势/机会/风险）</div></div>
+  <div class="example-block"><div class="example-query">"帮我做一份 AI 编程工具赛道分析"</div><div class="example-detail"><strong>采集策略</strong>：各工具官方源全文 + 融资报道 + Reddit/HN 用户评价 + GitHub Star 趋势 + 招聘岗位<br><strong>输出</strong>：赛道分析报告（玩家图谱/产品对比/融资/用户口碑/趋势判断）</div></div>
+  <div class="example-block"><div class="example-query">"整理一份 2026 年 2 月 AI 行业月报"</div><div class="example-detail"><strong>采集策略</strong>：全 Tier 全源全文模式，30天内所有内容<br><strong>输出</strong>：Signal Brief 月报</div></div>
+  <h3>执行流程</h3>
+  <div class="flow-chart"><span class="flow-step active">① 拆解研究框架</span><span class="flow-arrow">→</span><span class="flow-step active">② 多维信源选择</span><span class="flow-arrow">→</span><span class="flow-step active">③ RSS 全量扫描</span><span class="flow-arrow">→</span><span class="flow-step active">④ 搜索补充</span><span class="flow-arrow">→</span><span class="flow-step active">⑤ 全文抓取(20-30篇)</span><span class="flow-arrow">→</span><span class="flow-step active">⑥ 社区/视频/招聘</span><span class="flow-arrow">→</span><span class="flow-step active">⑦ 交叉验证</span><span class="flow-arrow">→</span><span class="flow-step active">⑧ 报告输出</span></div>
+  <div class="info-grid">
+    <div class="info-box strategy"><h4>采集参数</h4><ul><li><strong>采集深度</strong>：full_text（全部核心文章）</li><li><strong>全文抓取</strong>：20~50 篇</li><li><strong>并发数</strong>：8（避免限流）</li><li><strong>API 消耗</strong>：10~30 搜索 + 20~50 网页抓取</li></ul></div>
+    <div class="info-box output"><h4>输出形式</h4><ul><li>完整调研报告（5000~20000 字）</li><li>分章节：概述/分析/数据/趋势/建议</li><li>HTML 报告（带图表、引用）</li></ul></div>
+  </div>
+  <p class="note">对应代码 Profile: <code>deep_research</code> / <code>gaming_focus</code></p>
+</div></div>
+
+<!-- L5 -->
+<div class="density-card density-L5" data-level="L5">
+<div class="density-header" onclick="toggleDensity(this)">
+  <div><span class="density-title" style="color:#f44336">L5 · 深研（Deep Research）</span><span style="color:#888;font-size:13px;margin-left:8px">— 长周期持续追踪 + 反复迭代</span></div>
+  <div class="density-badges"><span class="badge badge-time">⏱ 数小时~持续</span><span class="badge badge-depth">全文+交叉验证</span><span class="badge badge-source">全部信源</span><span class="badge badge-cost">高成本</span><span class="toggle-icon">▼</span></div>
+</div>
+<div class="density-body">
+  <p style="font-size:13px;color:#555;margin-bottom:12px">最高密度。不是一次性任务，而是<strong>持续追踪、反复补充、多轮迭代</strong>。涉及竞品情报、投资决策、战略规划等需要极高信息完整度的场景。</p>
+  <h3>典型案例</h3>
+  <div class="example-block"><div class="example-query">"持续追踪 OpenAI/Anthropic/Google 的模型发布节奏，做竞品情报"</div><div class="example-detail"><strong>采集策略</strong>：三家公司全部官方源持续监控 + 每日自动扫描 + 每周搜索补充 + 行业领袖观点 + 学术论文 + 付费内容(需BrowserWing)<br><strong>输出</strong>：持续更新的竞品情报看板</div></div>
+  <div class="example-block"><div class="example-query">"帮我建一个 AI 芯片赛道的信息追踪系统"</div><div class="example-detail"><strong>采集策略</strong>：定义关键词 → 全源监控 → 每日自动采集+去重+归档<br><strong>输出</strong>：每日更新数据库 + 周报/月报</div></div>
+  <div class="info-grid">
+    <div class="info-box strategy"><h4>采集参数</h4><ul><li><strong>采集深度</strong>：full_text + 登录态内容</li><li><strong>执行方式</strong>：定时任务（cron）+ 增量采集</li><li><strong>并发数</strong>：8</li><li><strong>去重</strong>：全量历史去重（数据库）</li><li><strong>API 消耗</strong>：持续消耗，需关注月度额度</li></ul></div>
+    <div class="info-box risk"><h4>关键风险</h4><ul><li>🔴 API 额度可能不够持续使用</li><li>🔴 付费内容需 BrowserWing + Cookie</li><li>🟡 数据库需定期清理优化</li><li>🟡 需定期检查信源有效性</li></ul></div>
+  </div>
+</div></div>
+
+<!-- 密度对比矩阵 -->
+<h2>密度级别对比矩阵</h2>
+<div class="source-eval">
+<table>
+<thead><tr><th>维度</th><th style="color:#4caf50">L1 点查</th><th style="color:#ff9800">L2 快讯</th><th style="color:#2196f3">L3 专题</th><th style="color:#9c27b0">L4 报告</th><th style="color:#f44336">L5 深研</th></tr></thead>
+<tbody>
+<tr><td><strong>典型耗时</strong></td><td>10秒~1分</td><td>2~10分钟</td><td>10~30分钟</td><td>30分~2小时</td><td>数小时~持续</td></tr>
+<tr><td><strong>信源数量</strong></td><td>1~3</td><td>10~50</td><td>20~100</td><td>50~200</td><td>全部 201+</td></tr>
+<tr><td><strong>采集深度</strong></td><td>title_only</td><td>title_only</td><td>混合模式</td><td>full_text</td><td>full_text+登录态</td></tr>
+<tr><td><strong>全文抓取数</strong></td><td>0</td><td>0~3</td><td>5~15</td><td>20~50</td><td>50~100+</td></tr>
+<tr><td><strong>搜索 API</strong></td><td>0~1</td><td>0~3</td><td>3~10</td><td>10~30</td><td>持续消耗</td></tr>
+<tr><td><strong>全文工具</strong></td><td class="matrix-cell-no">—</td><td class="matrix-cell-opt">偶尔</td><td class="matrix-cell-yes">✓</td><td class="matrix-cell-yes">✓✓</td><td class="matrix-cell-yes">✓✓✓</td></tr>
+<tr><td><strong>搜索补充</strong></td><td class="matrix-cell-opt">可选</td><td class="matrix-cell-opt">可选</td><td class="matrix-cell-yes">✓</td><td class="matrix-cell-yes">✓✓</td><td class="matrix-cell-yes">✓✓</td></tr>
+<tr><td><strong>社区源</strong></td><td class="matrix-cell-no">—</td><td class="matrix-cell-no">—</td><td class="matrix-cell-opt">可选</td><td class="matrix-cell-yes">✓</td><td class="matrix-cell-yes">✓</td></tr>
+<tr><td><strong>视频字幕</strong></td><td class="matrix-cell-no">—</td><td class="matrix-cell-no">—</td><td class="matrix-cell-opt">可选</td><td class="matrix-cell-opt">可选</td><td class="matrix-cell-yes">✓</td></tr>
+<tr><td><strong>登录态</strong></td><td class="matrix-cell-no">—</td><td class="matrix-cell-no">—</td><td class="matrix-cell-no">—</td><td class="matrix-cell-opt">可选</td><td class="matrix-cell-yes">✓</td></tr>
+<tr><td><strong>招聘数据</strong></td><td class="matrix-cell-no">—</td><td class="matrix-cell-no">—</td><td class="matrix-cell-no">—</td><td class="matrix-cell-opt">可选</td><td class="matrix-cell-opt">可选</td></tr>
+<tr><td><strong>输出形式</strong></td><td>一句话</td><td>列表</td><td>专题报告</td><td>完整报告</td><td>看板+报告</td></tr>
+<tr><td><strong>代码 Profile</strong></td><td>—</td><td>quick_scan / daily_digest</td><td>topic_focus / signal_brief</td><td>deep_research / gaming_focus</td><td>deep_research + cron</td></tr>
+</tbody>
+</table>
+</div>
+
+<!-- 判断逻辑 -->
+<h2>如何判断用户需要哪级密度？</h2>
+<div class="source-eval">
+<table>
+<thead><tr><th>用户话语特征</th><th>信号词</th><th>→ 密度级别</th><th>案例</th></tr></thead>
+<tbody>
+<tr><td>问一个具体事实</td><td>"是什么""什么时候""多少钱""有没有"</td><td style="color:#4caf50;font-weight:bold">L1 点查</td><td>"GPT-5 发布了吗？""Llama 4 多大参数？"</td></tr>
+<tr><td>了解今日/近期动态</td><td>"今天""最近""有什么新闻""最新动态"</td><td style="color:#ff9800;font-weight:bold">L2 快讯</td><td>"AI 行业今天有啥？""华为最近有什么消息？"</td></tr>
+<tr><td>围绕主题/产品总结</td><td>"总结""整理""盘点""有什么进展""对比"</td><td style="color:#2196f3;font-weight:bold">L3 专题</td><td>"总结三星S26全部信息""对比 Cursor 和 Copilot"</td></tr>
+<tr><td>要求完整调研/报告</td><td>"调研报告""分析""行业研究""全景""市场"</td><td style="color:#9c27b0;font-weight:bold">L4 报告</td><td>"做一份海外休闲游戏调研报告""AI编程工具赛道分析"</td></tr>
+<tr><td>长期追踪/竞品监控</td><td>"持续追踪""监控""每天/每周更新""情报""看板"</td><td style="color:#f44336;font-weight:bold">L5 深研</td><td>"持续追踪三大模型厂竞品""建立AI芯片追踪系统"</td></tr>
+</tbody>
+</table>
+<p class="note" style="margin-top:10px">* 当无法确定密度级别时，默认走 L3 专题——比 L2 深一层，但不会像 L4 那样消耗过多资源。</p>
+</div>
+
+<!-- 信源评价 -->
+<h2>信源评价与特征标注</h2>
+<p style="font-size:13px;color:#666;margin-bottom:15px">每个信源的内容特征、AI 相关度、更新频率、内容深度、适用密度级别。调度时据此决定是否纳入。</p>
+
+<div class="source-eval">
+<div class="eval-filter">
+  <input type="text" id="evalSearch" placeholder="搜索信源名称..." oninput="filterEval()">
+  <select id="evalTier" onchange="filterEval()"><option value="">全部 Tier</option><option value="T1">Tier 1</option><option value="T2">Tier 2</option><option value="T3">Tier 3</option><option value="T4">Tier 4</option><option value="T-S">专题</option></select>
+  <select id="evalAi" onchange="filterEval()"><option value="">全部 AI 相关度</option><option value="core">🔴 核心</option><option value="high">🟠 高度</option><option value="mid">🟡 中度</option><option value="low">🟢 低</option></select>
+  <select id="evalFreq" onchange="filterEval()"><option value="">全部更新频率</option><option value="high">⚡ 高频</option><option value="mid">🔄 中频</option><option value="low">🐢 低频</option></select>
+</div>
+<table id="evalTable">
+<thead><tr><th>Tier</th><th>信源名称</th><th>描述/评价</th><th>AI 相关度</th><th>更新频率</th><th>内容深度</th><th>适用密度</th><th>特别说明</th></tr></thead>
+<tbody>
+<tr data-tier="T1" data-ai="core" data-freq="high"><td>T1</td><td><strong>OpenAI</strong></td><td>GPT/Sora/o1/o3，AI行业最重要的公司</td><td><span class="eval-tag eval-high">🔴 核心</span></td><td><span class="eval-tag eval-high">⚡ 高频</span></td><td>🔴 深度</td><td>L1~L5</td><td>6条Feed，覆盖最全</td></tr>
+<tr data-tier="T1" data-ai="core" data-freq="high"><td>T1</td><td><strong>Google DeepMind</strong></td><td>Gemini/AlphaFold/Veo/Imagen，Google AI研究主力</td><td><span class="eval-tag eval-high">🔴 核心</span></td><td><span class="eval-tag eval-high">⚡ 高频</span></td><td>🔴 深度</td><td>L1~L5</td><td>11条Feed，信源最多</td></tr>
+<tr data-tier="T1" data-ai="core" data-freq="high"><td>T1</td><td><strong>Meta AI</strong></td><td>Llama/SAM，开源模型主力</td><td><span class="eval-tag eval-high">🔴 核心</span></td><td><span class="eval-tag eval-high">⚡ 高频</span></td><td>🔴 深度</td><td>L1~L5</td><td>开源模型必追</td></tr>
+<tr data-tier="T1" data-ai="core" data-freq="mid"><td>T1</td><td><strong>Anthropic</strong></td><td>Claude模型/AI安全研究</td><td><span class="eval-tag eval-high">🔴 核心</span></td><td><span class="eval-tag eval-mid">🔄 中频</span></td><td>🔴 深度</td><td>L1~L5</td><td>安全研究内容质量极高</td></tr>
+<tr data-tier="T1" data-ai="high" data-freq="high"><td>T1</td><td><strong>Microsoft</strong></td><td>Copilot/Azure AI/GitHub Copilot</td><td><span class="eval-tag eval-high">🟠 高度</span></td><td><span class="eval-tag eval-high">⚡ 高频</span></td><td>🟡 思考</td><td>L2~L5</td><td>AI信息与其他业务混杂，需过滤</td></tr>
+<tr data-tier="T1" data-ai="high" data-freq="mid"><td>T1</td><td><strong>NVIDIA</strong></td><td>GPU/CUDA/AI硬件生态</td><td><span class="eval-tag eval-high">🟠 高度</span></td><td><span class="eval-tag eval-mid">🔄 中频</span></td><td>🟡 思考</td><td>L2~L5</td><td>硬件/芯片类任务必选</td></tr>
+<tr data-tier="T1" data-ai="core" data-freq="mid"><td>T1</td><td><strong>xAI</strong></td><td>Grok模型，Elon Musk创办</td><td><span class="eval-tag eval-high">🔴 核心</span></td><td><span class="eval-tag eval-mid">🔄 中频</span></td><td>🟡 思考</td><td>L1~L4</td><td></td></tr>
+<tr data-tier="T1" data-ai="core" data-freq="mid"><td>T1</td><td><strong>Mistral AI</strong></td><td>欧洲最强开源模型公司</td><td><span class="eval-tag eval-high">🔴 核心</span></td><td><span class="eval-tag eval-mid">🔄 中频</span></td><td>🟡 思考</td><td>L1~L4</td><td></td></tr>
+<tr data-tier="T1" data-ai="core" data-freq="low"><td>T1</td><td><strong>DeepSeek</strong></td><td>中国最强开源模型，DeepSeek-V3/R1</td><td><span class="eval-tag eval-high">🔴 核心</span></td><td><span class="eval-tag eval-low">🐢 低频</span></td><td>🔴 深度</td><td>L1~L5</td><td>发布少但每次都是大新闻</td></tr>
+<tr data-tier="T1" data-ai="core" data-freq="high"><td>T1</td><td><strong>Hugging Face</strong></td><td>开源AI生态核心平台</td><td><span class="eval-tag eval-high">🔴 核心</span></td><td><span class="eval-tag eval-high">⚡ 高频</span></td><td>🟡 思考</td><td>L2~L5</td><td>论文/模型发现主力平台</td></tr>
+<tr data-tier="T1" data-ai="mid" data-freq="low"><td>T1</td><td><strong>Apple</strong></td><td>Apple Intelligence/端侧AI</td><td><span class="eval-tag eval-mid">🟡 中度</span></td><td><span class="eval-tag eval-low">🐢 低频</span></td><td>🟡 思考</td><td>L3~L4</td><td>官方X极少发帖，AI信息密度低</td></tr>
+<tr data-tier="T1" data-ai="mid" data-freq="mid"><td>T1</td><td><strong>Amazon</strong></td><td>Bedrock/Titan/Nova/Alexa AI</td><td><span class="eval-tag eval-mid">🟡 中度</span></td><td><span class="eval-tag eval-mid">🔄 中频</span></td><td>🟡 思考</td><td>L3~L4</td><td>AI信息与AWS其他服务混杂</td></tr>
+<tr data-tier="T1" data-ai="core" data-freq="mid"><td>T1</td><td><strong>Perplexity AI</strong></td><td>AI搜索引擎</td><td><span class="eval-tag eval-high">🔴 核心</span></td><td><span class="eval-tag eval-mid">🔄 中频</span></td><td>🟡 思考</td><td>L1~L3</td><td></td></tr>
+<tr data-tier="T1" data-ai="core" data-freq="low"><td>T1</td><td><strong>Midjourney</strong></td><td>AI图像生成，V6/V7</td><td><span class="eval-tag eval-high">🔴 核心</span></td><td><span class="eval-tag eval-low">🐢 低频</span></td><td>🔵 快速</td><td>L1~L3</td><td>更新少但关注度高</td></tr>
+<tr data-tier="T1" data-ai="core" data-freq="low"><td>T1</td><td><strong>Runway</strong></td><td>AI视频生成，Gen-3</td><td><span class="eval-tag eval-high">🔴 核心</span></td><td><span class="eval-tag eval-low">🐢 低频</span></td><td>🔵 快速</td><td>L1~L3</td><td>视频生成赛道</td></tr>
+<tr data-tier="T1" data-ai="core" data-freq="low"><td>T1</td><td><strong>Stability AI</strong></td><td>Stable Diffusion系列</td><td><span class="eval-tag eval-high">🔴 核心</span></td><td><span class="eval-tag eval-low">🐢 低频</span></td><td>🟡 思考</td><td>L1~L3</td><td>公司动荡，发布不规律</td></tr>
+<tr data-tier="T1" data-ai="core" data-freq="low"><td>T1</td><td><strong>Cohere</strong></td><td>企业级LLM/RAG</td><td><span class="eval-tag eval-high">🔴 核心</span></td><td><span class="eval-tag eval-low">🐢 低频</span></td><td>🔴 深度</td><td>L3~L4</td><td>B2B赛道，更新偏低但内容深</td></tr>
+<tr data-tier="T1" data-ai="core" data-freq="mid"><td>T1</td><td><strong>Manus AI</strong></td><td>AI Agent产品</td><td><span class="eval-tag eval-high">🔴 核心</span></td><td><span class="eval-tag eval-mid">🔄 中频</span></td><td>🟡 思考</td><td>L1~L3</td><td>Agent赛道关注对象</td></tr>
+<tr data-tier="T1" data-ai="high" data-freq="high"><td>T1</td><td><strong>GitHub</strong></td><td>Copilot/开发者工具</td><td><span class="eval-tag eval-high">🟠 高度</span></td><td><span class="eval-tag eval-high">⚡ 高频</span></td><td>🟡 思考</td><td>L2~L5</td><td>Trending对发现新项目很有价值</td></tr>
+<tr data-tier="T1" data-ai="core" data-freq="mid"><td>T1</td><td><strong>Cursor</strong></td><td>AI代码编辑器</td><td><span class="eval-tag eval-high">🔴 核心</span></td><td><span class="eval-tag eval-mid">🔄 中频</span></td><td>🟡 思考</td><td>L1~L4</td><td>AI编程工具赛道标杆</td></tr>
+<tr data-tier="T1" data-ai="core" data-freq="low"><td>T1</td><td><strong>Artificial Analysis</strong></td><td>AI模型基准测试与分析平台</td><td><span class="eval-tag eval-high">🔴 核心</span></td><td><span class="eval-tag eval-low">🐢 低频</span></td><td>🔴 深度</td><td>L3~L5</td><td>Benchmark数据源，报告必用</td></tr>
+<tr data-tier="T1" data-ai="core" data-freq="mid"><td>T1</td><td><strong>通义千问</strong></td><td>Qwen系列开源模型，阿里云AI</td><td><span class="eval-tag eval-high">🔴 核心</span></td><td><span class="eval-tag eval-mid">🔄 中频</span></td><td>🟡 思考</td><td>L1~L4</td><td>中国开源模型代表</td></tr>
+<tr data-tier="T1" data-ai="core" data-freq="mid"><td>T1</td><td><strong>智谱AI</strong></td><td>GLM系列模型，ChatGLM，CodeGeeX</td><td><span class="eval-tag eval-high">🔴 核心</span></td><td><span class="eval-tag eval-mid">🔄 中频</span></td><td>🟡 思考</td><td>L1~L4</td><td></td></tr>
+<tr data-tier="T1" data-ai="core" data-freq="mid"><td>T1</td><td><strong>MiniMax</strong></td><td>海螺AI/Hailuo视频生成/MiniMax模型</td><td><span class="eval-tag eval-high">🔴 核心</span></td><td><span class="eval-tag eval-mid">🔄 中频</span></td><td>🟡 思考</td><td>L1~L4</td><td>多模态赛道，4条Feed</td></tr>
+<tr data-tier="T1" data-ai="core" data-freq="low"><td>T1</td><td><strong>月之暗面</strong></td><td>Kimi模型，长上下文</td><td><span class="eval-tag eval-high">🔴 核心</span></td><td><span class="eval-tag eval-low">🐢 低频</span></td><td>🟡 思考</td><td>L1~L3</td><td></td></tr>
+<tr data-tier="T1" data-ai="mid" data-freq="low"><td>T1</td><td><strong>字节跳动</strong></td><td>豆包大模型</td><td><span class="eval-tag eval-mid">🟡 中度</span></td><td><span class="eval-tag eval-low">🐢 低频</span></td><td>🔵 快速</td><td>L3~L4</td><td>AI信息少，与主业务混杂</td></tr>
+<tr data-tier="T1" data-ai="mid" data-freq="low"><td>T1</td><td><strong>腾讯</strong></td><td>混元模型/腾讯AI Lab</td><td><span class="eval-tag eval-mid">🟡 中度</span></td><td><span class="eval-tag eval-low">🐢 低频</span></td><td>🔵 快速</td><td>L3~L4</td><td>AI发布频率较低</td></tr>
+<tr data-tier="T1" data-ai="core" data-freq="low"><td>T1</td><td><strong>百川智能</strong></td><td>百川大模型，王小川创办</td><td><span class="eval-tag eval-high">🔴 核心</span></td><td><span class="eval-tag eval-low">🐢 低频</span></td><td>🔵 快速</td><td>L3~L4</td><td>活跃度低</td></tr>
+<tr data-tier="T1" data-ai="core" data-freq="low"><td>T1</td><td><strong>零一万物</strong></td><td>Yi系列模型，李开复创办</td><td><span class="eval-tag eval-high">🔴 核心</span></td><td><span class="eval-tag eval-low">🐢 低频</span></td><td>🔵 快速</td><td>L3~L4</td><td></td></tr>
+<tr data-tier="T1" data-ai="core" data-freq="low"><td>T1</td><td><strong>阶跃星辰</strong></td><td>Step系列模型，姜大昕创办</td><td><span class="eval-tag eval-high">🔴 核心</span></td><td><span class="eval-tag eval-low">🐢 低频</span></td><td>🔵 快速</td><td>L3~L4</td><td></td></tr>
+<tr data-tier="T1" data-ai="core" data-freq="high"><td>T1</td><td><strong>Sam Altman</strong></td><td>OpenAI CEO，AI行业风向标</td><td><span class="eval-tag eval-high">🔴 核心</span></td><td><span class="eval-tag eval-high">⚡ 高频</span></td><td>🔵 快速</td><td>L2~L5</td><td>发推频繁但信息密度不稳定</td></tr>
+<tr data-tier="T1" data-ai="mid" data-freq="high"><td>T1</td><td><strong>Elon Musk</strong></td><td>xAI/Grok创始人，超级影响力</td><td><span class="eval-tag eval-mid">🟡 中度</span></td><td><span class="eval-tag eval-high">⚡ 高频</span></td><td>🔵 快速</td><td>L2~L4</td><td>大量非AI内容，需严格过滤</td></tr>
+<tr data-tier="T1" data-ai="core" data-freq="low"><td>T1</td><td><strong>Demis Hassabis</strong></td><td>Google DeepMind CEO，诺贝尔化学奖得主</td><td><span class="eval-tag eval-high">🔴 核心</span></td><td><span class="eval-tag eval-low">🐢 低频</span></td><td>🟡 思考</td><td>L3~L5</td><td>低频但每条都有价值</td></tr>
+<tr data-tier="T1" data-ai="core" data-freq="low"><td>T1</td><td><strong>Dario Amodei</strong></td><td>Anthropic CEO，AI安全领袖</td><td><span class="eval-tag eval-high">🔴 核心</span></td><td><span class="eval-tag eval-low">🐢 低频</span></td><td>🔴 深度</td><td>L3~L5</td><td>安全/政策方向核心声音</td></tr>
+<tr data-tier="T1" data-ai="core" data-freq="mid"><td>T1</td><td><strong>Yann LeCun</strong></td><td>Meta首席AI科学家，图灵奖得主</td><td><span class="eval-tag eval-high">🔴 核心</span></td><td><span class="eval-tag eval-mid">🔄 中频</span></td><td>🟡 思考</td><td>L3~L5</td><td>学术视角，观点鲜明</td></tr>
+<tr data-tier="T1" data-ai="core" data-freq="mid"><td>T1</td><td><strong>Andrej Karpathy</strong></td><td>AI教育家，深度学习布道者</td><td><span class="eval-tag eval-high">🔴 核心</span></td><td><span class="eval-tag eval-mid">🔄 中频</span></td><td>🔴 深度</td><td>L3~L5</td><td>每条推文信息密度极高</td></tr>
+<tr data-tier="T1" data-ai="core" data-freq="low"><td>T1</td><td><strong>Ilya Sutskever</strong></td><td>SSI联合创始人，前OpenAI首席科学家</td><td><span class="eval-tag eval-high">🔴 核心</span></td><td><span class="eval-tag eval-low">🐢 低频</span></td><td>🔴 深度</td><td>L4~L5</td><td>极少发言但每次都重磅</td></tr>
+<tr data-tier="T1" data-ai="core" data-freq="mid"><td>T1</td><td><strong>Jim Fan</strong></td><td>NVIDIA高级研究科学家，AI Agent/具身智能</td><td><span class="eval-tag eval-high">🔴 核心</span></td><td><span class="eval-tag eval-mid">🔄 中频</span></td><td>🟡 思考</td><td>L3~L5</td><td>Agent/具身智能方向核心</td></tr>
+<tr data-tier="T1" data-ai="core" data-freq="low"><td>T1</td><td><strong>Fei-Fei Li</strong></td><td>斯坦福HAI联合主任，ImageNet之母，World Labs创始人</td><td><span class="eval-tag eval-high">🔴 核心</span></td><td><span class="eval-tag eval-low">🐢 低频</span></td><td>🔴 深度</td><td>L4~L5</td><td>学术+产业双重视角</td></tr>
+<tr data-tier="T1" data-ai="mid" data-freq="low"><td>T1</td><td><strong>Satya Nadella</strong></td><td>微软CEO，AI战略推动者</td><td><span class="eval-tag eval-mid">🟡 中度</span></td><td><span class="eval-tag eval-low">🐢 低频</span></td><td>🔵 快速</td><td>L3~L4</td><td>AI信息少，多为企业层面</td></tr>
+<tr data-tier="T1" data-ai="high" data-freq="low"><td>T1</td><td><strong>Jensen Huang</strong></td><td>NVIDIA CEO，AI硬件教父</td><td><span class="eval-tag eval-high">🟠 高度</span></td><td><span class="eval-tag eval-low">🐢 低频</span></td><td>🟡 思考</td><td>L3~L5</td><td>每次发言都影响市场</td></tr>
+<tr data-tier="T1" data-ai="core" data-freq="high"><td>T1</td><td><strong>Simon Willison</strong></td><td>AI工具/LLM深度实践第一人，日更高质量</td><td><span class="eval-tag eval-high">🔴 核心</span></td><td><span class="eval-tag eval-high">⚡ 高频</span></td><td>🟡 思考</td><td>L2~L5</td><td>LLM应用开发实践最强博主</td></tr>
+<tr data-tier="T2" data-ai="core" data-freq="high"><td>T2</td><td><strong>机器之心</strong></td><td>中文AI媒体第一梯队，论文解读+产业报道（官方RSS已失效）</td><td><span class="eval-tag eval-high">🔴 核心</span></td><td><span class="eval-tag eval-high">⚡ 高频</span></td><td>🔴 深度</td><td>L2~L5</td><td>技术深度在中文媒体中最强</td></tr>
+<tr data-tier="T2" data-ai="core" data-freq="high"><td>T2</td><td><strong>量子位</strong></td><td>中文AI快讯+深度，更新快</td><td><span class="eval-tag eval-high">🔴 核心</span></td><td><span class="eval-tag eval-high">⚡ 高频</span></td><td>🟡 思考</td><td>L2~L4</td><td>AI信息密度高</td></tr>
+<tr data-tier="T1" data-ai="high" data-freq="high"><td>T1</td><td><strong>Hacker News</strong></td><td>开发者社区风向标</td><td><span class="eval-tag eval-high">🟠 高度</span></td><td><span class="eval-tag eval-high">⚡ 高频</span></td><td>🔵 快速</td><td>L2~L4</td><td>无摘要，开发者风向标</td></tr>
+<tr data-tier="T1" data-ai="mid" data-freq="high"><td>T1</td><td><strong>Product Hunt</strong></td><td>新产品发现第一站</td><td><span class="eval-tag eval-mid">🟡 中度</span></td><td><span class="eval-tag eval-high">⚡ 高频</span></td><td>🟡 思考</td><td>L2~L4</td><td>新产品发现主力源</td></tr>
+<tr data-tier="T1" data-ai="mid" data-freq="mid"><td>T1</td><td><strong>逛逛GitHub</strong></td><td>GitHub开源项目推荐（中文公众号）</td><td><span class="eval-tag eval-mid">🟡 中度</span></td><td><span class="eval-tag eval-mid">🔄 中频</span></td><td>🟡 思考</td><td>L2~L3</td><td>中文解读GitHub项目</td></tr>
+<tr data-tier="T1" data-ai="high" data-freq="mid"><td>T1</td><td><strong>AIBase</strong></td><td>AI新产品收录，无官方RSS，依赖RSSHub（rsshub.app不稳定，需备用实例）</td><td><span class="eval-tag eval-high">🟠 高度</span></td><td><span class="eval-tag eval-mid">🔄 中频</span></td><td>🟡 思考</td><td>L3~L4</td><td>AI产品发现</td></tr>
+<tr data-tier="T1" data-ai="low" data-freq="high"><td>T1</td><td><strong>V2EX</strong></td><td>中文开发者社区热门话题，需关键词过滤AI相关</td><td><span class="eval-tag eval-low">🟢 低</span></td><td><span class="eval-tag eval-high">⚡ 高频</span></td><td>🔵 快速</td><td>L2~L3</td><td>大部分话题非AI相关</td></tr>
+<tr data-tier="T2" data-ai="high" data-freq="high"><td>T2</td><td><strong>TechCrunch</strong></td><td>AI创业/融资报道最强，全文RSS</td><td><span class="eval-tag eval-high">🟠 高度</span></td><td><span class="eval-tag eval-high">⚡ 高频</span></td><td>🔴 深度</td><td>L2~L5</td><td>全文RSS，AI创业/融资报道最强</td></tr>
+<tr data-tier="T2" data-ai="high" data-freq="low"><td>T2</td><td><strong>MIT Technology Review</strong></td><td>MIT出品，学术+产业深度</td><td><span class="eval-tag eval-high">🟠 高度</span></td><td><span class="eval-tag eval-low">🐢 低频</span></td><td>🔴 深度</td><td>L3~L5</td><td>更新频率偏低但深度极佳</td></tr>
+<tr data-tier="T2" data-ai="mid" data-freq="high"><td>T2</td><td><strong>The Verge</strong></td><td>科技产品/消费端报道强</td><td><span class="eval-tag eval-mid">🟡 中度</span></td><td><span class="eval-tag eval-high">⚡ 高频</span></td><td>🟡 思考</td><td>L2~L4</td><td>AI占比中等，消费端视角</td></tr>
+<tr data-tier="T2" data-ai="high" data-freq="mid"><td>T2</td><td><strong>VentureBeat</strong></td><td>企业AI/B2B深度分析</td><td><span class="eval-tag eval-high">🟠 高度</span></td><td><span class="eval-tag eval-mid">🔄 中频</span></td><td>🔴 深度</td><td>L3~L5</td><td>更新频率中等但每篇质量高</td></tr>
+<tr data-tier="T2" data-ai="mid" data-freq="mid"><td>T2</td><td><strong>Wired</strong></td><td>深度长文+科技文化</td><td><span class="eval-tag eval-mid">🟡 中度</span></td><td><span class="eval-tag eval-mid">🔄 中频</span></td><td>🟡 思考</td><td>L3~L4</td><td>AI相关需筛选</td></tr>
+<tr data-tier="T2" data-ai="mid" data-freq="mid"><td>T2</td><td><strong>Ars Technica</strong></td><td>硬核技术分析，GPU/芯片/安全领域强</td><td><span class="eval-tag eval-mid">🟡 中度</span></td><td><span class="eval-tag eval-mid">🔄 中频</span></td><td>🔴 深度</td><td>L3~L5</td><td>GPU/芯片/安全领域强</td></tr>
+<tr data-tier="T2" data-ai="high" data-freq="high"><td>T2</td><td><strong>Techmeme</strong></td><td>科技新闻编辑精选聚合</td><td><span class="eval-tag eval-high">🟠 高度</span></td><td><span class="eval-tag eval-high">⚡ 高频</span></td><td>🟡 思考</td><td>L2~L4</td><td>编辑精选聚合，了解热点最快</td></tr>
+<tr data-tier="T2" data-ai="low" data-freq="mid"><td>T2</td><td><strong>The Register</strong></td><td>IT基础设施/企业IT视角，英式幽默</td><td><span class="eval-tag eval-low">🟢 低</span></td><td><span class="eval-tag eval-mid">🔄 中频</span></td><td>🟡 思考</td><td>L3~L4</td><td>基础设施/安全/企业IT</td></tr>
+<tr data-tier="T2" data-ai="low" data-freq="mid"><td>T2</td><td><strong>TechRadar</strong></td><td>消费科技，AI相关内容较少</td><td><span class="eval-tag eval-low">🟢 低</span></td><td><span class="eval-tag eval-mid">🔄 中频</span></td><td>🔵 快速</td><td>L2~L3</td><td>AI相关内容较少</td></tr>
+<tr data-tier="T2" data-ai="high" data-freq="low"><td>T2</td><td><strong>Techspective</strong></td><td>AI专栏观点性强，更新频率低</td><td><span class="eval-tag eval-high">🟠 高度</span></td><td><span class="eval-tag eval-low">🐢 低频</span></td><td>🟡 思考</td><td>L3~L4</td><td>AI专栏观点性强，更新1周+</td></tr>
+<tr data-tier="T4" data-ai="high" data-freq="high"><td>T4</td><td><strong>36氪</strong></td><td>科技创业综合资讯</td><td><span class="eval-tag eval-high">🟠 高度</span></td><td><span class="eval-tag eval-high">⚡ 高频</span></td><td>🟡 思考</td><td>L2~L4</td><td>中文AI报道首选</td></tr>
+<tr data-tier="T-S" data-ai="low" data-freq="high"><td>T-S</td><td><strong>GamesIndustry.biz</strong></td><td>游戏行业商业新闻第一站，裁员/收购/财报</td><td><span class="eval-tag eval-low">🟢 低</span></td><td><span class="eval-tag eval-high">⚡ 高频</span></td><td>🔴 深度</td><td>L2~L4</td><td>游戏商业分析第一媒体</td></tr>
+<tr data-tier="T-S" data-ai="low" data-freq="mid"><td>T-S</td><td><strong>PC Gamer</strong></td><td>PC游戏硬件+评测</td><td><span class="eval-tag eval-low">🟢 低</span></td><td><span class="eval-tag eval-mid">🔄 中频</span></td><td>🟡 思考</td><td>L2~L4</td><td>PC游戏硬件+评测</td></tr>
+<tr data-tier="T-S" data-ai="low" data-freq="high"><td>T-S</td><td><strong>GameSpot</strong></td><td>游戏评测/新闻综合</td><td><span class="eval-tag eval-low">🟢 低</span></td><td><span class="eval-tag eval-high">⚡ 高频</span></td><td>🟡 思考</td><td>L2~L4</td><td>游戏评测/新闻综合</td></tr>
+<tr data-tier="T-S" data-ai="low" data-freq="mid"><td>T-S</td><td><strong>TouchArcade</strong></td><td>移动游戏专业媒体</td><td><span class="eval-tag eval-low">🟢 低</span></td><td><span class="eval-tag eval-mid">🔄 中频</span></td><td>🟡 思考</td><td>L3~L4</td><td>移动游戏专业媒体，休闲游戏调研必用</td></tr>
+<tr data-tier="T-S" data-ai="low" data-freq="high"><td>T-S</td><td><strong>IGN</strong></td><td>游戏行业综合</td><td><span class="eval-tag eval-low">🟢 低</span></td><td><span class="eval-tag eval-high">⚡ 高频</span></td><td>🟡 思考</td><td>L2~L4</td><td>游戏行业综合</td></tr>
+<tr data-tier="T-S" data-ai="low" data-freq="mid"><td>T-S</td><td><strong>Game Developer</strong></td><td>游戏开发专业媒体，GDC/技术分析</td><td><span class="eval-tag eval-low">🟢 低</span></td><td><span class="eval-tag eval-mid">🔄 中频</span></td><td>🔴 深度</td><td>L3~L5</td><td>GDC/技术分析</td></tr>
+<tr data-tier="T-S" data-ai="core" data-freq="low"><td>T-S</td><td><strong>gwern.net</strong></td><td>AI/ML深度长文，元分析大师</td><td><span class="eval-tag eval-high">🔴 核心</span></td><td><span class="eval-tag eval-low">🐢 低频</span></td><td>🔴 深度</td><td>L4~L5</td><td>更新极少但每篇都是经典</td></tr>
+<tr data-tier="T-S" data-ai="core" data-freq="mid"><td>T-S</td><td><strong>Gary Marcus</strong></td><td>AI批评家，提供反面视角</td><td><span class="eval-tag eval-high">🔴 核心</span></td><td><span class="eval-tag eval-mid">🔄 中频</span></td><td>🟡 思考</td><td>L3~L5</td><td>AI批评家，提供反面视角</td></tr>
+<tr data-tier="T-S" data-ai="high" data-freq="mid"><td>T-S</td><td><strong>George Hotz</strong></td><td>George Hotz(tinygrad)，AI硬件/创业</td><td><span class="eval-tag eval-high">🟠 高度</span></td><td><span class="eval-tag eval-mid">🔄 中频</span></td><td>🟡 思考</td><td>L3~L4</td><td>tinygrad，AI硬件/创业</td></tr>
+<tr data-tier="T-S" data-ai="low" data-freq="low"><td>T-S</td><td><strong>Paul Graham</strong></td><td>Y Combinator创始人，创业/思想</td><td><span class="eval-tag eval-low">🟢 低</span></td><td><span class="eval-tag eval-low">🐢 低频</span></td><td>🔴 深度</td><td>L4~L5</td><td>YC创始人，创业/思想，AI相关需筛选</td></tr>
+<tr data-tier="T-S" data-ai="core" data-freq="low"><td>T-S</td><td><strong>Dwarkesh Patel</strong></td><td>顶级AI人物访谈播客</td><td><span class="eval-tag eval-high">🔴 核心</span></td><td><span class="eval-tag eval-low">🐢 低频</span></td><td>🔴 深度</td><td>L4~L5</td><td>顶级AI人物访谈播客</td></tr>
+<tr data-tier="T-S" data-ai="low" data-freq="mid"><td>T-S</td><td><strong>Krebs on Security</strong></td><td>安全领域第一博客</td><td><span class="eval-tag eval-low">🟢 低</span></td><td><span class="eval-tag eval-mid">🔄 中频</span></td><td>🔴 深度</td><td>L3~L5</td><td>安全领域第一博客</td></tr>
+</tbody>
+</table>
+</div>
+
+<script>
+function toggleDensity(header) { header.parentElement.classList.toggle('open'); }
+
+function filterEval() {
+  const search = (document.getElementById('evalSearch').value || '').toLowerCase();
+  const tier = document.getElementById('evalTier').value;
+  const ai = document.getElementById('evalAi').value;
+  const freq = document.getElementById('evalFreq').value;
+  document.querySelectorAll('#evalTable tbody tr').forEach(row => {
+    const matchSearch = !search || row.textContent.toLowerCase().includes(search);
+    const matchTier = !tier || row.dataset.tier === tier;
+    const matchAi = !ai || row.dataset.ai === ai;
+    const matchFreq = !freq || row.dataset.freq === freq;
+    row.style.display = (matchSearch && matchTier && matchAi && matchFreq) ? '' : 'none';
+  });
+}
+
+// 默认只展开 L1
+document.querySelectorAll('.density-card').forEach((card, i) => {
+  if (i > 0) card.classList.remove('open');
+});
+</script>
+
+</body></html>

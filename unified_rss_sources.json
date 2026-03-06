@@ -1,0 +1,2445 @@
+{
+  "meta": {
+    "title": "统一信息源列表（Entity-Centric 多渠道版）",
+    "version": "7.0",
+    "updated": "2026-03-04",
+    "description": "v7 重构：Tier 1 信源采用 entity-centric 结构，每个公司/人物作为一个实体(entity)，下辖多个信源(feeds)。同一平台可以有多个账号。Tier 2-4 保持 flat source 格式兼容。",
+    "changelog": "v7: 信源重构为 entity-centric 多渠道格式。每个 AI 公司/行业领袖是一个 entity，entity 下有 feeds[] 数组，每条 feed 标注 platform(x/blog/threads/rss/web/youtube/podcast 等)。新增大量官方子账号（如 Google: @GoogleAI, @GeminiApp, @GoogleDeepMind, @GoogleAIStudio 等）。补全了缺失的博客/产品账号。",
+    "schema_note": "categories[].sources 有两种格式：1) entity 格式(含 entity+feeds)用于 tier1; 2) flat 格式(含 name+url)用于 tier2-4。source_manager.py 会自动展平 entity 为独立 source。"
+  },
+  "categories": [
+    {
+      "id": "tier1_official",
+      "name": "Tier 1 · AI公司官方信源",
+      "tier": 1,
+      "description": "最一手的信息源——AI公司官方博客 + 社交账号。每个公司/产品一个 entity，下辖多个 feeds",
+      "format": "entity",
+      "sources": [
+        {
+          "entity": "OpenAI",
+          "category": "AI Lab",
+          "priority": 1,
+          "note": "GPT/Sora/o1，AI行业最重要的公司",
+          "feeds": [
+            {
+              "platform": "x",
+              "handle": "@OpenAI",
+              "url": "https://rsshub.app/twitter/user/OpenAI",
+              "type": "rss",
+              "note": "官方主账号，产品发布/重大公告"
+            },
+            {
+              "platform": "x",
+              "handle": "@ChatGPTapp",
+              "url": "https://rsshub.app/twitter/user/ChatGPTapp",
+              "type": "rss",
+              "note": "ChatGPT 产品账号"
+            },
+            {
+              "platform": "x",
+              "handle": "@OpenAIDevs",
+              "url": "https://rsshub.app/twitter/user/OpenAIDevs",
+              "type": "rss",
+              "note": "开发者关系，API更新/技术文档"
+            },
+            {
+              "platform": "x",
+              "handle": "@OpenAINewsroom",
+              "url": "https://rsshub.app/twitter/user/OpenAINewsroom",
+              "type": "rss",
+              "note": "新闻发布室"
+            },
+            {
+              "platform": "blog",
+              "handle": "OpenAI Blog",
+              "url": "https://openai.com/blog/rss.xml",
+              "type": "rss",
+              "note": "官方博客，研究/产品首发"
+            },
+            {
+              "platform": "blog",
+              "handle": "OpenAI News",
+              "url": "https://openai.com/news",
+              "type": "web",
+              "note": "官方新闻页（含非博客公告）"
+            }
+          ]
+        },
+        {
+          "entity": "Google",
+          "category": "Big Tech",
+          "priority": 1,
+          "note": "Gemini/DeepMind/Google AI，多个子品牌和研究团队",
+          "feeds": [
+            {
+              "platform": "x",
+              "handle": "@GoogleAI",
+              "url": "https://rsshub.app/twitter/user/GoogleAI",
+              "type": "rss",
+              "note": "Google AI 官方"
+            },
+            {
+              "platform": "x",
+              "handle": "@GeminiApp",
+              "url": "https://rsshub.app/twitter/user/GeminiApp",
+              "type": "rss",
+              "note": "Gemini 产品账号"
+            },
+            {
+              "platform": "x",
+              "handle": "@GoogleDeepMind",
+              "url": "https://rsshub.app/twitter/user/GoogleDeepMind",
+              "type": "rss",
+              "note": "DeepMind 研究"
+            },
+            {
+              "platform": "x",
+              "handle": "@GoogleAIStudio",
+              "url": "https://rsshub.app/twitter/user/GoogleAIStudio",
+              "type": "rss",
+              "note": "AI Studio 开发者工具"
+            },
+            {
+              "platform": "x",
+              "handle": "@Google",
+              "url": "https://rsshub.app/twitter/user/Google",
+              "type": "rss",
+              "priority": 3,
+              "note": "Google 主账号（信息量大但 AI 占比低）"
+            },
+            {
+              "platform": "blog",
+              "handle": "Google DeepMind Blog",
+              "url": "https://deepmind.google/blog/rss.xml",
+              "type": "rss",
+              "note": "DeepMind 研究博客"
+            },
+            {
+              "platform": "blog",
+              "handle": "Google Research Blog",
+              "url": "https://research.google/blog/rss/",
+              "type": "rss",
+              "note": "Google Research 博客"
+            },
+            {
+              "platform": "blog",
+              "handle": "Google Blog",
+              "url": "https://blog.google/rss/",
+              "type": "rss",
+              "priority": 2,
+              "note": "Google 全线产品博客"
+            },
+            {
+              "platform": "blog",
+              "handle": "Google Developers Blog",
+              "url": "https://developers.googleblog.com/feeds/posts/default",
+              "type": "rss",
+              "priority": 3,
+              "note": "开发者博客"
+            },
+            {
+              "platform": "rss",
+              "handle": "Google Workspace Updates",
+              "url": "https://feeds.feedburner.com/GoogleAppsUpdates",
+              "type": "rss",
+              "priority": 3,
+              "note": "Workspace AI功能更新"
+            }
+          ]
+        },
+        {
+          "entity": "Meta",
+          "category": "Big Tech",
+          "priority": 1,
+          "note": "Llama/SAM，开源模型主力",
+          "feeds": [
+            {
+              "platform": "x",
+              "handle": "@AIatMeta",
+              "url": "https://rsshub.app/twitter/user/AIatMeta",
+              "type": "rss",
+              "note": "Meta AI 官方"
+            },
+            {
+              "platform": "x",
+              "handle": "@MetaAI",
+              "url": "https://rsshub.app/twitter/user/MetaAI",
+              "type": "rss",
+              "note": "Meta AI 产品账号"
+            },
+            {
+              "platform": "x",
+              "handle": "@LlamaAIResearch",
+              "url": "https://rsshub.app/twitter/user/LlamaAIResearch",
+              "type": "rss",
+              "note": "Llama 模型专属"
+            },
+            {
+              "platform": "blog",
+              "handle": "Meta AI Blog",
+              "url": "https://ai.meta.com/blog/",
+              "type": "web",
+              "note": "官方博客（无RSS，需爬取）"
+            }
+          ]
+        },
+        {
+          "entity": "Anthropic",
+          "category": "AI Lab",
+          "priority": 1,
+          "note": "Claude 模型/AI安全研究",
+          "feeds": [
+            {
+              "platform": "x",
+              "handle": "@AnthropicAI",
+              "url": "https://rsshub.app/twitter/user/AnthropicAI",
+              "type": "rss",
+              "note": "Anthropic 官方"
+            },
+            {
+              "platform": "x",
+              "handle": "@claudeai",
+              "url": "https://rsshub.app/twitter/user/claudeai",
+              "type": "rss",
+              "note": "Claude 产品账号"
+            },
+            {
+              "platform": "blog",
+              "handle": "Anthropic News",
+              "url": "https://www.anthropic.com/news",
+              "type": "web",
+              "note": "官方新闻/研究（无RSS，需爬取）"
+            },
+            {
+              "platform": "blog",
+              "handle": "Anthropic Research",
+              "url": "https://www.anthropic.com/research",
+              "type": "web",
+              "note": "研究论文页"
+            }
+          ]
+        },
+        {
+          "entity": "Microsoft",
+          "category": "Big Tech",
+          "priority": 1,
+          "note": "Copilot/Azure AI/Bing Chat",
+          "feeds": [
+            {
+              "platform": "x",
+              "handle": "@MSFTResearch",
+              "url": "https://rsshub.app/twitter/user/MSFTResearch",
+              "type": "rss",
+              "note": "微软研究院"
+            },
+            {
+              "platform": "x",
+              "handle": "@Microsoft",
+              "url": "https://rsshub.app/twitter/user/Microsoft",
+              "type": "rss",
+              "priority": 3,
+              "note": "微软主账号"
+            },
+            {
+              "platform": "x",
+              "handle": "@MicrosoftAI",
+              "url": "https://rsshub.app/twitter/user/MicrosoftAI",
+              "type": "rss",
+              "note": "Microsoft AI 官方"
+            },
+            {
+              "platform": "blog",
+              "handle": "Microsoft AI Blog",
+              "url": "https://blogs.microsoft.com/ai/feed/",
+              "type": "rss",
+              "note": "Copilot/Azure AI 官方动态"
+            }
+          ]
+        },
+        {
+          "entity": "NVIDIA",
+          "category": "AI Infra",
+          "priority": 1,
+          "note": "GPU/CUDA/AI硬件生态",
+          "feeds": [
+            {
+              "platform": "x",
+              "handle": "@NVIDIAAI",
+              "url": "https://rsshub.app/twitter/user/NVIDIAAI",
+              "type": "rss",
+              "note": "NVIDIA AI 官方"
+            },
+            {
+              "platform": "x",
+              "handle": "@nvidia",
+              "url": "https://rsshub.app/twitter/user/nvidia",
+              "type": "rss",
+              "priority": 3,
+              "note": "NVIDIA 主账号"
+            },
+            {
+              "platform": "blog",
+              "handle": "NVIDIA AI Blog",
+              "url": "https://blogs.nvidia.com/feed/",
+              "type": "rss",
+              "note": "AI/GPU 技术博客"
+            }
+          ]
+        },
+        {
+          "entity": "xAI",
+          "category": "AI Lab",
+          "priority": 1,
+          "note": "Grok 模型，Elon Musk 创办",
+          "feeds": [
+            {
+              "platform": "x",
+              "handle": "@xaborat",
+              "url": "https://rsshub.app/twitter/user/xaborat",
+              "type": "rss",
+              "note": "xAI 官方"
+            },
+            {
+              "platform": "x",
+              "handle": "@gaboris",
+              "url": "https://rsshub.app/twitter/user/gaboris",
+              "type": "rss",
+              "note": "Grok 产品账号"
+            },
+            {
+              "platform": "blog",
+              "handle": "xAI Blog",
+              "url": "https://x.ai/blog",
+              "type": "web",
+              "note": "官方博客（无RSS，需爬取）"
+            }
+          ]
+        },
+        {
+          "entity": "Mistral AI",
+          "category": "AI Lab",
+          "priority": 1,
+          "note": "欧洲最强开源模型公司",
+          "feeds": [
+            {
+              "platform": "x",
+              "handle": "@MistralAI",
+              "url": "https://rsshub.app/twitter/user/MistralAI",
+              "type": "rss",
+              "note": "Mistral 官方"
+            },
+            {
+              "platform": "x",
+              "handle": "@le_chat_ai",
+              "url": "https://rsshub.app/twitter/user/le_chat_ai",
+              "type": "rss",
+              "note": "Le Chat 产品账号"
+            },
+            {
+              "platform": "blog",
+              "handle": "Mistral News",
+              "url": "https://mistral.ai/news/",
+              "type": "web",
+              "note": "官方新闻（无RSS，需爬取）"
+            }
+          ]
+        },
+        {
+          "entity": "DeepSeek",
+          "category": "AI Lab (CN)",
+          "priority": 1,
+          "note": "中国最强开源模型，DeepSeek-V3/R1",
+          "feeds": [
+            {
+              "platform": "x",
+              "handle": "@deepseek_ai",
+              "url": "https://rsshub.app/twitter/user/deepseek_ai",
+              "type": "rss",
+              "note": "DeepSeek 官方"
+            },
+            {
+              "platform": "blog",
+              "handle": "DeepSeek Blog",
+              "url": "https://api-docs.deepseek.com/news",
+              "type": "web",
+              "note": "官方新闻（无RSS，需爬取）"
+            }
+          ]
+        },
+        {
+          "entity": "Hugging Face",
+          "category": "AI Platform",
+          "priority": 1,
+          "note": "开源AI生态核心平台",
+          "feeds": [
+            {
+              "platform": "x",
+              "handle": "@huggingface",
+              "url": "https://rsshub.app/twitter/user/huggingface",
+              "type": "rss",
+              "note": "HuggingFace 官方"
+            },
+            {
+              "platform": "blog",
+              "handle": "HuggingFace Blog",
+              "url": "https://huggingface.co/blog/feed.xml",
+              "type": "rss",
+              "note": "技术博客，模型/工具首发"
+            }
+          ]
+        },
+        {
+          "entity": "Apple",
+          "category": "Big Tech",
+          "priority": 1,
+          "note": "Apple Intelligence/端侧AI",
+          "feeds": [
+            {
+              "platform": "blog",
+              "handle": "Apple ML Research",
+              "url": "https://machinelearning.apple.com/rss.xml",
+              "type": "rss",
+              "note": "Apple ML 研究博客"
+            }
+          ]
+        },
+        {
+          "entity": "Amazon / AWS",
+          "category": "Big Tech / AI Infra",
+          "priority": 2,
+          "note": "Bedrock/Titan/Alexa AI",
+          "feeds": [
+            {
+              "platform": "x",
+              "handle": "@AmazonScience",
+              "url": "https://rsshub.app/twitter/user/AmazonScience",
+              "type": "rss",
+              "note": "Amazon Science 研究"
+            },
+            {
+              "platform": "x",
+              "handle": "@awscloud",
+              "url": "https://rsshub.app/twitter/user/awscloud",
+              "type": "rss",
+              "priority": 3,
+              "note": "AWS 主账号"
+            },
+            {
+              "platform": "blog",
+              "handle": "Amazon Science",
+              "url": "https://www.amazon.science/index.rss",
+              "type": "rss",
+              "note": "Amazon 科学研究博客"
+            }
+          ]
+        },
+        {
+          "entity": "Perplexity AI",
+          "category": "AI Product",
+          "priority": 1,
+          "note": "AI搜索引擎",
+          "feeds": [
+            {
+              "platform": "x",
+              "handle": "@perplexity_ai",
+              "url": "https://rsshub.app/twitter/user/perplexity_ai",
+              "type": "rss",
+              "note": "Perplexity 官方"
+            }
+          ]
+        },
+        {
+          "entity": "Midjourney",
+          "category": "AI Product",
+          "priority": 1,
+          "note": "AI图像生成，V6/V7",
+          "feeds": [
+            {
+              "platform": "x",
+              "handle": "@midaborat",
+              "url": "https://rsshub.app/twitter/user/midjourney",
+              "type": "rss",
+              "note": "Midjourney 官方"
+            }
+          ]
+        },
+        {
+          "entity": "Runway",
+          "category": "AI Product",
+          "priority": 1,
+          "note": "AI视频生成，Gen-3",
+          "feeds": [
+            {
+              "platform": "x",
+              "handle": "@runwayml",
+              "url": "https://rsshub.app/twitter/user/runwayml",
+              "type": "rss",
+              "note": "Runway 官方"
+            }
+          ]
+        },
+        {
+          "entity": "Stability AI",
+          "category": "AI Lab",
+          "priority": 2,
+          "note": "Stable Diffusion 系列",
+          "feeds": [
+            {
+              "platform": "x",
+              "handle": "@StabilityAI",
+              "url": "https://rsshub.app/twitter/user/StabilityAI",
+              "type": "rss",
+              "note": "Stability AI 官方"
+            },
+            {
+              "platform": "blog",
+              "handle": "Stability News",
+              "url": "https://stability.ai/news",
+              "type": "web",
+              "note": "官方新闻（无RSS，需爬取）"
+            }
+          ]
+        },
+        {
+          "entity": "Cohere",
+          "category": "AI Lab",
+          "priority": 2,
+          "note": "企业级LLM/RAG",
+          "feeds": [
+            {
+              "platform": "x",
+              "handle": "@CohereAI",
+              "url": "https://rsshub.app/twitter/user/CohereAI",
+              "type": "rss",
+              "note": "Cohere 官方"
+            },
+            {
+              "platform": "blog",
+              "handle": "Cohere Blog",
+              "url": "https://cohere.com/blog",
+              "type": "web",
+              "note": "官方博客（无RSS，需爬取）"
+            }
+          ]
+        },
+        {
+          "entity": "Manus AI",
+          "category": "AI Product",
+          "priority": 2,
+          "note": "AI Agent 产品",
+          "feeds": [
+            {
+              "platform": "x",
+              "handle": "@ManusAI",
+              "url": "https://api.xgo.ing/rss/user/320181c4651a41a08015946b55f704ab",
+              "type": "rss",
+              "note": "Manus AI 官方"
+            }
+          ]
+        },
+        {
+          "entity": "GitHub",
+          "category": "AI Platform",
+          "priority": 2,
+          "note": "Copilot/开发者工具",
+          "feeds": [
+            {
+              "platform": "blog",
+              "handle": "GitHub Blog",
+              "url": "https://github.blog/feed/",
+              "type": "rss",
+              "note": "Copilot/开发者工具动态"
+            }
+          ]
+        },
+        {
+          "entity": "Cursor / Anysphere",
+          "category": "AI Product",
+          "priority": 2,
+          "note": "AI代码编辑器",
+          "feeds": [
+            {
+              "platform": "x",
+              "handle": "@cursor_ai",
+              "url": "https://rsshub.app/twitter/user/cursor_ai",
+              "type": "rss",
+              "note": "Cursor 官方"
+            },
+            {
+              "platform": "blog",
+              "handle": "Cursor Changelog",
+              "url": "https://www.cursor.com/changelog",
+              "type": "web",
+              "note": "产品更新日志"
+            }
+          ]
+        },
+        {
+          "entity": "阿里/通义千问 Qwen",
+          "category": "AI Lab (CN)",
+          "priority": 1,
+          "note": "Qwen系列开源模型",
+          "feeds": [
+            {
+              "platform": "x",
+              "handle": "@Alibaba_Qwen",
+              "url": "https://rsshub.app/twitter/user/Alibaba_Qwen",
+              "type": "rss",
+              "note": "Qwen 团队官方"
+            },
+            {
+              "platform": "x",
+              "handle": "@tongaborat_qianwen",
+              "url": "https://rsshub.app/twitter/user/tongyi_qianwen",
+              "type": "rss",
+              "note": "通义千问产品"
+            },
+            {
+              "platform": "blog",
+              "handle": "Qwen Blog",
+              "url": "https://qwenlm.github.io/blog/",
+              "type": "web",
+              "note": "Qwen 技术博客"
+            }
+          ]
+        },
+        {
+          "entity": "智谱AI",
+          "category": "AI Lab (CN)",
+          "priority": 1,
+          "note": "GLM系列模型，ChatGLM",
+          "feeds": [
+            {
+              "platform": "x",
+              "handle": "@thinkaborat_ai",
+              "url": "https://rsshub.app/twitter/user/thinkaborat_ai",
+              "type": "rss",
+              "note": "智谱AI 官方"
+            }
+          ]
+        },
+        {
+          "entity": "MiniMax",
+          "category": "AI Lab (CN)",
+          "priority": 1,
+          "note": "海螺AI/MiniMax模型",
+          "feeds": [
+            {
+              "platform": "x",
+              "handle": "@MiniMax_HQ",
+              "url": "https://rsshub.app/twitter/user/MiniMax_HQ",
+              "type": "rss",
+              "note": "MiniMax 官方"
+            },
+            {
+              "platform": "公众号",
+              "handle": "MiniMax公众号",
+              "url": "https://wechat2rss.bestblogs.dev/feed/00306b171f754d463b28cf83f3ba086ad009b430.xml",
+              "type": "rss",
+              "lang": "zh",
+              "note": "MiniMax 官方公众号"
+            }
+          ]
+        },
+        {
+          "entity": "月之暗面 Moonshot AI",
+          "category": "AI Lab (CN)",
+          "priority": 1,
+          "note": "Kimi 模型",
+          "feeds": [
+            {
+              "platform": "x",
+              "handle": "@Moonshot_AI",
+              "url": "https://rsshub.app/twitter/user/Moonshot_AI",
+              "type": "rss",
+              "note": "月之暗面 官方"
+            },
+            {
+              "platform": "x",
+              "handle": "@KimiChat_AI",
+              "url": "https://rsshub.app/twitter/user/KimiChat_AI",
+              "type": "rss",
+              "note": "Kimi 产品账号"
+            }
+          ]
+        },
+        {
+          "entity": "字节跳动/豆包",
+          "category": "Big Tech (CN)",
+          "priority": 2,
+          "note": "豆包大模型",
+          "feeds": [
+            {
+              "platform": "x",
+              "handle": "@doubao_ai",
+              "url": "https://rsshub.app/twitter/user/doubao_ai",
+              "type": "rss",
+              "note": "豆包 官方"
+            }
+          ]
+        },
+        {
+          "entity": "腾讯AI",
+          "category": "Big Tech (CN)",
+          "priority": 2,
+          "note": "混元模型/腾讯AI Lab",
+          "feeds": [
+            {
+              "platform": "x",
+              "handle": "@TencentAILab",
+              "url": "https://rsshub.app/twitter/user/TencentAILab",
+              "type": "rss",
+              "note": "腾讯AI实验室"
+            }
+          ]
+        },
+        {
+          "entity": "百川智能",
+          "category": "AI Lab (CN)",
+          "priority": 2,
+          "note": "百川大模型",
+          "feeds": [
+            {
+              "platform": "x",
+              "handle": "@Baichuan_AI",
+              "url": "https://rsshub.app/twitter/user/Baichuan_AI",
+              "type": "rss",
+              "note": "百川智能 官方"
+            }
+          ]
+        },
+        {
+          "entity": "零一万物",
+          "category": "AI Lab (CN)",
+          "priority": 2,
+          "note": "Yi系列模型，李开复创办",
+          "feeds": [
+            {
+              "platform": "x",
+              "handle": "@01aborat_yi",
+              "url": "https://rsshub.app/twitter/user/01aborat_yi",
+              "type": "rss",
+              "note": "零一万物 官方"
+            }
+          ]
+        },
+        {
+          "entity": "阶跃星辰",
+          "category": "AI Lab (CN)",
+          "priority": 2,
+          "note": "Step系列模型，姜大昕创办",
+          "feeds": [
+            {
+              "platform": "x",
+              "handle": "@StepFunAI",
+              "url": "https://rsshub.app/twitter/user/StepFunAI",
+              "type": "rss",
+              "note": "阶跃星辰 官方"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "tier1_leaders",
+      "name": "Tier 1 · 行业领袖与深度博主",
+      "tier": 1,
+      "description": "AI领域核心人物（CEO/CTO/首席科学家/研究员）+ 顶级深度原创博主。每个人物一个 entity，下辖多平台",
+      "format": "entity",
+      "sources": [
+        {
+          "entity": "Sam Altman",
+          "category": "CEO",
+          "affiliation": "OpenAI",
+          "priority": 1,
+          "note": "OpenAI CEO，AI行业风向标",
+          "feeds": [
+            {
+              "platform": "x",
+              "handle": "@sama",
+              "url": "https://rsshub.app/twitter/user/sama",
+              "type": "rss",
+              "note": "个人 X"
+            },
+            {
+              "platform": "blog",
+              "handle": "Sam Altman Blog",
+              "url": "https://blog.samaltman.com/",
+              "type": "web",
+              "note": "个人博客（不常更新）"
+            }
+          ]
+        },
+        {
+          "entity": "Elon Musk",
+          "category": "CEO",
+          "affiliation": "xAI / Tesla / SpaceX",
+          "priority": 1,
+          "note": "xAI/Grok，超级影响力",
+          "feeds": [
+            {
+              "platform": "x",
+              "handle": "@elonmusk",
+              "url": "https://rsshub.app/twitter/user/elonmusk",
+              "type": "rss",
+              "note": "个人 X（信息量极大，需筛选 AI 相关）"
+            }
+          ]
+        },
+        {
+          "entity": "Demis Hassabis",
+          "category": "CEO",
+          "affiliation": "Google DeepMind",
+          "priority": 1,
+          "note": "Google DeepMind CEO，诺贝尔化学奖得主",
+          "feeds": [
+            {
+              "platform": "x",
+              "handle": "@demaborat",
+              "url": "https://api.xgo.ing/rss/user/4a884d5e2f3740c5a26c9c093de6388a",
+              "type": "rss",
+              "note": "个人 X"
+            }
+          ]
+        },
+        {
+          "entity": "Dario Amodei",
+          "category": "CEO",
+          "affiliation": "Anthropic",
+          "priority": 1,
+          "note": "Anthropic CEO，AI安全领袖",
+          "feeds": [
+            {
+              "platform": "x",
+              "handle": "@DarioAmodei",
+              "url": "https://rsshub.app/twitter/user/DarioAmodei",
+              "type": "rss",
+              "note": "个人 X"
+            },
+            {
+              "platform": "blog",
+              "handle": "Dario's Essays",
+              "url": "https://darioamodei.com/",
+              "type": "web",
+              "note": "个人博客/长文"
+            }
+          ]
+        },
+        {
+          "entity": "Yann LeCun",
+          "category": "Scientist",
+          "affiliation": "Meta",
+          "priority": 1,
+          "note": "Meta首席AI科学家，图灵奖得主",
+          "feeds": [
+            {
+              "platform": "x",
+              "handle": "@ylecun",
+              "url": "https://rsshub.app/twitter/user/ylecun",
+              "type": "rss",
+              "note": "个人 X，活跃度极高"
+            }
+          ]
+        },
+        {
+          "entity": "Andrej Karpathy",
+          "category": "Researcher / Educator",
+          "affiliation": "前 OpenAI / Tesla",
+          "priority": 1,
+          "note": "AI教育家，深度学习布道者",
+          "feeds": [
+            {
+              "platform": "x",
+              "handle": "@kaboris",
+              "url": "https://rsshub.app/twitter/user/kaboris",
+              "type": "rss",
+              "note": "个人 X"
+            },
+            {
+              "platform": "youtube",
+              "handle": "Andrej Karpathy",
+              "url": "https://www.youtube.com/@AndrejKarpathy",
+              "type": "web",
+              "note": "YouTube 深度教程"
+            }
+          ]
+        },
+        {
+          "entity": "Ilya Sutskever",
+          "category": "Scientist",
+          "affiliation": "SSI (前 OpenAI)",
+          "priority": 1,
+          "note": "SSI联合创始人，前OpenAI首席科学家",
+          "feeds": [
+            {
+              "platform": "x",
+              "handle": "@ilyasut",
+              "url": "https://rsshub.app/twitter/user/ilyasut",
+              "type": "rss",
+              "note": "个人 X（低频但极高价值）"
+            }
+          ]
+        },
+        {
+          "entity": "Jim Fan",
+          "category": "Researcher",
+          "affiliation": "NVIDIA",
+          "priority": 1,
+          "note": "NVIDIA高级研究科学家，AI Agent/机器人/具身智能",
+          "feeds": [
+            {
+              "platform": "x",
+              "handle": "@DrJimFan",
+              "url": "https://rsshub.app/twitter/user/DrJimFan",
+              "type": "rss",
+              "note": "个人 X，技术帖质量极高"
+            }
+          ]
+        },
+        {
+          "entity": "Fei-Fei Li 李飞飞",
+          "category": "Scientist",
+          "affiliation": "Stanford HAI / World Labs",
+          "priority": 1,
+          "note": "斯坦福HAI联合主任，ImageNet之母，World Labs创始人",
+          "feeds": [
+            {
+              "platform": "x",
+              "handle": "@drfeifei",
+              "url": "https://rsshub.app/twitter/user/drfeifei",
+              "type": "rss",
+              "note": "个人 X"
+            }
+          ]
+        },
+        {
+          "entity": "Mark Zuckerberg",
+          "category": "CEO",
+          "affiliation": "Meta",
+          "priority": 1,
+          "note": "Meta CEO，Llama开源模型推动者",
+          "feeds": [
+            {
+              "platform": "x",
+              "handle": "@finkd",
+              "url": "https://rsshub.app/twitter/user/finkd",
+              "type": "rss",
+              "note": "X 账号"
+            }
+          ]
+        },
+        {
+          "entity": "Satya Nadella",
+          "category": "CEO",
+          "affiliation": "Microsoft",
+          "priority": 2,
+          "note": "微软CEO，AI战略推动者",
+          "feeds": [
+            {
+              "platform": "x",
+              "handle": "@sataboris",
+              "url": "https://rsshub.app/twitter/user/sataboris",
+              "type": "rss",
+              "note": "个人 X"
+            }
+          ]
+        },
+        {
+          "entity": "Jensen Huang 黄仁勋",
+          "category": "CEO",
+          "affiliation": "NVIDIA",
+          "priority": 2,
+          "note": "NVIDIA CEO，AI硬件教父",
+          "feeds": [
+            {
+              "platform": "x",
+              "handle": "@jensen_huang_",
+              "url": "https://rsshub.app/twitter/user/jensen_huang_",
+              "type": "rss",
+              "note": "个人 X"
+            }
+          ]
+        },
+        {
+          "entity": "Sundar Pichai",
+          "category": "CEO",
+          "affiliation": "Google / Alphabet",
+          "priority": 2,
+          "note": "Google CEO",
+          "feeds": [
+            {
+              "platform": "x",
+              "handle": "@sundaboris",
+              "url": "https://rsshub.app/twitter/user/sundaboris",
+              "type": "rss",
+              "note": "个人 X"
+            }
+          ]
+        },
+        {
+          "entity": "Junyang Lin 林骏洋",
+          "category": "Researcher",
+          "affiliation": "阿里 Qwen",
+          "priority": 1,
+          "note": "Qwen团队负责人，Qwen系列核心推动者",
+          "feeds": [
+            {
+              "platform": "x",
+              "handle": "@JunyangL",
+              "url": "https://rsshub.app/twitter/user/JunyangL",
+              "type": "rss",
+              "note": "个人 X"
+            }
+          ]
+        },
+        {
+          "entity": "Clement Delangue",
+          "category": "CEO",
+          "affiliation": "Hugging Face",
+          "priority": 1,
+          "note": "Hugging Face CEO，开源AI生态领袖",
+          "feeds": [
+            {
+              "platform": "x",
+              "handle": "@ClementDelangue",
+              "url": "https://rsshub.app/twitter/user/ClementDelangue",
+              "type": "rss",
+              "note": "个人 X"
+            }
+          ]
+        },
+        {
+          "entity": "Jason Wei",
+          "category": "Researcher",
+          "affiliation": "OpenAI",
+          "priority": 1,
+          "note": "Chain-of-Thought 论文作者",
+          "feeds": [
+            {
+              "platform": "x",
+              "handle": "@_jasonwei",
+              "url": "https://rsshub.app/twitter/user/_jasonwei",
+              "type": "rss",
+              "note": "个人 X"
+            }
+          ]
+        },
+        {
+          "entity": "David Ha",
+          "category": "CEO",
+          "affiliation": "Sakana AI",
+          "priority": 1,
+          "note": "Sakana AI CEO，前Google Brain",
+          "feeds": [
+            {
+              "platform": "x",
+              "handle": "@hardmaru",
+              "url": "https://rsshub.app/twitter/user/hardmaru",
+              "type": "rss",
+              "note": "个人 X"
+            }
+          ]
+        },
+        {
+          "entity": "Percy Liang",
+          "category": "Scientist",
+          "affiliation": "Stanford CRFM",
+          "priority": 1,
+          "note": "斯坦福CRFM主任，HELM基准创始人",
+          "feeds": [
+            {
+              "platform": "x",
+              "handle": "@percyliang",
+              "url": "https://rsshub.app/twitter/user/percyliang",
+              "type": "rss",
+              "note": "个人 X"
+            }
+          ]
+        },
+        {
+          "entity": "Harrison Chase",
+          "category": "CEO",
+          "affiliation": "LangChain",
+          "priority": 1,
+          "note": "LangChain创始人，AI Agent框架",
+          "feeds": [
+            {
+              "platform": "x",
+              "handle": "@hwchase17",
+              "url": "https://rsshub.app/twitter/user/hwchase17",
+              "type": "rss",
+              "note": "个人 X"
+            }
+          ]
+        },
+        {
+          "entity": "Aravind Srinivas",
+          "category": "CEO",
+          "affiliation": "Perplexity AI",
+          "priority": 2,
+          "note": "Perplexity AI CEO",
+          "feeds": [
+            {
+              "platform": "x",
+              "handle": "@AravSrinivas",
+              "url": "https://rsshub.app/twitter/user/AravSrinivas",
+              "type": "rss",
+              "note": "个人 X"
+            }
+          ]
+        },
+        {
+          "entity": "David Sacks",
+          "category": "Policy / VC",
+          "affiliation": "白宫AI/加密沙皇",
+          "priority": 2,
+          "note": "白宫AI政策制定者，科技投资人",
+          "feeds": [
+            {
+              "platform": "x",
+              "handle": "@DavSacks",
+              "url": "https://rsshub.app/twitter/user/DavSacks",
+              "type": "rss",
+              "note": "个人 X"
+            }
+          ]
+        },
+        {
+          "entity": "杨植麟",
+          "category": "CEO",
+          "affiliation": "月之暗面 Moonshot AI",
+          "priority": 1,
+          "note": "月之暗面创始人，Kimi",
+          "feeds": [
+            {
+              "platform": "x",
+              "handle": "@yzaborat_yang",
+              "url": "https://rsshub.app/twitter/user/yzaborat_yang",
+              "type": "rss",
+              "note": "个人 X"
+            }
+          ]
+        },
+        {
+          "entity": "贾佳亚",
+          "category": "Scientist",
+          "affiliation": "智谱AI / CUHK",
+          "priority": 1,
+          "note": "智谱AI首席科学家，香港中文大学教授",
+          "feeds": [
+            {
+              "platform": "x",
+              "handle": "@jiaborajia_cuhk",
+              "url": "https://rsshub.app/twitter/user/jiaborajia_cuhk",
+              "type": "rss",
+              "note": "个人 X"
+            }
+          ]
+        },
+        {
+          "entity": "李开复",
+          "category": "CEO / VC",
+          "affiliation": "零一万物 / 创新工场",
+          "priority": 1,
+          "note": "零一万物创始人，AI投资人",
+          "feeds": [
+            {
+              "platform": "x",
+              "handle": "@kaaborat_lee",
+              "url": "https://rsshub.app/twitter/user/kaaborat_lee",
+              "type": "rss",
+              "note": "个人 X"
+            }
+          ]
+        },
+        {
+          "entity": "唐杰",
+          "category": "Scientist",
+          "affiliation": "清华大学 / 智谱AI",
+          "priority": 2,
+          "note": "清华大学教授，智谱AI联合创始人",
+          "feeds": [
+            {
+              "platform": "x",
+              "handle": "@tangjie_me",
+              "url": "https://rsshub.app/twitter/user/tangjie_me",
+              "type": "rss",
+              "note": "个人 X"
+            }
+          ]
+        },
+        {
+          "entity": "Simon Willison",
+          "category": "Blogger / Developer",
+          "affiliation": "独立",
+          "priority": 1,
+          "note": "AI工具/LLM深度实践第一人，日更高质量",
+          "feeds": [
+            {
+              "platform": "blog",
+              "handle": "Simon Willison's Weblog",
+              "url": "https://simonwillison.net/atom/everything/",
+              "type": "rss",
+              "note": "核心博客，必读"
+            },
+            {
+              "platform": "x",
+              "handle": "@simonw",
+              "url": "https://rsshub.app/twitter/user/simonw",
+              "type": "rss",
+              "note": "个人 X"
+            }
+          ]
+        },
+        {
+          "entity": "宝玉",
+          "category": "Blogger / Translator",
+          "affiliation": "独立",
+          "priority": 1,
+          "note": "中文AI社区最重要的翻译+分析博主",
+          "feeds": [
+            {
+              "platform": "blog",
+              "handle": "宝玉的博客",
+              "url": "https://rsshub.app/baoyu/blog",
+              "type": "rss",
+              "note": "中文博客"
+            },
+            {
+              "platform": "x",
+              "handle": "@dotey",
+              "url": "https://rsshub.app/twitter/user/dotey",
+              "type": "rss",
+              "note": "个人 X"
+            }
+          ]
+        },
+        {
+          "entity": "Pavel Durov",
+          "category": "CEO",
+          "affiliation": "Telegram",
+          "priority": 2,
+          "note": "Telegram创始人，社交/隐私视角",
+          "feeds": [
+            {
+              "platform": "telegram",
+              "handle": "@durov",
+              "url": "https://rsshub.rssforever.com/telegram/channel/durov",
+              "type": "rss",
+              "note": "Telegram 频道"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "tier1_community",
+      "name": "Tier 1 · 开发者社区与产品发现",
+      "tier": 1,
+      "description": "开发者讨论、新产品发现、GitHub趋势——发现新项目和社区热点的核心渠道",
+      "sources": [
+        {
+          "name": "Hacker News",
+          "url": "https://news.ycombinator.com/rss",
+          "type": "rss",
+          "lang": "en",
+          "priority": 1,
+          "note": "开发者社区风向标"
+        },
+        {
+          "name": "GitHub Trending Daily",
+          "url": "https://rsshub.rssforever.com/github/trending/daily/any",
+          "type": "rss",
+          "lang": "en",
+          "priority": 1,
+          "note": "每日热门开源项目"
+        },
+        {
+          "name": "Product Hunt",
+          "url": "https://www.producthunt.com/feed",
+          "type": "rss",
+          "lang": "en",
+          "priority": 1,
+          "note": "新产品发现第一站"
+        },
+        {
+          "name": "逛逛GitHub",
+          "url": "https://wechat2rss.bestblogs.dev/feed/38be32e5376d852c13d3383e4d7a757fd9a55ff6.xml",
+          "type": "rss",
+          "lang": "zh",
+          "priority": 2,
+          "source_type": "公众号",
+          "note": "GitHub开源项目推荐（中文）"
+        },
+        {
+          "name": "AIBase产品库",
+          "url": "https://rsshub.app/aibase/discover",
+          "type": "rss",
+          "lang": "zh",
+          "priority": 2,
+          "note": "AI新产品收录"
+        },
+        {
+          "name": "Product Hunt (Buzzing镜像)",
+          "url": "https://ph.buzzing.cc/feed.xml",
+          "type": "rss",
+          "lang": "en",
+          "priority": 2,
+          "note": "PH中文翻译版"
+        },
+        {
+          "name": "V2EX热门",
+          "url": "https://www.v2ex.com/api/topics/hot.json",
+          "type": "api",
+          "lang": "zh",
+          "priority": 2,
+          "note": "中文开发者社区热门话题"
+        }
+      ]
+    },
+    {
+      "id": "tier2_intl_media",
+      "name": "Tier 2 · 国际顶级科技媒体",
+      "tier": 2,
+      "description": "有专业记者团队的英文科技媒体，原创报道+深度调查",
+      "sources": [
+        {
+          "name": "TechCrunch AI",
+          "url": "https://techcrunch.com/category/artificial-intelligence/feed/",
+          "type": "rss",
+          "lang": "en",
+          "priority": 2,
+          "note": "AI创业/融资报道最强"
+        },
+        {
+          "name": "MIT Technology Review AI",
+          "url": "https://www.technologyreview.com/topic/artificial-intelligence/feed/",
+          "type": "rss",
+          "lang": "en",
+          "priority": 2,
+          "note": "MIT出品，学术+产业深度"
+        },
+        {
+          "name": "The Verge",
+          "url": "https://www.theverge.com/rss/index.xml",
+          "type": "rss",
+          "lang": "en",
+          "priority": 2,
+          "note": "科技产品/消费端报道强"
+        },
+        {
+          "name": "VentureBeat",
+          "url": "https://venturebeat.com/feed/",
+          "type": "rss",
+          "lang": "en",
+          "priority": 2,
+          "note": "企业AI/B2B视角"
+        },
+        {
+          "name": "Wired",
+          "url": "https://www.wired.com/feed/rss",
+          "type": "rss",
+          "lang": "en",
+          "priority": 2,
+          "note": "深度长文+科技文化"
+        },
+        {
+          "name": "Ars Technica",
+          "url": "https://feeds.arstechnica.com/arstechnica/index",
+          "type": "rss",
+          "lang": "en",
+          "priority": 2,
+          "note": "技术深度分析强"
+        },
+        {
+          "name": "Bloomberg Tech",
+          "url": "https://feeds.bloomberg.com/technology/news.rss",
+          "type": "rss",
+          "lang": "en",
+          "priority": 2,
+          "note": "金融+科技交叉，独家商业信息"
+        },
+        {
+          "name": "Techmeme",
+          "url": "https://www.techmeme.com/feed.xml",
+          "type": "rss",
+          "lang": "en",
+          "priority": 2,
+          "note": "科技新闻聚合器，编辑精选质量高"
+        },
+        {
+          "name": "The Register",
+          "url": "https://www.theregister.com/headlines.atom",
+          "type": "rss",
+          "lang": "en",
+          "priority": 3,
+          "note": "IT基础设施/企业IT视角"
+        },
+        {
+          "name": "TechRadar",
+          "url": "https://www.techradar.com/rss",
+          "type": "rss",
+          "lang": "en",
+          "priority": 3,
+          "note": "消费科技，AI相关较少"
+        },
+        {
+          "name": "Techspective AI",
+          "url": "https://techspective.net/category/technology/artificial-intelligence/feed/",
+          "type": "rss",
+          "lang": "en",
+          "priority": 3,
+          "note": "AI专栏，更新频率中等"
+        }
+      ]
+    },
+    {
+      "id": "tier2_cn_media",
+      "name": "Tier 2 · 中文头部AI/科技媒体",
+      "tier": 2,
+      "description": "中文世界AI报道最及时、最专业的媒体+微信公众号",
+      "sources": [
+        {
+          "name": "机器之心",
+          "url": "https://www.jiqizhixin.com/rss",
+          "type": "web",
+          "lang": "zh",
+          "priority": 2,
+          "source_type": "网页",
+          "note": "中文AI媒体第一梯队，论文解读+产业报道（官方RSS已失效，需爬取）"
+        },
+        {
+          "name": "量子位",
+          "url": "https://www.qbitai.com/feed",
+          "type": "rss",
+          "lang": "zh",
+          "priority": 2,
+          "source_type": "网页",
+          "note": "中文AI快讯+深度，更新快"
+        },
+        {
+          "name": "新智元",
+          "url": "https://raw.githubusercontent.com/osnsyc/Wechat-Scholar/main/channels/gh_108f2a2a27f4.xml",
+          "type": "rss",
+          "lang": "zh",
+          "priority": 2,
+          "source_type": "公众号",
+          "note": "中文AI媒体，热点覆盖广"
+        },
+        {
+          "name": "晚点LatePost",
+          "url": "https://rsshub.app/latepost",
+          "type": "rss",
+          "lang": "zh",
+          "priority": 2,
+          "source_type": "网页",
+          "note": "科技商业深度报道，独家信息多"
+        },
+        {
+          "name": "Founder Park",
+          "url": "https://wechat2rss.bestblogs.dev/feed/f940695505f2be1399d23cc98182297cadf6f90d.xml",
+          "type": "rss",
+          "lang": "zh",
+          "priority": 3,
+          "source_type": "公众号",
+          "note": "极客公园旗下，创业+AI"
+        },
+        {
+          "name": "硅基观察Pro",
+          "url": "https://wechat2rss.bestblogs.dev/feed/f21c3e34df9b5fecfda57e2e53512864255ed4cd.xml",
+          "type": "rss",
+          "lang": "zh",
+          "priority": 3,
+          "source_type": "公众号",
+          "note": "AI产业观察"
+        },
+        {
+          "name": "赛博禅心",
+          "url": "https://wechat2rss.bestblogs.dev/feed/752c31ca0446b837339463fc5440539e20267d2f.xml",
+          "type": "rss",
+          "lang": "zh",
+          "priority": 3,
+          "source_type": "公众号",
+          "note": "AI哲学+产业思考"
+        },
+        {
+          "name": "InfoQ 推荐",
+          "url": "https://www.infoq.cn/feed",
+          "type": "rss",
+          "lang": "zh",
+          "priority": 3,
+          "source_type": "网页",
+          "note": "开发者技术社区"
+        },
+        {
+          "name": "数字生命卡兹克",
+          "url": "https://wechat2rss.bestblogs.dev/feed/ff621c3e98d6ae6fceb3397e57441ffc6ea3c17f.xml",
+          "type": "rss",
+          "lang": "zh",
+          "priority": 4,
+          "source_type": "公众号",
+          "note": "AI应用评测"
+        },
+        {
+          "name": "51CTO",
+          "url": "https://rsshub.app/51cto/index/recommend",
+          "type": "rss",
+          "lang": "zh",
+          "priority": 4,
+          "source_type": "网页",
+          "note": "IT技术社区，偏运维/开发"
+        }
+      ]
+    },
+    {
+      "id": "tier3_vc",
+      "name": "Tier 3 · 投资机构与行业分析",
+      "tier": 3,
+      "description": "顶级VC博客和投资研究——提供市场趋势、融资动向、行业格局的独特视角",
+      "sources": [
+        {
+          "name": "Sequoia Capital",
+          "url": "https://www.sequoiacap.com/feed/",
+          "type": "rss",
+          "lang": "en",
+          "priority": 3,
+          "note": "红杉资本，AI投资风向标"
+        },
+        {
+          "name": "ARK Invest",
+          "url": "https://ark-invest.com/feed/",
+          "type": "rss",
+          "lang": "en",
+          "priority": 3,
+          "note": "ARK投资研究，Big Ideas年度报告"
+        },
+        {
+          "name": "Union Square Ventures (AVC)",
+          "url": "https://avc.com/feed/",
+          "type": "rss",
+          "lang": "en",
+          "priority": 4,
+          "note": "Fred Wilson(USV创始人)博客，已长期不更新（最新2024-05）"
+        }
+      ]
+    },
+    {
+      "id": "tier3_academic",
+      "name": "Tier 3 · 学术论文前沿",
+      "tier": 3,
+      "description": "arXiv最新论文——AI领域的学术源头，量大需筛选，适合深度追踪而非日常资讯",
+      "sources": [
+        {
+          "name": "arXiv - Artificial Intelligence",
+          "url": "https://rss.arxiv.org/rss/cs.AI",
+          "type": "rss",
+          "lang": "en",
+          "priority": 3,
+          "note": "AI核心论文，日更数百篇，需筛选"
+        },
+        {
+          "name": "arXiv - Machine Learning",
+          "url": "https://rss.arxiv.org/rss/cs.LG",
+          "type": "rss",
+          "lang": "en",
+          "priority": 3,
+          "note": "ML论文，与cs.AI有交叉"
+        },
+        {
+          "name": "arXiv - Computer Vision",
+          "url": "https://rss.arxiv.org/rss/cs.CV",
+          "type": "rss",
+          "lang": "en",
+          "priority": 4,
+          "note": "CV论文，视频/图像生成相关"
+        },
+        {
+          "name": "arXiv - Audio/Speech Processing",
+          "url": "https://rss.arxiv.org/rss/eess.AS",
+          "type": "rss",
+          "lang": "en",
+          "priority": 4,
+          "note": "语音/音频AI，较小众"
+        }
+      ]
+    },
+    {
+      "id": "tier4_aggregators",
+      "name": "Tier 4 · 新闻聚合站（补充参考）",
+      "tier": 4,
+      "description": "多源聚合平台+中文综合科技媒体——信息重复度高，用来查漏补缺或快速浏览热点概况",
+      "sources": [
+        {
+          "name": "TechURLs",
+          "url": "https://techurls.com/",
+          "type": "web",
+          "lang": "en",
+          "priority": 4,
+          "note": "科技新闻聚合，一页看全"
+        },
+        {
+          "name": "Buzzing",
+          "url": "https://www.buzzing.cc/feed.json",
+          "type": "api",
+          "lang": "en",
+          "priority": 4,
+          "note": "多源JSON Feed"
+        },
+        {
+          "name": "Zeli (HN 24h热门)",
+          "url": "https://zeli.app/api/hacker-news?type=hot24h",
+          "type": "api",
+          "lang": "en",
+          "priority": 4,
+          "note": "HN精选"
+        },
+        {
+          "name": "BestBlogs",
+          "url": "https://www.bestblogs.dev/en/newsletter",
+          "type": "web",
+          "lang": "en",
+          "priority": 4,
+          "note": "优质博客周刊"
+        },
+        {
+          "name": "Info Flow (Iris)",
+          "url": "https://iris.findtruman.io/web/info_flow",
+          "type": "web",
+          "lang": "en",
+          "priority": 4,
+          "note": "信息流聚合"
+        },
+        {
+          "name": "36氪 - 最新资讯",
+          "url": "https://36kr.com/feed",
+          "type": "rss",
+          "lang": "zh",
+          "priority": 5,
+          "source_type": "网页",
+          "note": "科技创业综合资讯（官方RSS）"
+        },
+        {
+          "name": "36氪AI频道",
+          "url": "https://36kr.com/information/AI",
+          "type": "web",
+          "lang": "zh",
+          "priority": 5,
+          "source_type": "网页",
+          "note": "36氪AI专题（需爬取）"
+        },
+        {
+          "name": "虎嗅 - 前沿科技",
+          "url": "https://www.huxiu.com/rss/0.xml",
+          "type": "rss",
+          "lang": "zh",
+          "priority": 5,
+          "source_type": "网页",
+          "note": "科技评论+产业分析（官方RSS）"
+        },
+        {
+          "name": "爱范儿",
+          "url": "http://www.ifanr.com/feed",
+          "type": "rss",
+          "lang": "zh",
+          "priority": 5,
+          "source_type": "网页",
+          "note": "科技消费品+新锐产品"
+        },
+        {
+          "name": "钛媒体",
+          "url": "https://www.tmtpost.com/rss.xml",
+          "type": "rss",
+          "lang": "zh",
+          "priority": 5,
+          "source_type": "网页",
+          "note": "科技商业综合"
+        },
+        {
+          "name": "少数派",
+          "url": "https://sspai.com/feed",
+          "type": "rss",
+          "lang": "zh",
+          "priority": 5,
+          "source_type": "网页",
+          "note": "工具/效率/AI应用评测"
+        },
+        {
+          "name": "IT之家",
+          "url": "https://www.ithome.com/rss/",
+          "type": "rss",
+          "lang": "zh",
+          "priority": 5,
+          "source_type": "网页",
+          "note": "科技快讯，速度快但深度一般"
+        },
+        {
+          "name": "腾讯科技",
+          "url": "https://i.news.qq.com/web_backend/v2/getTagInfo?tagId=aEWqxLtdgmQ%3D",
+          "type": "api",
+          "lang": "zh",
+          "priority": 5,
+          "source_type": "网页",
+          "note": "腾讯新闻科技频道"
+        },
+        {
+          "name": "TopHub",
+          "url": "https://tophub.today/",
+          "type": "web",
+          "lang": "zh",
+          "priority": 5,
+          "note": "中文多平台热榜"
+        },
+        {
+          "name": "AI今日热榜",
+          "url": "https://aihot.today/",
+          "type": "web",
+          "lang": "zh",
+          "priority": 5,
+          "note": "AI热门聚合"
+        },
+        {
+          "name": "NewsNow",
+          "url": "https://newsnow.busiyi.world/",
+          "type": "web",
+          "lang": "zh",
+          "priority": 5,
+          "note": "新闻聚合器"
+        }
+      ]
+    },
+    {
+      "id": "tier_special_gaming",
+      "name": "专题 · 游戏行业",
+      "tier": 3,
+      "description": "游戏行业媒体——覆盖AI游戏、AI NPC、游戏开发、行业商业动态",
+      "sources": [
+        {
+          "name": "GamesIndustry.biz",
+          "url": "https://www.gamesindustry.biz/feed",
+          "type": "rss",
+          "lang": "en",
+          "priority": 3,
+          "note": "游戏行业商业新闻第一站，裁员/收购/财报"
+        },
+        {
+          "name": "Eurogamer",
+          "url": "https://www.eurogamer.net/feed",
+          "type": "rss",
+          "lang": "en",
+          "priority": 3,
+          "note": "游戏+娱乐文化深度（替换Polygon，RSS已失效）"
+        },
+        {
+          "name": "Rock Paper Shotgun",
+          "url": "https://www.rockpapershotgun.com/feed",
+          "type": "rss",
+          "lang": "en",
+          "priority": 3,
+          "note": "PC游戏文化/评论（替换Kotaku，RSS被403封锁）"
+        },
+        {
+          "name": "PC Gamer",
+          "url": "https://www.pcgamer.com/rss/",
+          "type": "rss",
+          "lang": "en",
+          "priority": 3,
+          "note": "PC游戏硬件+评测"
+        },
+        {
+          "name": "GameSpot",
+          "url": "https://www.gamespot.com/feeds/mashup/",
+          "type": "rss",
+          "lang": "en",
+          "priority": 3,
+          "note": "游戏评测/新闻综合"
+        },
+        {
+          "name": "TouchArcade",
+          "url": "https://feeds.feedburner.com/toucharcade",
+          "type": "rss",
+          "lang": "en",
+          "priority": 4,
+          "note": "移动游戏专业媒体（FeedBurner源）"
+        },
+        {
+          "name": "IGN",
+          "url": "https://feeds.feedburner.com/ign/all",
+          "type": "rss",
+          "lang": "en",
+          "priority": 4,
+          "note": "游戏行业综合"
+        },
+        {
+          "name": "Game Developer",
+          "url": "https://www.gamedeveloper.com/rss.xml",
+          "type": "rss",
+          "lang": "en",
+          "priority": 3,
+          "note": "游戏开发专业媒体，GDC/技术分析"
+        }
+      ]
+    },
+    {
+      "id": "karpathy_picks",
+      "name": "专题 · Karpathy精选信息源",
+      "tier": 2,
+      "description": "Andrej Karpathy 推荐的顶级技术博客（去掉已在其他类目的重复项后90个），涵盖安全、编程、AI、硬件、创业等",
+      "priority_note": "整体 priority 2-3。AI高相关的靠前，通用编程/文化类偏后。",
+      "sources": [
+        {
+          "name": "gwern.net",
+          "url": "https://gwern.substack.com/feed",
+          "type": "rss",
+          "lang": "en",
+          "priority": 2,
+          "note": "AI/ML深度长文，元分析大师"
+        },
+        {
+          "name": "garymarcus.substack.com",
+          "url": "https://garymarcus.substack.com/feed",
+          "type": "rss",
+          "lang": "en",
+          "priority": 2,
+          "note": "AI批评家，提供反面视角"
+        },
+        {
+          "name": "minimaxir.com",
+          "url": "https://minimaxir.com/index.xml",
+          "type": "rss",
+          "lang": "en",
+          "priority": 2,
+          "note": "Max Woolf，AI/数据可视化"
+        },
+        {
+          "name": "geohot.github.io",
+          "url": "https://geohot.github.io/blog/feed.xml",
+          "type": "rss",
+          "lang": "en",
+          "priority": 2,
+          "note": "George Hotz(tinygrad)，AI硬件/创业"
+        },
+        {
+          "name": "paulgraham.com",
+          "url": "http://www.aaronsw.com/2002/feeds/pgessays.rss",
+          "type": "rss",
+          "lang": "en",
+          "priority": 2,
+          "note": "Y Combinator创始人，创业/思想"
+        },
+        {
+          "name": "dwarkesh.com",
+          "url": "https://www.dwarkeshpatel.com/feed",
+          "type": "rss",
+          "lang": "en",
+          "priority": 2,
+          "note": "Dwarkesh Patel播客，顶级AI人物访谈"
+        },
+        {
+          "name": "steveblank.com",
+          "url": "https://steveblank.com/feed/",
+          "type": "rss",
+          "lang": "en",
+          "priority": 2,
+          "note": "精益创业之父，创业方法论"
+        },
+        {
+          "name": "overreacted.io",
+          "url": "https://overreacted.io/rss.xml",
+          "type": "rss",
+          "lang": "en",
+          "priority": 2,
+          "note": "Dan Abramov(React核心)，前端深度"
+        },
+        {
+          "name": "antirez.com",
+          "url": "http://antirez.com/rss",
+          "type": "rss",
+          "lang": "en",
+          "priority": 2,
+          "note": "Redis作者，系统设计"
+        },
+        {
+          "name": "mitchellh.com",
+          "url": "https://mitchellh.com/feed.xml",
+          "type": "rss",
+          "lang": "en",
+          "priority": 2,
+          "note": "HashiCorp创始人，基础设施"
+        },
+        {
+          "name": "krebsonsecurity.com",
+          "url": "https://krebsonsecurity.com/feed/",
+          "type": "rss",
+          "lang": "en",
+          "priority": 2,
+          "note": "安全领域第一博客"
+        },
+        {
+          "name": "troyhunt.com",
+          "url": "https://www.troyhunt.com/rss/",
+          "type": "rss",
+          "lang": "en",
+          "priority": 2,
+          "note": "HaveIBeenPwned创始人，安全"
+        },
+        {
+          "name": "lcamtuf.substack.com",
+          "url": "https://lcamtuf.substack.com/feed",
+          "type": "rss",
+          "lang": "en",
+          "priority": 2,
+          "note": "安全研究员，fuzzing先驱"
+        },
+        {
+          "name": "daringfireball.net",
+          "url": "https://daringfireball.net/feeds/main",
+          "type": "rss",
+          "lang": "en",
+          "priority": 2,
+          "note": "John Gruber，Apple生态评论"
+        },
+        {
+          "name": "pluralistic.net",
+          "url": "https://pluralistic.net/feed/",
+          "type": "rss",
+          "lang": "en",
+          "priority": 2,
+          "note": "Cory Doctorow，科技+社会批评"
+        },
+        {
+          "name": "anildash.com",
+          "url": "https://anildash.com/feed.xml",
+          "type": "rss",
+          "lang": "en",
+          "priority": 2,
+          "note": "Anil Dash，科技文化评论"
+        },
+        {
+          "name": "construction-physics.com",
+          "url": "https://www.construction-physics.com/feed",
+          "type": "rss",
+          "lang": "en",
+          "priority": 3,
+          "note": "Brian Potter，物理世界工程"
+        },
+        {
+          "name": "experimental-history.com",
+          "url": "https://www.experimental-history.com/feed",
+          "type": "rss",
+          "lang": "en",
+          "priority": 3,
+          "note": "心理学/科学方法论"
+        },
+        {
+          "name": "jeffgeerling.com",
+          "url": "https://www.jeffgeerling.com/blog.xml",
+          "type": "rss",
+          "lang": "en",
+          "priority": 3,
+          "note": "硬件/树莓派/DevOps"
+        },
+        {
+          "name": "seangoedecke.com",
+          "url": "https://www.seangoedecke.com/rss.xml",
+          "type": "rss",
+          "lang": "en",
+          "priority": 3
+        },
+        {
+          "name": "ericmigi.com",
+          "url": "https://ericmigi.com/rss.xml",
+          "type": "rss",
+          "lang": "en",
+          "priority": 3
+        },
+        {
+          "name": "idiallo.com",
+          "url": "https://idiallo.com/feed.rss",
+          "type": "rss",
+          "lang": "en",
+          "priority": 3
+        },
+        {
+          "name": "maurycyz.com",
+          "url": "https://maurycyz.com/index.xml",
+          "type": "rss",
+          "lang": "en",
+          "priority": 3
+        },
+        {
+          "name": "shkspr.mobi",
+          "url": "https://shkspr.mobi/blog/feed/",
+          "type": "rss",
+          "lang": "en",
+          "priority": 3
+        },
+        {
+          "name": "dynomight.net",
+          "url": "https://dynomight.net/feed.xml",
+          "type": "rss",
+          "lang": "en",
+          "priority": 3
+        },
+        {
+          "name": "utcc.utoronto.ca/~cks",
+          "url": "https://utcc.utoronto.ca/~cks/space/blog/?atom",
+          "type": "rss",
+          "lang": "en",
+          "priority": 3
+        },
+        {
+          "name": "xeiaso.net",
+          "url": "https://xeiaso.net/blog.rss",
+          "type": "rss",
+          "lang": "en",
+          "priority": 3,
+          "note": "Xe Iaso，系统/DevOps"
+        },
+        {
+          "name": "devblogs.microsoft.com/oldnewthing",
+          "url": "https://devblogs.microsoft.com/oldnewthing/feed",
+          "type": "rss",
+          "lang": "en",
+          "priority": 3,
+          "note": "Raymond Chen，Windows内部"
+        },
+        {
+          "name": "righto.com",
+          "url": "https://www.righto.com/feeds/posts/default",
+          "type": "rss",
+          "lang": "en",
+          "priority": 3,
+          "note": "Ken Shirriff，硬件逆向工程"
+        },
+        {
+          "name": "lucumr.pocoo.org",
+          "url": "https://lucumr.pocoo.org/feed.atom",
+          "type": "rss",
+          "lang": "en",
+          "priority": 3,
+          "note": "Armin Ronacher(Flask作者)"
+        },
+        {
+          "name": "skyfall.dev",
+          "url": "https://skyfall.dev/rss.xml",
+          "type": "rss",
+          "lang": "en",
+          "priority": 3
+        },
+        {
+          "name": "timsh.org",
+          "url": "https://timsh.org/rss/",
+          "type": "rss",
+          "lang": "en",
+          "priority": 3
+        },
+        {
+          "name": "johndcook.com",
+          "url": "https://www.johndcook.com/blog/feed/",
+          "type": "rss",
+          "lang": "en",
+          "priority": 3,
+          "note": "数学/统计/编程"
+        },
+        {
+          "name": "gilesthomas.com",
+          "url": "https://gilesthomas.com/feed/rss.xml",
+          "type": "rss",
+          "lang": "en",
+          "priority": 3
+        },
+        {
+          "name": "matklad.github.io",
+          "url": "https://matklad.github.io/feed.xml",
+          "type": "rss",
+          "lang": "en",
+          "priority": 3,
+          "note": "rust-analyzer作者"
+        },
+        {
+          "name": "derekthompson.org",
+          "url": "https://www.theatlantic.com/feed/author/derek-thompson/",
+          "type": "rss",
+          "lang": "en",
+          "priority": 3,
+          "note": "Atlantic评论员，经济/科技"
+        },
+        {
+          "name": "evanhahn.com",
+          "url": "https://evanhahn.com/feed.xml",
+          "type": "rss",
+          "lang": "en",
+          "priority": 3
+        },
+        {
+          "name": "terriblesoftware.org",
+          "url": "https://terriblesoftware.org/feed/",
+          "type": "rss",
+          "lang": "en",
+          "priority": 3
+        },
+        {
+          "name": "rakhim.exotext.com",
+          "url": "https://rakhim.exotext.com/rss.xml",
+          "type": "rss",
+          "lang": "en",
+          "priority": 3
+        },
+        {
+          "name": "joanwestenberg.com",
+          "url": "https://joanwestenberg.com/rss",
+          "type": "rss",
+          "lang": "en",
+          "priority": 3
+        },
+        {
+          "name": "xania.org",
+          "url": "https://xania.org/feed",
+          "type": "rss",
+          "lang": "en",
+          "priority": 3
+        },
+        {
+          "name": "micahflee.com",
+          "url": "https://micahflee.com/feed/",
+          "type": "rss",
+          "lang": "en",
+          "priority": 3,
+          "note": "安全/隐私记者"
+        },
+        {
+          "name": "nesbitt.io",
+          "url": "https://nesbitt.io/feed.xml",
+          "type": "rss",
+          "lang": "en",
+          "priority": 3
+        },
+        {
+          "name": "tedium.co",
+          "url": "https://feed.tedium.co/",
+          "type": "rss",
+          "lang": "en",
+          "priority": 3,
+          "note": "科技历史冷知识"
+        },
+        {
+          "name": "susam.net",
+          "url": "https://susam.net/feed.xml",
+          "type": "rss",
+          "lang": "en",
+          "priority": 3
+        },
+        {
+          "name": "entropicthoughts.com",
+          "url": "https://entropicthoughts.com/feed.xml",
+          "type": "rss",
+          "lang": "en",
+          "priority": 3
+        },
+        {
+          "name": "buttondown.com/hillelwayne",
+          "url": "https://buttondown.com/hillelwayne/rss",
+          "type": "rss",
+          "lang": "en",
+          "priority": 3,
+          "note": "形式化验证/软件工程"
+        },
+        {
+          "name": "wheresyoured.at",
+          "url": "https://www.wheresyoured.at/rss/",
+          "type": "rss",
+          "lang": "en",
+          "priority": 3,
+          "note": "科技行业批评"
+        },
+        {
+          "name": "jayd.ml",
+          "url": "https://jayd.ml/feed.xml",
+          "type": "rss",
+          "lang": "en",
+          "priority": 3
+        },
+        {
+          "name": "borretti.me",
+          "url": "https://borretti.me/feed.xml",
+          "type": "rss",
+          "lang": "en",
+          "priority": 3
+        },
+        {
+          "name": "filfre.net",
+          "url": "https://www.filfre.net/feed/",
+          "type": "rss",
+          "lang": "en",
+          "priority": 3,
+          "note": "数字文化历史"
+        },
+        {
+          "name": "blog.jim-nielsen.com",
+          "url": "https://blog.jim-nielsen.com/feed.xml",
+          "type": "rss",
+          "lang": "en",
+          "priority": 3
+        },
+        {
+          "name": "dfarq.homeip.net",
+          "url": "https://dfarq.homeip.net/feed/",
+          "type": "rss",
+          "lang": "en",
+          "priority": 3
+        },
+        {
+          "name": "jyn.dev",
+          "url": "https://jyn.dev/atom.xml",
+          "type": "rss",
+          "lang": "en",
+          "priority": 3
+        },
+        {
+          "name": "geoffreylitt.com",
+          "url": "https://www.geoffreylitt.com/feed.xml",
+          "type": "rss",
+          "lang": "en",
+          "priority": 3,
+          "note": "终端用户编程研究"
+        },
+        {
+          "name": "downtowndougbrown.com",
+          "url": "https://www.downtowndougbrown.com/feed/",
+          "type": "rss",
+          "lang": "en",
+          "priority": 3
+        },
+        {
+          "name": "brutecat.com",
+          "url": "https://brutecat.com/rss.xml",
+          "type": "rss",
+          "lang": "en",
+          "priority": 3
+        },
+        {
+          "name": "eli.thegreenplace.net",
+          "url": "https://eli.thegreenplace.net/feeds/all.atom.xml",
+          "type": "rss",
+          "lang": "en",
+          "priority": 3,
+          "note": "编程/编译器/Go"
+        },
+        {
+          "name": "abortretry.fail",
+          "url": "https://www.abortretry.fail/feed",
+          "type": "rss",
+          "lang": "en",
+          "priority": 3
+        },
+        {
+          "name": "oldvcr.blogspot.com",
+          "url": "https://oldvcr.blogspot.com/feeds/posts/default",
+          "type": "rss",
+          "lang": "en",
+          "priority": 3
+        },
+        {
+          "name": "bogdanthegeek.github.io",
+          "url": "https://bogdanthegeek.github.io/blog/index.xml",
+          "type": "rss",
+          "lang": "en",
+          "priority": 3
+        },
+        {
+          "name": "hugotunius.se",
+          "url": "https://hugotunius.se/feed.xml",
+          "type": "rss",
+          "lang": "en",
+          "priority": 3
+        },
+        {
+          "name": "berthub.eu",
+          "url": "https://berthub.eu/articles/index.xml",
+          "type": "rss",
+          "lang": "en",
+          "priority": 3
+        },
+        {
+          "name": "chadnauseam.com",
+          "url": "https://chadnauseam.com/rss.xml",
+          "type": "rss",
+          "lang": "en",
+          "priority": 3
+        },
+        {
+          "name": "simone.org",
+          "url": "https://simone.org/feed/",
+          "type": "rss",
+          "lang": "en",
+          "priority": 3
+        },
+        {
+          "name": "it-notes.dragas.net",
+          "url": "https://it-notes.dragas.net/feed/",
+          "type": "rss",
+          "lang": "en",
+          "priority": 3
+        },
+        {
+          "name": "beej.us",
+          "url": "https://beej.us/blog/rss.xml",
+          "type": "rss",
+          "lang": "en",
+          "priority": 3,
+          "note": "Beej's Guide作者"
+        },
+        {
+          "name": "hey.paris",
+          "url": "https://hey.paris/index.xml",
+          "type": "rss",
+          "lang": "en",
+          "priority": 3
+        },
+        {
+          "name": "danielwirtz.com",
+          "url": "https://danielwirtz.com/rss.xml",
+          "type": "rss",
+          "lang": "en",
+          "priority": 3
+        },
+        {
+          "name": "matduggan.com",
+          "url": "https://matduggan.com/rss/",
+          "type": "rss",
+          "lang": "en",
+          "priority": 3
+        },
+        {
+          "name": "refactoringenglish.com",
+          "url": "https://refactoringenglish.com/index.xml",
+          "type": "rss",
+          "lang": "en",
+          "priority": 3
+        },
+        {
+          "name": "worksonmymachine.substack.com",
+          "url": "https://worksonmymachine.substack.com/feed",
+          "type": "rss",
+          "lang": "en",
+          "priority": 3
+        },
+        {
+          "name": "philiplaine.com",
+          "url": "https://philiplaine.com/index.xml",
+          "type": "rss",
+          "lang": "en",
+          "priority": 3
+        },
+        {
+          "name": "bernsteinbear.com",
+          "url": "https://bernsteinbear.com/feed.xml",
+          "type": "rss",
+          "lang": "en",
+          "priority": 3
+        },
+        {
+          "name": "danieldelaney.net",
+          "url": "https://danieldelaney.net/feed",
+          "type": "rss",
+          "lang": "en",
+          "priority": 3
+        },
+        {
+          "name": "herman.bearblog.dev",
+          "url": "https://herman.bearblog.dev/feed/",
+          "type": "rss",
+          "lang": "en",
+          "priority": 3
+        },
+        {
+          "name": "tomrenner.com",
+          "url": "https://tomrenner.com/index.xml",
+          "type": "rss",
+          "lang": "en",
+          "priority": 3
+        },
+        {
+          "name": "blog.pixelmelt.dev",
+          "url": "https://blog.pixelmelt.dev/rss/",
+          "type": "rss",
+          "lang": "en",
+          "priority": 3
+        },
+        {
+          "name": "martinalderson.com",
+          "url": "https://martinalderson.com/feed.xml",
+          "type": "rss",
+          "lang": "en",
+          "priority": 3
+        },
+        {
+          "name": "danielchasehooper.com",
+          "url": "https://danielchasehooper.com/feed.xml",
+          "type": "rss",
+          "lang": "en",
+          "priority": 3
+        },
+        {
+          "name": "chiark.greenend.org.uk/~sgtatham",
+          "url": "https://www.chiark.greenend.org.uk/~sgtatham/quasiblog/feed.xml",
+          "type": "rss",
+          "lang": "en",
+          "priority": 3,
+          "note": "PuTTY作者"
+        },
+        {
+          "name": "grantslatton.com",
+          "url": "https://grantslatton.com/rss.xml",
+          "type": "rss",
+          "lang": "en",
+          "priority": 3
+        },
+        {
+          "name": "aresluna.org",
+          "url": "https://aresluna.org/main.rss",
+          "type": "rss",
+          "lang": "en",
+          "priority": 3
+        },
+        {
+          "name": "michael.stapelberg.ch",
+          "url": "https://michael.stapelberg.ch/feed.xml",
+          "type": "rss",
+          "lang": "en",
+          "priority": 3
+        },
+        {
+          "name": "miguelgrinberg.com",
+          "url": "https://blog.miguelgrinberg.com/feed",
+          "type": "rss",
+          "lang": "en",
+          "priority": 3,
+          "note": "Flask Mega-Tutorial作者"
+        },
+        {
+          "name": "keygen.sh",
+          "url": "https://keygen.sh/blog/feed.xml",
+          "type": "rss",
+          "lang": "en",
+          "priority": 3
+        },
+        {
+          "name": "mjg59.dreamwidth.org",
+          "url": "https://mjg59.dreamwidth.org/data/rss",
+          "type": "rss",
+          "lang": "en",
+          "priority": 3
+        },
+        {
+          "name": "computer.rip",
+          "url": "https://computer.rip/rss.xml",
+          "type": "rss",
+          "lang": "en",
+          "priority": 3,
+          "note": "电信/网络基础设施"
+        }
+      ]
+    }
+  ]
+}

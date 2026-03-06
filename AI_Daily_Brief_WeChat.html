@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Signal Daily Brief · 公众号排版</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: -apple-system, 'PingFang SC', sans-serif; background: #f5f5f5; padding: 20px; }
+  .toolbar {
+    position: sticky; top: 0; z-index: 100;
+    background: #fff; border-radius: 12px; padding: 16px 24px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+    margin-bottom: 20px; display: flex; align-items: center; gap: 16px;
+    max-width: 780px; margin-left: auto; margin-right: auto;
+  }
+  .toolbar label { font-size: 14px; color: #666; font-weight: 500; }
+  .toolbar button {
+    padding: 8px 20px; border: none; border-radius: 8px; cursor: pointer;
+    font-size: 14px; font-weight: 600; transition: all 0.2s;
+  }
+  .btn-style { background: #f0f0f0; color: #333; }
+  .btn-style.active { background: #1a1a2e; color: #fff; }
+  .btn-style:hover { opacity: 0.85; }
+  .btn-copy {
+    background: linear-gradient(135deg, #D97757, #B8533A); color: #fff;
+    margin-left: auto;
+  }
+  .btn-copy:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(217,119,87,0.3); }
+  .btn-copy.copied { background: #4ade80; }
+  .preview-wrap {
+    max-width: 780px; margin: 0 auto;
+    background: #fff; border-radius: 12px; overflow: hidden;
+    box-shadow: 0 2px 20px rgba(0,0,0,0.06);
+  }
+  /* 预览区域内部不需要额外样式，排版都在 #wechat-content 的内联样式中 */
+  #wechat-content { padding: 0; }
+  .toast {
+    position: fixed; top: 80px; left: 50%; transform: translateX(-50%);
+    background: #333; color: #fff; padding: 10px 24px; border-radius: 8px;
+    font-size: 14px; opacity: 0; transition: opacity 0.3s; pointer-events: none;
+    z-index: 999;
+  }
+  .toast.show { opacity: 1; }
+</style>
+</head>
+<body>
+
+<div class="toolbar">
+  <label>排版风格：</label>
+  <button class="btn-style active" onclick="switchTheme('claude')" id="btn-claude">Claude</button>
+  <button class="btn-style" onclick="switchTheme('nyt')" id="btn-nyt">NYT</button>
+  <button class="btn-copy" onclick="copyToClipboard()" id="btn-copy">📋 复制到公众号</button>
+</div>
+
+<div class="preview-wrap">
+  <div id="wechat-content"></div>
+</div>
+
+<div class="toast" id="toast">已复制到剪贴板，可直接粘贴到公众号</div>
+
+<script>
+// ==================== 数据定义 ====================
+const dailyData = {
+  date: "2026年3月5日 · 周四",
+  summary: "两会政府工作报告首提"智能经济"；荣耀 MWC 开源 MagicAgent（30B MoE，超 GPT-5.2）；阿里明确 Qwen 为集团第一优先级，MAU 达 2.03 亿；Claude Code 推出语音编程模式，年化收入破 25 亿美元；苹果发布 MacBook Air M5，AI 性能提升 6 倍；Samsung S26 携定制高通芯片亮相 MWC；字节豆包 Seedance 2.0 定价公布。",
+  sections: [
+    {
+      icon: "🧠", title: "模型发布与架构升级",
+      items: [
+        {
+          title: "荣耀 MagicAgent 全球开源，300亿参数超越 GPT-5.2",
+          tags: [{ text: "开源", color: "green" }, { text: "30B MoE", color: "blue" }],
+          body: "荣耀在 MWC 2026 发布行业首个支持全场景泛化规划 + 异构任务编排的智能体基础模型 MagicAgent，与复旦大学联合研发。MoE 架构 300 亿参数（轻量级），六大核心测试全面领先 GPT-5.2、Kimi-K2、GLM-4.7 等千亿级模型。面向全球开源。",
+          stats: ["逻辑图编排超 GPT-5.2 51%", "工具调用领先 10%"],
+          source: "钛媒体 · 搜狐 · 东方财富 | MWC 3月3-4日"
+        },
+        {
+          title: "阿里 Qwen 战略调整：集团第一优先级",
+          tags: [{ text: "战略", color: "red" }],
+          body: "CEO 吴泳铭在内部明确表态 Qwen（千问）是阿里第一优先级。千问 MAU 达 2.03 亿，增速 553%。新加坡国家 AI 计划 Sea-Lion 已从 Meta 体系转向 Qwen 架构，标志中国开源 AI 模型全球影响力扩张。",
+          source: "新浪科技 | 3月5日"
+        },
+        {
+          title: "字节豆包 Seedance 2.0 视频生成 API 定价公布",
+          tags: [{ text: "定价", color: "orange" }],
+          body: "火山引擎公布定价：纯视频生成 46 元/百万 tokens，15 秒视频约 30.9 万 tokens，折合成本约 1 元/秒。API 暂未对外开放。",
+          source: "新浪科技 | 3月5日"
+        }
+      ]
+    },
+    {
+      icon: "🤖", title: "Agent 与多模态突破",
+      items: [
+        {
+          title: "Claude Code 推出语音模式，年化收入破 25 亿美元",
+          tags: [{ text: "Agent", color: "blue" }, { text: "语音", color: "purple" }],
+          body: "Anthropic 为 Claude Code 推出 Voice Mode（语音编程），开发者可通过语音指令与 AI 编程助手交互。Claude Code 年化收入已超 25 亿美元，较年初翻倍；周活跃用户自 1 月以来翻倍。目前 5% 用户可用。",
+          source: "TechCrunch | 3月3日"
+        },
+        {
+          title: "Anthropic 开放 Claude 记忆导入功能",
+          tags: [{ text: "Agent", color: "blue" }],
+          body: "Claude 向免费用户开放记忆导入工具，用户可从 ChatGPT 等竞品导入对话记录和记忆数据，大幅降低迁移门槛。",
+          source: "东方财富 AI早报 | 3月4日"
+        },
+        {
+          title: "华为发布 Agentic Core 方案",
+          tags: [{ text: "Agent", color: "blue" }, { text: "MWC", color: "gray" }],
+          body: "华为在 MWC 发布 Agentic Core 方案，基于三大引擎应对 AI 时代流量激增。随着 AI Agent 手机普及，连接实体将扩展十倍，需引入数字身份、Agent 注册发现、A2A 会话管理等能力。",
+          source: "Total Telecom | MWC 3月4日"
+        },
+        {
+          title: "Mastercard × Santander：欧洲首次 AI Agent 实时支付",
+          tags: [{ text: "里程碑", color: "green" }],
+          body: "Mastercard 与桑坦德银行完成欧洲首笔 AI Agent 实时支付交易，标志着 Agentic AI 正式进入金融交易实操阶段。",
+          source: "FinTech Futures | 3月4日"
+        }
+      ]
+    },
+    {
+      icon: "📱", title: "手机厂商 AI 动态",
+      items: [
+        {
+          title: "苹果 3/4 发布 MacBook Air M5：AI 性能提升 6 倍",
+          tags: [{ text: "苹果", color: "gray" }, { text: "芯片", color: "purple" }],
+          body: "苹果发布搭载 M5 芯片的 MacBook Air。M5 采用台积电第三代 3nm 工艺，10 核 CPU + 10 核 GPU + 16 核神经网络引擎，每个 GPU 核心内置独立神经引擎。相比 M1，AI 处理能力提升 6 倍。起价 RMB 8499。",
+          stats: ["3nm 三代工艺", "神经引擎 16核", "AI性能 ×6"],
+          source: "Apple 官网 · 新浪 | 3月4日"
+        },
+        {
+          title: "Samsung Galaxy S26：定制高通芯片 + 三大 AI 模型",
+          tags: [{ text: "三星", color: "blue" }],
+          body: "Galaxy S26 搭载高通定制芯片（NPU 性能 +39%、GPU +24%、CPU +19%）。Galaxy AI 确认接入 Perplexity，加上 Google Gemini 和 Bixby 三大 AI 引擎。同时宣布 2030 年前全球工厂转型 AI 驱动。",
+          source: "Telecoms · Samsung Newsroom | MWC 3月3-4日"
+        },
+        {
+          title: "Rokid 海外版 AR 眼镜首发支持 Gemini",
+          tags: [{ text: "AR眼镜", color: "purple" }],
+          body: "Rokid Glasses 海外版接入 Gemini、ChatGPT、DeepSeek、通义千问四大模型，成为行业首款支持 Gemini 的 AI 眼镜。",
+          source: "东方财富 AI早报 | 3月4日"
+        },
+        {
+          title: "Apple Intelligence 使用率低迷，90% AI 算力闲置",
+          tags: [{ text: "数据", color: "orange" }],
+          body: "Apple Intelligence 使用率远低于预期，约 90% 的 AI 算力闲置。应对措施：暂借 Google Gemini 驱动下一代 Siri，加速自研 \"Baltra\" 芯片打造自有 AI 服务器。",
+          source: "新浪科技 | 3月5日"
+        }
+      ]
+    },
+    {
+      icon: "⚡", title: "芯片与算力",
+      items: [
+        {
+          title: "亚洲芯片巨头 2026 年资本支出超 1360 亿美元",
+          tags: [{ text: "芯片", color: "purple" }],
+          body: "台积电、三星、SK 海力士领衔，2026 年资本支出预计超 1360 亿美元，同比增长 25%。HBM 成为高端 GPU 成本主力，中国 AI 芯片厂商探索降低内存依赖的路线。",
+          source: "新浪科技 | 3月5日"
+        },
+        {
+          title: "NVIDIA \"反常识\"方案：让服务器慢点跑，1 分钟降耗 1/3",
+          tags: [{ text: "节能", color: "green" }],
+          body: "NVIDIA 在 Blackwell Ultra 集群（96 GPU）上测试 Emerald AI 软件，通过动态调节算力负载，数据中心可在 1 分钟内降耗约 1/3，5 天内成功响应 200+ 电力调节指令。",
+          source: "新浪财经 | 3月4日"
+        },
+        {
+          title: "美国 AI 面临电力瓶颈，变压器 80% 依赖进口",
+          tags: [{ text: "电力", color: "orange" }],
+          body: "数据中心电力供应成为 AI 算力扩张的核心制约。美国关键设备变压器进口依赖度高达 80%，而这恰好是中国的优势产业链方向。",
+          source: "新浪科技 | 3月5日"
+        }
+      ]
+    },
+    {
+      icon: "🎮", title: "游戏行业 AI 应用",
+      items: [
+        {
+          title: "Samsung 将 Agentic AI 带入工业制造，游戏化数字孪生",
+          tags: [{ text: "AI+游戏", color: "blue" }],
+          body: "三星在 MWC 展示基于数字孪生的制造创新，Agent AI 可在虚拟环境中实时理解运营上下文并独立执行决策。这套 Agentic AI 工业架构与游戏引擎中的 AI NPC 决策树有高度技术同源性。",
+          source: "Samsung Newsroom | MWC 3月3-4日"
+        },
+        {
+          title: "moeru-ai/airi：自托管 AI 伴侣，可玩 Minecraft 和 Factorio",
+          tags: [{ text: "开源", color: "green" }, { text: "GitHub", color: "gray" }],
+          body: "GitHub 今日热榜项目（+1454 星），自托管 AI 虚拟伴侣，支持实时语音聊天并能自主玩 Minecraft 和 Factorio，目标达到 Neuro-sama 水平。",
+          source: "GitHub Trending | 3月5日"
+        }
+      ]
+    },
+    {
+      icon: "📦", title: "GitHub 今日高增长",
+      isGithub: true,
+      items: [
+        { title: "msitarzewski/agency-agents", desc: "一站式 AI 代理机构：前端向导、Reddit 社区忍者等专家角色集合", stars: "+2,209" },
+        { title: "KeygraphHQ/shannon", desc: "Shannon Lite：全自动 AI 渗透测试，XBOW 基准 96.15% 漏洞利用率", stars: "+1,854" },
+        { title: "moeru-ai/airi", desc: "自托管 AI 伴侣，实时语音 + 自主玩 Minecraft/Factorio", stars: "+1,454" },
+        { title: "ItzCrazyKns/Perplexica", desc: "开源 AI 答案引擎，Perplexity.ai 替代方案", stars: "+1,090" },
+        { title: "K-Dense-AI/claude-scientific-skills", desc: "Claude 科研 Agent 技能包：研究、工程、金融、写作", stars: "+940" },
+        { title: "alibaba/OpenSandbox", desc: "阿里开源：AI 应用通用沙箱平台，多语言 SDK", stars: "+788" },
+        { title: "agentscope-ai/agentscope", desc: "构建可视化、可解释、可信赖的 AI Agent", stars: "+427" },
+        { title: "FlowiseAI/Flowise", desc: "可视化构建 AI Agents 工作流", stars: "+145" }
+      ]
+    },
+    {
+      icon: "🏛️", title: "行业动向",
+      items: [
+        {
+          title: "政府工作报告首提\"智能经济\"，深化\"人工智能+\"",
+          tags: [{ text: "两会", color: "red" }, { text: "重磅", color: "red" }],
+          body: "3月5日，政府工作报告首次提出\"打造智能经济新形态\"：深化拓展\"人工智能+\"，促进智能终端和智能体推广；推动 AI 商业化规模化应用；支持人工智能开源社区建设；实施超大规模智算集群、算电协同等新基建工程。报告肯定\"国产大模型引领全球开源生态\"，工业机器人产量增长 28%。",
+          source: "同花顺 · 中国经济网 | 3月5日"
+        },
+        {
+          title: "国内 AI 应用格局：\"千豆\"双雄并立",
+          tags: [{ text: "数据", color: "orange" }],
+          body: "全球 MAU 前三：ChatGPT 领先，豆包 MAU 3.15 亿、千问 MAU 2.03 亿（增速 553%）。国内 AI 应用已形成字节 vs 阿里的两强格局。AI 人才争夺战升级，部分应届生年薪超 200 万元。",
+          source: "东方财富 · 新浪科技 | 3月4-5日"
+        },
+        {
+          title: "智元机器人海外独立站上线 + 赛那德机器人融资",
+          tags: [{ text: "机器人", color: "blue" }],
+          body: "智元机器人 (AGIBOT) 在 MWC 发布海外独立站，推出\"机器人即服务\"租赁模式，覆盖 17 国。赛那德具身装卸货机器人完成 2 亿元融资。全国人大发言人点赞国产人形机器人。",
+          source: "东方财富 AI早报 | 3月4日"
+        },
+        {
+          title: "近期重要融资动态",
+          tags: [{ text: "融资", color: "orange" }],
+          body: "深度智耀 (DIP)：AI 制药独角兽完成 4000 万美元新一轮融资 ｜ 赛那德：具身装卸货机器人完成超 2 亿元融资 ｜ Anduril：国防科技独角兽筹备新一轮融资，目标估值 600 亿美元。",
+          source: "界面新闻 · TechCrunch | 3月3-5日"
+        }
+      ]
+    }
+  ]
+};
+
+// ==================== 主题定义 ====================
+const themes = {
+  claude: {
+    name: "Claude",
+    bg: "#FAF6F1",        // 燕麦色背景
+    cardBg: "#FFFFFF",
+    text: "#1a1a2e",
+    textSub: "#64615B",
+    accent: "#D97757",     // Claude 标志橙棕色
+    accentLight: "#F5E6DC",
+    sectionBg: "#F3EDE7",
+    border: "#E8E0D8",
+    tagColors: {
+      red: { bg: "#FDECEA", text: "#C0392B" },
+      green: { bg: "#E8F5E9", text: "#27864A" },
+      blue: { bg: "#E3F2FD", text: "#1565C0" },
+      orange: { bg: "#FFF3E0", text: "#E65100" },
+      purple: { bg: "#F3E5F5", text: "#7B1FA2" },
+      gray: { bg: "#F0EDEA", text: "#6B6560" },
+    },
+    headerGradient: "linear-gradient(135deg, #D97757, #B8533A)",
+    fontFamily: "'Georgia', 'PingFang SC', 'Noto Serif SC', serif",
+    bodyFont: "-apple-system, 'PingFang SC', 'Helvetica Neue', sans-serif",
+  },
+  nyt: {
+    name: "NYT",
+    bg: "#FFFFFF",
+    cardBg: "#FFFFFF",
+    text: "#121212",
+    textSub: "#5A5A5A",
+    accent: "#121212",
+    accentLight: "#F7F7F7",
+    sectionBg: "#F7F7F7",
+    border: "#E2E2E2",
+    tagColors: {
+      red: { bg: "#FCE4EC", text: "#C62828" },
+      green: { bg: "#E0F2F1", text: "#00695C" },
+      blue: { bg: "#E8EAF6", text: "#283593" },
+      orange: { bg: "#FFF8E1", text: "#E65100" },
+      purple: { bg: "#EDE7F6", text: "#4A148C" },
+      gray: { bg: "#F5F5F5", text: "#616161" },
+    },
+    headerGradient: "none",
+    fontFamily: "'Georgia', 'Noto Serif SC', 'Source Han Serif SC', 'SimSun', serif",
+    bodyFont: "'Georgia', 'PingFang SC', 'Noto Serif SC', serif",
+  }
+};
+
+let currentTheme = 'claude';
+
+// ==================== 渲染函数 ====================
+function renderTag(tag, theme) {
+  const tc = theme.tagColors[tag.color] || theme.tagColors.gray;
+  return `<span style="display:inline-block;font-size:12px;line-height:1;padding:3px 8px;border-radius:3px;background:${tc.bg};color:${tc.text};font-weight:600;margin-right:6px;vertical-align:middle;">${tag.text}</span>`;
+}
+
+function renderStats(stats, theme) {
+  if (!stats || !stats.length) return '';
+  return `<p style="margin:8px 0 0 0;padding:0;">${stats.map(s =>
+    `<span style="display:inline-block;font-size:12px;padding:3px 10px;border-radius:4px;background:${theme.accentLight};color:${theme.accent};font-weight:600;margin-right:8px;margin-bottom:4px;">${s}</span>`
+  ).join('')}</p>`;
+}
+
+function renderGithubSection(section, theme, themeKey) {
+  const isNYT = themeKey === 'nyt';
+  let html = '';
+
+  // Section Title
+  html += renderSectionTitle(section, theme, themeKey);
+
+  // GitHub grid - 用table实现兼容微信
+  html += `<table style="width:100%;border-collapse:separate;border-spacing:${isNYT ? '0' : '8px'};">`;
+  for (let i = 0; i < section.items.length; i += 2) {
+    html += '<tr>';
+    for (let j = i; j < Math.min(i + 2, section.items.length); j++) {
+      const item = section.items[j];
+      if (isNYT) {
+        html += `<td style="width:50%;padding:10px 12px;vertical-align:top;border-bottom:1px solid ${theme.border};">
+          <p style="margin:0;font-family:${theme.fontFamily};font-size:14px;font-weight:700;color:${theme.text};line-height:1.4;">${item.title}</p>
+          <p style="margin:4px 0 0 0;font-size:12px;color:${theme.textSub};line-height:1.5;font-family:${theme.bodyFont};">${item.desc}</p>
+          <p style="margin:4px 0 0 0;font-size:12px;color:#D4A017;font-weight:600;">⭐ ${item.stars}</p>
+        </td>`;
+      } else {
+        html += `<td style="width:50%;padding:12px 14px;vertical-align:top;background:${theme.sectionBg};border-radius:8px;">
+          <p style="margin:0;font-size:14px;font-weight:600;color:${theme.accent};line-height:1.4;font-family:${theme.bodyFont};">${item.title}</p>
+          <p style="margin:4px 0 0 0;font-size:12px;color:${theme.textSub};line-height:1.5;font-family:${theme.bodyFont};">${item.desc}</p>
+          <p style="margin:4px 0 0 0;font-size:12px;color:#D97757;font-weight:600;">⭐ ${item.stars}</p>
+        </td>`;
+      }
+    }
+    if (section.items.length % 2 !== 0 && i + 2 >= section.items.length) {
+      html += '<td></td>';
+    }
+    html += '</tr>';
+  }
+  html += '</table>';
+  return html;
+}
+
+function renderSectionTitle(section, theme, themeKey) {
+  const isNYT = themeKey === 'nyt';
+  if (isNYT) {
+    // NYT: 经典报纸分隔线 + 衬线体标题
+    return `
+      <div style="margin:28px 0 0 0;padding:0;">
+        <div style="border-top:3px double ${theme.text};margin-bottom:12px;"></div>
+        <h2 style="margin:0 0 16px 0;font-family:${theme.fontFamily};font-size:20px;font-weight:700;color:${theme.text};letter-spacing:0.5px;line-height:1.3;">
+          <span style="margin-right:8px;">${section.icon}</span>${section.title}
+        </h2>
+      </div>`;
+  } else {
+    // Claude: 暖色左边框 + 圆角背景
+    return `
+      <div style="margin:24px 0 0 0;padding:0;">
+        <div style="background:${theme.sectionBg};border-left:4px solid ${theme.accent};border-radius:0 8px 8px 0;padding:10px 16px;margin-bottom:14px;">
+          <h2 style="margin:0;font-family:${theme.bodyFont};font-size:18px;font-weight:700;color:${theme.text};line-height:1.4;">
+            <span style="margin-right:6px;">${section.icon}</span>${section.title}
+          </h2>
+        </div>
+      </div>`;
+  }
+}
+
+function renderItem(item, theme, themeKey) {
+  const isNYT = themeKey === 'nyt';
+  const tagsHtml = (item.tags || []).map(t => renderTag(t, theme)).join('');
+  const statsHtml = renderStats(item.stats, theme);
+
+  if (isNYT) {
+    // NYT: 简约经典，细线分隔，衬线标题
+    return `
+      <div style="padding:14px 0;border-bottom:1px solid ${theme.border};">
+        <p style="margin:0 0 4px 0;">${tagsHtml}</p>
+        <h3 style="margin:0 0 6px 0;font-family:${theme.fontFamily};font-size:17px;font-weight:700;color:${theme.text};line-height:1.45;letter-spacing:0.2px;">${item.title}</h3>
+        <p style="margin:0 0 6px 0;font-family:${theme.bodyFont};font-size:14px;color:${theme.textSub};line-height:1.75;">${item.body}</p>
+        ${statsHtml}
+        <p style="margin:6px 0 0 0;font-size:12px;color:#999;font-family:${theme.bodyFont};line-height:1.4;">${item.source}</p>
+      </div>`;
+  } else {
+    // Claude: 卡片式，暖色调，圆角边框
+    return `
+      <div style="background:${theme.cardBg};border:1px solid ${theme.border};border-radius:10px;padding:14px 18px;margin-bottom:10px;">
+        <p style="margin:0 0 6px 0;line-height:1;">${tagsHtml}</p>
+        <h3 style="margin:0 0 6px 0;font-family:${theme.bodyFont};font-size:16px;font-weight:700;color:${theme.text};line-height:1.45;">${item.title}</h3>
+        <p style="margin:0 0 6px 0;font-family:${theme.bodyFont};font-size:14px;color:${theme.textSub};line-height:1.75;">${item.body}</p>
+        ${statsHtml}
+        <p style="margin:6px 0 0 0;font-size:12px;color:#999;font-family:${theme.bodyFont};line-height:1.4;">${item.source}</p>
+      </div>`;
+  }
+}
+
+function render(themeKey) {
+  const theme = themes[themeKey];
+  const isNYT = themeKey === 'nyt';
+  let html = '';
+
+  // 最外层容器
+  html += `<div style="max-width:680px;margin:0 auto;padding:${isNYT ? '0' : '20px'};background:${theme.bg};font-family:${theme.bodyFont};color:${theme.text};">`;
+
+  // ======= Header =======
+  if (isNYT) {
+    // NYT 报纸头
+    html += `
+      <div style="text-align:center;padding:24px 0 16px 0;border-bottom:4px double ${theme.text};">
+        <p style="margin:0;font-size:11px;color:${theme.textSub};font-family:${theme.fontFamily};letter-spacing:4px;text-transform:uppercase;">AI SIGNAL</p>
+        <h1 style="margin:6px 0;font-family:${theme.fontFamily};font-size:32px;font-weight:700;color:${theme.text};letter-spacing:1px;line-height:1.2;">Daily Brief</h1>
+        <p style="margin:0;font-size:13px;color:${theme.textSub};font-family:${theme.fontFamily};">${dailyData.date}</p>
+        <div style="border-top:1px solid ${theme.border};margin-top:12px;"></div>
+      </div>`;
+    // NYT 导语
+    html += `
+      <div style="padding:14px 0;border-bottom:1px solid ${theme.border};">
+        <p style="margin:0;font-family:${theme.fontFamily};font-size:15px;color:${theme.textSub};line-height:1.8;font-style:italic;">${dailyData.summary}</p>
+      </div>`;
+  } else {
+    // Claude 头部
+    html += `
+      <div style="text-align:center;padding:24px 20px;margin-bottom:4px;">
+        <div style="display:inline-block;background:${theme.headerGradient};padding:10px 28px;border-radius:12px;">
+          <h1 style="margin:0;font-size:24px;font-weight:700;color:#FFFFFF;letter-spacing:0.5px;line-height:1.3;font-family:${theme.bodyFont};">AI Signal Daily Brief</h1>
+        </div>
+        <p style="margin:10px 0 0 0;font-size:13px;color:${theme.textSub};font-family:${theme.bodyFont};">${dailyData.date}</p>
+      </div>`;
+    // Claude 摘要
+    html += `
+      <div style="background:${theme.sectionBg};border:1px solid ${theme.border};border-radius:10px;padding:14px 18px;margin-bottom:4px;">
+        <p style="margin:0;font-size:13px;color:${theme.accent};font-weight:600;margin-bottom:6px;font-family:${theme.bodyFont};">📌 今日速览</p>
+        <p style="margin:0;font-size:14px;color:${theme.textSub};line-height:1.75;font-family:${theme.bodyFont};">${dailyData.summary}</p>
+      </div>`;
+  }
+
+  // ======= Sections =======
+  for (const section of dailyData.sections) {
+    if (section.isGithub) {
+      html += renderGithubSection(section, theme, themeKey);
+    } else {
+      html += renderSectionTitle(section, theme, themeKey);
+      for (const item of section.items) {
+        html += renderItem(item, theme, themeKey);
+      }
+    }
+  }
+
+  // ======= Footer =======
+  if (isNYT) {
+    html += `
+      <div style="border-top:3px double ${theme.text};margin-top:24px;padding:16px 0;text-align:center;">
+        <p style="margin:0;font-family:${theme.fontFamily};font-size:12px;color:${theme.textSub};">AI Signal Daily Brief · ${dailyData.date}</p>
+        <p style="margin:4px 0 0 0;font-family:${theme.fontFamily};font-size:11px;color:#bbb;">数据来源：Tavily · GitHub Trending · 东方财富 · 新浪科技 · TechCrunch 等 20+ 源</p>
+      </div>`;
+  } else {
+    html += `
+      <div style="border-top:1px solid ${theme.border};margin-top:20px;padding:16px 0;text-align:center;">
+        <p style="margin:0;font-size:12px;color:${theme.textSub};font-family:${theme.bodyFont};">AI Signal Daily Brief · ${dailyData.date}</p>
+        <p style="margin:4px 0 0 0;font-size:11px;color:#bbb;font-family:${theme.bodyFont};">数据来源：Tavily · GitHub Trending · 东方财富 · 新浪科技 · TechCrunch 等 20+ 源</p>
+      </div>`;
+  }
+
+  html += '</div>';
+
+  document.getElementById('wechat-content').innerHTML = html;
+}
+
+// ==================== 交互 ====================
+function switchTheme(theme) {
+  currentTheme = theme;
+  document.getElementById('btn-claude').classList.toggle('active', theme === 'claude');
+  document.getElementById('btn-nyt').classList.toggle('active', theme === 'nyt');
+  render(theme);
+}
+
+function copyToClipboard() {
+  const content = document.getElementById('wechat-content');
+  const range = document.createRange();
+  range.selectNodeContents(content);
+  const selection = window.getSelection();
+  selection.removeAllRanges();
+  selection.addRange(range);
+
+  // 同时写入 HTML 和纯文本到剪贴板
+  const htmlContent = content.innerHTML;
+  const textContent = content.innerText;
+
+  if (navigator.clipboard && navigator.clipboard.write) {
+    const blob = new ClipboardItem({
+      'text/html': new Blob([htmlContent], { type: 'text/html' }),
+      'text/plain': new Blob([textContent], { type: 'text/plain' }),
+    });
+    navigator.clipboard.write([blob]).then(() => {
+      showToast();
+    }).catch(() => {
+      // fallback
+      document.execCommand('copy');
+      showToast();
+    });
+  } else {
+    document.execCommand('copy');
+    showToast();
+  }
+  selection.removeAllRanges();
+}
+
+function showToast() {
+  const toast = document.getElementById('toast');
+  const btn = document.getElementById('btn-copy');
+  btn.textContent = '✅ 已复制';
+  btn.classList.add('copied');
+  toast.classList.add('show');
+  setTimeout(() => {
+    toast.classList.remove('show');
+    btn.textContent = '📋 复制到公众号';
+    btn.classList.remove('copied');
+  }, 2000);
+}
+
+// 初始渲染
+try {
+  render('claude');
+} catch(e) {
+  document.getElementById('wechat-content').innerHTML = '<div style="padding:40px;color:red;font-size:16px;">渲染错误: ' + e.message + '<br><br>Stack: ' + e.stack + '</div>';
+}
+</script>
+
+</body>
+</html>

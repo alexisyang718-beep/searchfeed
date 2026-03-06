@@ -1,0 +1,41 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+*.egg-info/
+dist/
+build/
+.eggs/
+.venv/
+venv/
+env/
+
+# 浏览器数据（包含个人 Cookie、登录态）
+chrome_user_data/
+
+# 本地运行数据
+data/
+log/
+
+# 敏感配置（包含密钥）
+config.toml
+config/
+
+# 采集输出（运行时生成）
+output/
+collector/output/
+
+# 临时文件
+unified_inbox.json
+collector/unified_inbox.json
+entity_schema_review.json
+
+# 内部技能文件
+.codebuddy/
+SKILL_ADMIN.md
+SKILL_EXECUTOR.md
+
+# macOS
+.DS_Store

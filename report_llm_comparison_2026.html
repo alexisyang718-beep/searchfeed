@@ -1,0 +1,1400 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>深度报告 | 2026年主流大模型横向对比</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Serif+SC:wght@400;600;700&display=swap');
+
+  :root {
+    --bg: #FAF9F5; --bg-warm: #F5F0E8; --card: #FFFFFF;
+    --border: #E8E2D9; --border-light: #F0EBE3;
+    --accent: #C96442; --accent-hover: #B5573A;
+    --accent-soft: rgba(201,100,66,0.08); --accent-border: rgba(201,100,66,0.2);
+    --text: #1A1A1A; --text-secondary: #6B6560; --text-tertiary: #9B9590;
+    --tag-red: #C96442; --tag-red-bg: rgba(201,100,66,0.08);
+    --tag-green: #5A8F6B; --tag-green-bg: rgba(90,143,107,0.08);
+    --tag-blue: #4A7B9D; --tag-blue-bg: rgba(74,123,157,0.08);
+    --tag-purple: #7B6B9D; --tag-purple-bg: rgba(123,107,157,0.08);
+    --tag-orange: #B8863B; --tag-orange-bg: rgba(184,134,59,0.08);
+    --tag-teal: #4A8F8F; --tag-teal-bg: rgba(74,143,143,0.08);
+    --shadow-sm: 0 1px 3px rgba(0,0,0,0.04);
+    --shadow-md: 0 4px 12px rgba(0,0,0,0.06);
+    --radius: 16px; --radius-sm: 10px;
+  }
+
+  [data-theme="dark"] {
+    --bg: #1A1816; --bg-warm: #242220; --card: #2A2826;
+    --border: #3A3836; --border-light: #333130;
+    --text: #E8E2D9; --text-secondary: #A09890; --text-tertiary: #6B6560;
+    --shadow-sm: 0 1px 3px rgba(0,0,0,0.2); --shadow-md: 0 4px 12px rgba(0,0,0,0.3);
+  }
+
+  * { margin:0; padding:0; box-sizing:border-box; }
+
+  body {
+    font-family: 'Inter', -apple-system, 'PingFang SC', 'Noto Sans SC', sans-serif;
+    background: var(--bg); color: var(--text); line-height: 1.8;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .container { max-width: 860px; margin: 0 auto; padding: 0 24px; }
+
+  .header {
+    background: linear-gradient(135deg, var(--accent) 0%, #A84E35 100%);
+    color: white; padding: 48px 0 40px; margin-bottom: 32px;
+  }
+  .header h1 { font-family: 'Noto Serif SC', serif; font-size: 28px; font-weight: 700; margin-bottom: 8px; }
+  .header .subtitle { font-size: 15px; opacity: 0.85; margin-bottom: 16px; }
+  .header .meta { font-size: 13px; opacity: 0.7; }
+  .header .meta span { margin-right: 16px; }
+
+  .theme-toggle {
+    position: fixed; top: 16px; right: 16px; z-index: 100;
+    width: 40px; height: 40px; border-radius: 50%;
+    background: var(--card); border: 1px solid var(--border);
+    cursor: pointer; font-size: 18px; display: flex; align-items: center; justify-content: center;
+    box-shadow: var(--shadow-md);
+  }
+
+  .toc {
+    background: var(--card); border: 1px solid var(--border); border-radius: var(--radius);
+    padding: 24px 28px; margin-bottom: 28px; box-shadow: var(--shadow-sm);
+  }
+  .toc h3 { font-size: 15px; color: var(--accent); margin-bottom: 12px; font-weight: 600; }
+  .toc ol { padding-left: 20px; }
+  .toc li { margin-bottom: 6px; font-size: 14px; color: var(--text-secondary); }
+  .toc a { color: var(--text-secondary); text-decoration: none; }
+  .toc a:hover { color: var(--accent); }
+
+  .section { margin-bottom: 36px; }
+  .section-title {
+    font-family: 'Noto Serif SC', serif; font-size: 20px; font-weight: 700;
+    color: var(--accent); margin-bottom: 16px; padding-bottom: 10px;
+    border-bottom: 2px solid var(--accent-border);
+  }
+
+  .card {
+    background: var(--card); border: 1px solid var(--border); border-radius: var(--radius);
+    padding: 24px; margin-bottom: 16px; box-shadow: var(--shadow-sm);
+  }
+  .card h4 { font-size: 16px; font-weight: 600; margin-bottom: 10px; color: var(--text); }
+  .card p, .card li { font-size: 14px; color: var(--text-secondary); line-height: 1.75; }
+  .card ul, .card ol { padding-left: 18px; margin-top: 8px; }
+  .card li { margin-bottom: 4px; }
+
+  .highlight { color: var(--accent); font-weight: 600; }
+
+  table {
+    width: 100%; border-collapse: collapse; font-size: 13px; margin: 16px 0;
+    background: var(--card); border-radius: var(--radius-sm); overflow: hidden;
+  }
+  th {
+    background: var(--bg-warm); color: var(--text); font-weight: 600;
+    padding: 10px 12px; text-align: left; border-bottom: 2px solid var(--border);
+    position: sticky; top: 0; font-size: 12px;
+  }
+  td {
+    padding: 9px 12px; border-bottom: 1px solid var(--border-light);
+    color: var(--text-secondary); vertical-align: top;
+  }
+  tr:hover td { background: var(--accent-soft); }
+  .table-wrap { overflow-x: auto; border: 1px solid var(--border); border-radius: var(--radius-sm); margin: 16px 0; }
+
+  .tag {
+    display: inline-block; padding: 2px 8px; border-radius: 4px;
+    font-size: 11px; font-weight: 600; margin-right: 4px;
+  }
+  .tag-red { background: var(--tag-red-bg); color: var(--tag-red); }
+  .tag-green { background: var(--tag-green-bg); color: var(--tag-green); }
+  .tag-blue { background: var(--tag-blue-bg); color: var(--tag-blue); }
+  .tag-purple { background: var(--tag-purple-bg); color: var(--tag-purple); }
+  .tag-orange { background: var(--tag-orange-bg); color: var(--tag-orange); }
+  .tag-teal { background: var(--tag-teal-bg); color: var(--tag-teal); }
+
+  .verdict-box {
+    background: linear-gradient(135deg, var(--accent-soft), rgba(201,100,66,0.03));
+    border: 1px solid var(--accent-border); border-radius: var(--radius);
+    padding: 20px 24px; margin: 16px 0;
+  }
+  .verdict-box h5 { color: var(--accent); font-size: 14px; margin-bottom: 8px; }
+  .verdict-box p { font-size: 13px; color: var(--text-secondary); }
+
+  .key-insight {
+    background: var(--bg-warm); border-left: 3px solid var(--accent);
+    padding: 14px 18px; margin: 14px 0; border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+    font-size: 13px; color: var(--text-secondary);
+  }
+
+  .note-box {
+    background: rgba(74,123,157,0.06); border: 1px dashed var(--tag-blue);
+    border-radius: var(--radius-sm); padding: 14px 18px; margin: 14px 0;
+    font-size: 12px; color: var(--tag-blue);
+  }
+
+  /* 折线时间轴 */
+  .tl-wrap { position: relative; min-height: 320px; }
+  .tl-wrap svg { display: block; }
+  .tl-dot {
+    cursor: pointer; transition: r 0.15s, fill 0.15s;
+  }
+  .tl-dot:hover { filter: brightness(1.15); }
+  .tl-label {
+    font-size: 10px; fill: var(--text-tertiary); font-weight: 600;
+    pointer-events: none; user-select: none;
+  }
+  .tl-axis-label {
+    font-size: 10px; fill: var(--text-tertiary); font-weight: 500;
+  }
+  .tl-tooltip {
+    position: absolute; display: none; width: 300px;
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: var(--radius-sm); box-shadow: var(--shadow-md);
+    padding: 14px 16px; z-index: 20; pointer-events: none;
+  }
+  .tl-tooltip.show { display: block; }
+  .tl-tooltip .tt-date { font-size: 11px; color: var(--accent); font-weight: 700; }
+  .tl-tooltip .tt-title { font-size: 14px; font-weight: 600; margin: 4px 0 6px; color: var(--text); }
+  .tl-tooltip .tt-desc { font-size: 12px; color: var(--text-secondary); line-height: 1.65; margin: 0; }
+  .tl-tooltip .tt-tag {
+    display: inline-block; padding: 1px 6px; border-radius: 3px;
+    font-size: 10px; font-weight: 600; margin-top: 6px;
+  }
+
+  .footer {
+    text-align: center; padding: 40px 0; color: var(--text-tertiary); font-size: 12px;
+    border-top: 1px solid var(--border); margin-top: 40px;
+  }
+
+  /* 左侧固定分级目录 */
+  .side-nav {
+    position: fixed; top: 60px; left: 0; width: 220px; height: calc(100vh - 60px);
+    overflow-y: auto; padding: 16px 12px 24px 16px; z-index: 90;
+    font-size: 12px; line-height: 1.6;
+    background: var(--bg); border-right: 1px solid var(--border);
+    scrollbar-width: thin; scrollbar-color: var(--border) transparent;
+  }
+  .side-nav::-webkit-scrollbar { width: 4px; }
+  .side-nav::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+  .side-nav .nav-title {
+    font-size: 11px; font-weight: 700; color: var(--accent);
+    text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px;
+  }
+  .side-nav a {
+    display: block; color: var(--text-secondary); text-decoration: none;
+    padding: 3px 8px; border-radius: 4px; transition: all 0.15s;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .side-nav a:hover { color: var(--accent); background: var(--accent-soft); }
+  .side-nav a.active {
+    color: var(--accent); font-weight: 600;
+    background: var(--accent-soft); border-left: 2px solid var(--accent);
+    padding-left: 6px;
+  }
+  .side-nav .nav-l1 { font-weight: 600; margin-top: 10px; font-size: 12px; }
+  .side-nav .nav-l2 { padding-left: 16px; font-size: 11px; }
+  .side-nav .nav-l3 { padding-left: 28px; font-size: 11px; color: var(--text-tertiary); }
+
+  /* 有侧边栏时主内容居中 */
+  .has-sidenav .container { margin: 0 auto; max-width: 860px; }
+  .has-sidenav .header .container { margin: 0 auto; }
+  .has-sidenav .theme-toggle { right: 16px; }
+
+  @media (max-width: 1100px) {
+    .side-nav { display: none; }
+    .has-sidenav .container { margin-left: auto; }
+    .has-sidenav .header { padding-left: 0; }
+  }
+
+  @media (max-width: 640px) {
+    .header h1 { font-size: 22px; }
+    .container { padding: 0 16px; }
+    .card { padding: 18px; }
+    th, td { padding: 7px 8px; font-size: 12px; }
+  }
+</style>
+</head>
+<body class="has-sidenav">
+
+<!-- 左侧固定目录 -->
+<nav class="side-nav" id="sideNav">
+  <div class="nav-title">目录导航</div>
+  <a href="#exec" class="nav-l1">一、核心结论</a>
+  <a href="#timeline" class="nav-l1">二、时间轴</a>
+  <a href="#comparison" class="nav-l1">三、模型对比及选型</a>
+  <a href="#sec-selection" class="nav-l2">3.1 选型建议</a>
+  <a href="#sec-panorama" class="nav-l2">3.2 全景对比</a>
+  <a href="#sec-deep" class="nav-l2">3.3 各模型深度解读</a>
+  <a href="#deep-claude" class="nav-l3">① Claude Opus 4.6</a>
+  <a href="#deep-gpt" class="nav-l3">② GPT-5.4</a>
+  <a href="#deep-gemini" class="nav-l3">③ Gemini 3 Pro</a>
+  <a href="#deep-grok" class="nav-l3">④ Grok 4</a>
+  <a href="#deep-glm" class="nav-l3">⑤ GLM-5</a>
+  <a href="#deep-seed" class="nav-l3">⑥ Seed 2.0</a>
+  <a href="#deep-minimax" class="nav-l3">⑦ MiniMax M2.5</a>
+  <a href="#deep-deepseek" class="nav-l3">⑧ DeepSeek-V3</a>
+  <a href="#deep-qwen" class="nav-l3">⑨ Qwen3.5-Plus</a>
+  <a href="#category" class="nav-l1">四、演进趋势分析</a>
+  <a href="#trend-1" class="nav-l2">趋势一：能力趋同</a>
+  <a href="#trend-2" class="nav-l2">趋势二：Agent 执行</a>
+  <a href="#trend-3" class="nav-l2">趋势三：成本摩尔定律</a>
+  <a href="#trend-4" class="nav-l2">趋势四：端侧部署</a>
+  <a href="#trend-5" class="nav-l2">趋势五：发布节奏加速</a>
+  <a href="#trend-6" class="nav-l2">趋势六：蒸馏与追赶壁垒</a>
+  <a href="#trend-7" class="nav-l2">趋势七：品味与个性化</a>
+  <a href="#family" class="nav-l1">附录A：模型概览与迭代</a>
+  <a href="#appendix-bench" class="nav-l1">附录B：Benchmark</a>
+</nav>
+
+<button class="theme-toggle" onclick="document.documentElement.dataset.theme = document.documentElement.dataset.theme === 'dark' ? '' : 'dark'">🌓</button>
+
+<div class="header">
+  <div class="container">
+    <h1>2026年主流大模型横向对比</h1>
+    <div class="subtitle">GPT-5.4 · Claude Opus 4.6 · Gemini 3 · Grok 3/4 · DeepSeek-V3/R1 · GLM-5 · Seed 2.0 · MiniMax M2.5</div>
+    <div class="meta">
+      <span>📅 2026年3月6日</span>
+      <span>📊 深度分析报告</span>
+      <span>🎯 深度分析</span>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+
+<!-- 目录 -->
+<div class="toc">
+  <h3>📑 目录</h3>
+  <ol>
+    <li><a href="#exec">核心结论</a></li>
+    <li><a href="#timeline">市场版图时间轴</a></li>
+    <li><a href="#comparison"><strong>模型对比及选型建议</strong></a></li>
+    <li><a href="#category">模型演进的四大趋势判断</a></li>
+    <li><a href="#family">附录A：各家模型系列概览与迭代路径</a></li>
+    <li><a href="#appendix-bench">附录B：Benchmark 实测数据</a></li>
+  </ol>
+</div>
+
+<!-- 1. 核心结论 -->
+<div class="section" id="exec">
+  <h2 class="section-title">一、核心结论</h2>
+  <div class="verdict-box">
+    <h5>⚡ 三句话总结</h5>
+    <p>
+      <strong>1.</strong> 2026年3月5日，OpenAI 发布 <span class="highlight">GPT-5.4</span>，成为首个带原生计算机操作（Computer Use）能力的通用大模型，OSWorld 75.0%（人类水平 72.4%），1M 上下文窗口，定位"专业工作"——标志着 AI 从"生成内容"正式进入"操作计算机执行任务"阶段。<br>
+      <strong>2.</strong> 国产模型阵营同期集中爆发——<span class="highlight">GLM-5 开源登顶编程榜</span>、<span class="highlight">字节 Seed 2.0 系列全线覆盖文本/代码/图像/视频</span>、<span class="highlight">MiniMax M2.5 SWE-bench 80.2%</span>，在编程和 Agent 场景已具备替代国际模型的能力。<br>
+      <strong>3.</strong> 大模型正从"单模态文本生成"加速向"多模态全栈能力"演进，各家路线分化明显——OpenAI 专业工作流+Computer Use、Anthropic 深度编程+Agent Teams、Google 全栈多模态、字节 内容生成全链路。个人用户的最优策略是<span class="highlight">"主力+备选组合，按场景切换"</span>（详见<a href="#comparison">第三章 模型对比及选型建议</a>）。
+    </p>
+  </div>
+</div>
+
+<!-- 2. 时间轴 -->
+<div class="section" id="timeline">
+  <h2 class="section-title">二、市场版图时间轴</h2>
+  <div class="card" style="padding-bottom:16px">
+    <h4>2025–2026 大模型关键发布事件</h4>
+    <p style="font-size:12px;color:var(--text-secondary);margin-bottom:4px">鼠标悬停节点查看详情 · 越往右事件越密集，说明迭代加速</p>
+    <div id="timelineChart" style="position:relative;width:100%;overflow-x:auto;"></div>
+  </div>
+</div>
+
+<!-- 3. 核心：模型横向对比 -->
+<div class="section" id="comparison">
+  <h2 class="section-title">三、模型对比及选型建议</h2>
+
+  <!-- 3.1 选型建议 -->
+  <div class="card" id="sec-selection">
+    <h4>3.1 选型建议：个人用户按场景选模型</h4>
+    <div class="verdict-box">
+      <h5>结论</h5>
+      <p>2026 年没有"最好的模型"，只有"最适合你的模型"。个人用户的最优策略是<strong>"主力+备选"组合</strong>——用一个主力模型处理 80% 的日常需求，再配一两个备选覆盖特殊场景。以下速查表帮你快速找到最适合自己的组合。</p>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <tr><th>你的场景</th><th>首选模型</th><th>备选模型</th><th>为什么选它</th></tr>
+        <tr><td><strong>写代码/做项目</strong></td><td><span class="tag tag-blue">Claude Opus 4.6</span></td><td>GPT-5.4</td><td>实战编程第一（LFG 9.25/10），Agent Teams 能帮你做整个项目而不只是写函数</td></tr>
+        <tr><td><strong>办公自动化/操作电脑</strong></td><td><span class="tag tag-red">GPT-5.4</span></td><td>Claude Opus 4.6</td><td>唯一能直接操作你电脑的 AI（OSWorld 75%），Excel/浏览器/桌面全能操控</td></tr>
+        <tr><td><strong>学术研究/科学推理</strong></td><td><span class="tag tag-red">GPT-5.4 Pro</span></td><td>Grok 4</td><td>GPQA 93.2%，适合写论文、做数据分析、解复杂数学题</td></tr>
+        <tr><td><strong>视频剪辑/多媒体创作</strong></td><td><span class="tag tag-green">Gemini 3 Pro</span></td><td>Seedance 2.0</td><td>原生理解视频/图片/音频，和 Google 全家桶无缝集成</td></tr>
+        <tr><td><strong>中文编程/国内开发</strong></td><td><span class="tag tag-purple">GLM-5</span></td><td>DeepSeek-V3</td><td>开源编程最强，中文理解好，可本地部署保护隐私</td></tr>
+        <tr><td><strong>自动化工作流/批量处理</strong></td><td><span class="tag tag-teal">MiniMax M2.5</span></td><td>Claude Opus 4.6</td><td>Agent/工具调用能力极强，100 TPS 仅 $1/小时，性价比高</td></tr>
+        <tr><td><strong>日常聊天/学习/预算有限</strong></td><td><span class="tag tag-orange">DeepSeek-V3</span></td><td>Qwen3.5</td><td>月费不到 3 块钱能干 GPT-5 八成的活，MIT 开源可本地跑</td></tr>
+        <tr><td><strong>AI 视频生成</strong></td><td><span class="tag tag-orange">Seedance 2.0</span></td><td>—</td><td>电影级多镜头叙事，$0.14/秒，目前最佳商用 AI 视频</td></tr>
+      </table>
+    </div>
+    <div class="key-insight">
+      <strong>💡 个人用户推荐组合：</strong>
+      <br>• <strong>程序员</strong>：Claude Opus 4.6（主力写码）+ DeepSeek-V3（日常问答省钱）
+      <br>• <strong>研究生/学者</strong>：GPT-5.4（论文+数据分析）+ Gemini 3 Pro（多模态文献）
+      <br>• <strong>内容创作者</strong>：Gemini 3 Pro（图文视频理解）+ Seedance 2.0（视频生成）
+      <br>• <strong>预算敏感用户</strong>：DeepSeek-V3 或 Qwen3.5-Plus，月费 ¥0.6–3，够用
+    </div>
+  </div>
+
+  <!-- 4.2 模型全景对比 -->
+  <div class="card">
+    <h4>3.2 模型全景对比</h4>
+    <div class="verdict-box">
+      <h5>结论</h5>
+      <p>8 款核心模型在技术规格上各有侧重：闭源旗舰（Opus 4.6 / GPT-5.4 / Gemini 3 Pro）在推理深度和多模态上领先，但价格是开源模型的 10–200 倍；开源阵营（DeepSeek-V3 / GLM-5 / M2.5）在编程和性价比上已接近甚至超越闭源。<strong>选模型的核心变量不再是"谁更强"，而是"性价比 × 场景匹配"。</strong></p>
+    </div>
+    <div class="table-wrap" style="overflow-x:auto">
+      <table style="min-width:1200px">
+        <tr>
+          <th>参数</th>
+          <th><span class="tag tag-blue">Opus 4.6</span></th>
+          <th><span class="tag tag-red">GPT-5.4</span></th>
+          <th><span class="tag tag-green">Gemini 3 Pro</span></th>
+          <th><span class="tag tag-purple">GLM-5</span></th>
+          <th><span class="tag tag-orange">DeepSeek-V3</span></th>
+          <th><span class="tag tag-teal">M2.5</span></th>
+          <th>Grok 4</th>
+          <th>Qwen3.5</th>
+        </tr>
+        <tr>
+          <td><strong>架构</strong></td>
+          <td>Dense</td><td>MoE</td><td>MoE</td><td>MoE 744B(40B激活)</td><td>MoE 685B(37B激活)</td><td>MoE</td><td>未公开</td><td>MoE</td>
+        </tr>
+        <tr>
+          <td><strong>上下文</strong></td>
+          <td>1M(Beta)/200K</td><td>1M（>272K翻倍）</td><td>1M+</td><td>未公开</td><td>128K</td><td>未公开</td><td>128K</td><td>128K</td>
+        </tr>
+        <tr>
+          <td><strong>多模态</strong></td>
+          <td>文/图/音</td><td>文/图/音/视/CU</td><td>文/图/音/视(原生)</td><td>文/图/代码</td><td>文/代码</td><td>文/代码/Agent</td><td>文/图</td><td>文/图/代码</td>
+        </tr>
+        <tr>
+          <td><strong>开源</strong></td>
+          <td>❌</td><td>❌</td><td>❌</td><td>✅</td><td>✅ MIT</td><td>✅</td><td>❌</td><td>✅</td>
+        </tr>
+        <tr style="background:var(--surface-alt, #f8f4f0)">
+          <td><strong>输入 $/M</strong></td>
+          <td>$5.00</td><td>$2.50</td><td>$2.50</td><td>—（开源）</td><td class="highlight">$0.28</td><td>~$0.36</td><td>订阅$3K/年</td><td class="highlight">$0.11</td>
+        </tr>
+        <tr style="background:var(--surface-alt, #f8f4f0)">
+          <td><strong>输出 $/M</strong></td>
+          <td>$25.00</td><td>$15.00</td><td>$10.00</td><td>—（开源）</td><td>$1.10</td><td>~$1.44</td><td>—</td><td>$0.11</td>
+        </tr>
+        <tr style="background:var(--surface-alt, #f8f4f0)">
+          <td><strong>月成本</strong></td>
+          <td class="highlight">≈ ¥216</td><td>≈ ¥122</td><td>≈ ¥94</td><td>自部署</td><td>≈ ¥10</td><td>≈ ¥13</td><td>≈ ¥1,800</td><td class="highlight">≈ ¥2.2</td>
+        </tr>
+        <tr style="background:var(--surface-alt, #f8f4f0)">
+          <td><strong>相对倍数</strong></td>
+          <td>98x</td><td>55x</td><td>43x</td><td>—</td><td>4.5x</td><td>6x</td><td>818x</td><td>1x（基准）</td>
+        </tr>
+        <tr style="background:var(--surface-alt, #f8f4f0)">
+          <td><strong>性价比</strong></td>
+          <td><span class="tag tag-red">低</span>闭源最贵</td>
+          <td><span class="tag tag-orange">中</span>CU+1M $2.5</td>
+          <td><span class="tag tag-orange">中</span>多模态优</td>
+          <td><span class="tag tag-green">高</span>开源自部署</td>
+          <td><span class="tag tag-green">高</span></td>
+          <td><span class="tag tag-green">高</span></td>
+          <td><span class="tag tag-red">低</span>仅研究</td>
+          <td><span class="tag tag-green">高</span></td>
+        </tr>
+      </table>
+    </div>
+    <p style="font-size:13px;color:var(--text-secondary);margin-top:8px">* 月成本按个人重度用户估算（200万输入+80万输出 Token/月，日均 3-4 小时深度使用）。Qwen3.5-Plus 为 1x 基准。Opus 4.6 是闭源中最贵的。</p>
+    <div class="key-insight">
+      <strong>关键洞察：</strong>
+      <br>• 闭源旗舰的成本差异巨大：Opus 4.6（$5/$25）是闭源中最贵的，GPT-5.4（$2.50/$15）性价比更优，但 Opus 编程更强
+      <br>• 开源阵营月费 ¥2–13，闭源阵营 ¥94–216，差距 10–100 倍——但能力差距远没有这么大
+      <br>• Grok 4 的 $3,000/年订阅制使其仅适合极端需求，普通用户不用考虑
+      <br>• MoE 架构已成主流（6/8 款采用），优势是"大参数容量 + 低推理成本"；Dense（Opus）则在推理深度上更有优势
+    </div>
+  </div>
+
+  <!-- 4.3 各模型深度解读（定量+定性融合） -->
+  <h3 id="sec-deep" style="margin-top:28px;margin-bottom:4px;font-size:20px;color:var(--accent)">3.3 各模型深度解读</h3>
+  <p style="color:var(--text-secondary);margin-bottom:16px">每款模型都有独特的"灵魂"和明确的短板。以下将 Benchmark 数据与用户真实评价融合——<strong>数据说"能力有多强"，用户说"体验有多好"。</strong></p>
+
+  <!-- ① Claude Opus 4.6 -->
+  <div class="card" id="deep-claude">
+    <h4>① Claude Opus 4.6</h4>
+
+    <p style="margin-top:8px"><strong style="color:var(--accent)">编程能力数一数二</strong></p>
+    <p>LFG Bench 9.25/10（实战编程第一），ARC-AGI-2 68.8%（抽象推理遥遥领先，较 4.5 的 37.6% 提升 83%）。MRCR v2 76%，长上下文代码检索 4.1x 提升，1M 上下文(Beta)可以一次性理解整个代码库。</p>
+    <div class="key-insight">
+      <strong>🗣️ 用户声音：</strong>"Opus 4.6 is the new king for hard problems. I threw a Next.js e-commerce project at it and it completed every feature including checkout — Codex 5.3 missed the checkout flow entirely."<br>—— LFG Bench 实测对比，HN 讨论帖（1561 赞）
+    </div>
+
+    <p style="margin-top:14px"><strong style="color:var(--accent)">行业的引领者和规则制定者</strong></p>
+    <p>Anthropic 不只是做模型，而是在定义 AI 的未来形态——MCP（模型上下文协议）已被 Cursor/Windsurf/Zed 等主流 IDE 原生支持，正在成为 AI Agent 的事实标准接口。Skills、Todo、Agent Teams 都是他们率先提出并实现的。</p>
+    <div class="key-insight">
+      <strong>🗣️ 用户声音：</strong>"Agent Teams 是杀手级功能。16 个 Agent 从零构建 C 编译器——AI 编程不再是'帮我写函数'，而是'帮我做项目'。"<br>—— X/Twitter 开发者评论
+    </div>
+
+    <p style="margin-top:14px"><strong style="color:var(--accent)">最有品味、最具灵魂的 AI</strong></p>
+    <p>AI 宪法（Constitutional AI）让 Claude 在安全与能力之间找到了优雅的平衡。它不只是一个工具，而是一个有自己思考方式的伙伴。公司员工留存率在 AI 行业中名列前茅，说明这家公司有真正的使命感和文化。</p>
+
+    <p style="margin-top:14px"><strong style="color:var(--accent)">价格昂贵且封号严格</strong></p>
+    <p style="color:var(--text-secondary);font-size:13px">定价 $5/$25 是闭源中最贵的（GPT-5.4 仅 $2.50/$15，贵一倍）。封号政策严格，违规即封无申诉。技术文档写作质量相比 4.5 有退化——"编码用 4.6，写作留 4.5"。月费 ≈ ¥216（按 200万 token 计），是 DeepSeek 的 22 倍。</p>
+  </div>
+
+  <!-- ② GPT-5.4 -->
+  <div class="card">
+    <h4>② GPT-5.4</h4>
+
+    <p style="margin-top:8px"><strong style="color:var(--accent)">Computer Use 首个超越人类的通用 AI</strong></p>
+    <p>OSWorld 75.0%（人类水平 72.4%），首个带原生计算机操作能力的通用大模型。能直接操作 Excel 做财务建模、浏览网页、控制桌面应用。BrowseComp 89.3%（Pro），投行基准 87.5%，深度 Excel/Sheets 集成。</p>
+    <div class="key-insight">
+      <strong>🗣️ 用户声音：</strong>"Computer Use 是真正的游戏规则改变者。它能直接在我的电脑上操作 Excel 做财务建模。OSWorld 75% 超人类不是营销话术——这是实打实的。"<br>—— 早期 ChatGPT Pro 用户
+    </div>
+
+    <p style="margin-top:14px"><strong style="color:var(--accent)">最全能的 AI，什么都能干什么都不差</strong></p>
+    <p>GPQA 93.2%+ 科学推理顶级，1M 上下文窗口，文/图/音/视/CU 五模态全覆盖。推理、编程、多模态全面无短板，是真正的"全能选手"。工具搜索减少 47% token 消耗。</p>
+
+    <p style="margin-top:14px"><strong style="color:var(--accent)">不封号 + 适合长任务，最省心的选择</strong></p>
+    <p>你可以放心把一个 8 小时的工作流交给它，不会半路被掐断。幻觉降低 33% 是最被低估的改进——做事实核查和报告生成时，这比任何 benchmark 提升都重要。</p>
+    <div class="key-insight">
+      <strong>🗣️ 用户声音：</strong>"幻觉降低 33% 是最被低估的改进。做事实核查和报告生成的场景下，这比任何 benchmark 提升都重要。"<br>—— VentureBeat 报道
+    </div>
+
+    <p style="margin-top:14px"><strong style="color:var(--accent)">编程深度不如 Opus，Pro 版定价极高</strong></p>
+    <p style="color:var(--text-secondary);font-size:13px">开放性编程不如 Opus（LFG Bench 7.5 vs 9.25）；Pro 版 $30/$180 定价极高，普通人用不起；>272K 上下文翻倍计费。标准版 $2.50/$15 性价比尚可。</p>
+  </div>
+
+  <!-- ③ Gemini 3 Pro -->
+  <div class="card" id="deep-gemini">
+    <h4>③ Gemini 3 Pro</h4>
+
+    <p style="margin-top:8px"><strong style="color:var(--accent)">多模态感知力最强，原生视频处理独家</strong></p>
+    <p>原生文/图/音/视四模态不是后期缝合，而是底层架构特性。原生视频流处理是独家能力，1M+ 上下文可以一次性分析整部电影或数小时的会议录像。Arena 排名第 3（~1435），GPQA ~87%。</p>
+
+    <p style="margin-top:14px"><strong style="color:var(--accent)">Google 生态深度集成，护城河难以复制</strong></p>
+    <p>与 Google 搜索/Maps/Workspace 的深度集成构建了其他厂商难以复制的护城河。做前端设计和视觉任务时灵感四溢，适合内容创作者和多媒体工作者。</p>
+
+    <p style="margin-top:14px"><strong style="color:var(--accent)">Flash-Lite 定义轻量模型新标准</strong></p>
+    <p>363 tok/s + $0.25/M，速度是 GPT-5.3 Instant 的 5x，价格是其 1/2。所有轻量任务的绝对最优选择。</p>
+    <div class="key-insight">
+      <strong>🗣️ 用户声音：</strong>"Flash-Lite 性价比逆天，363 tok/s 的速度让我把所有轻量任务都迁过来了。但纯文本深度推理还是不如 GPT/Claude。"<br>—— 开发者评价
+    </div>
+
+    <p style="margin-top:14px"><strong style="color:var(--accent)">编程能力短板明显，国内访问受限</strong></p>
+    <p style="color:var(--text-secondary);font-size:13px">编程能力不如 Opus/GPT-5.4（尤其后端/算法题）；中文生态不如国产模型；API 在国内访问受限，需要科学上网。</p>
+  </div>
+
+  <!-- ④ Grok 4 -->
+  <div class="card">
+    <h4>④ Grok 4</h4>
+
+    <p style="margin-top:8px"><strong style="color:var(--accent)">Arena 排名第一的推理怪兽</strong></p>
+    <p>Arena ~1450+（全场第一），AIME 2025 数学竞赛 93 分。凭借 10 万张 H100 的 Colossus 集群和 X/Twitter 实时数据独占优势，在推理和信息时效性上做到天花板。</p>
+
+    <p style="margin-top:14px"><strong style="color:var(--accent)">X 生态绑定，信息时效性最强</strong></p>
+    <p>实时接入 X/Twitter 全平台数据，回答的时效性远超其他模型。适合追踪实时热点、金融市场动态、突发新闻等场景。</p>
+
+    <p style="margin-top:14px"><strong style="color:var(--accent)">$3000/年天价 + 擦边争议，普通人用不上</strong></p>
+    <p style="color:var(--text-secondary);font-size:13px">$3,000/年订阅制，性价比极低，把大多数人挡在门外。仅文/图两种模态。因"擦边"内容生成（NSFW 宽松策略）饱受争议。编程/Agent 不是强项，API 封闭。它可能是"最强但最难用"的模型。</p>
+  </div>
+
+  <!-- ⑤ GLM-5 -->
+  <div class="card" id="deep-glm">
+    <h4>⑤ GLM-5</h4>
+
+    <p style="margin-top:8px"><strong style="color:var(--accent)">开源编程最强，对齐 Claude Opus 4.5</strong></p>
+    <p>MoE 744B（40B 激活），28.5T 训练数据。全球权威 Agent 榜单第 4、开源第 1。编程能力较 GLM-4.7 提升 >20%，在开源模型中编程能力独占鳌头。</p>
+    <div class="key-insight">
+      <strong>🗣️ 用户声音：</strong>"GLM-5 让我震惊——一个开源模型在编程上能接近 Opus 4.5 的水平，还能跑在国产芯片上。"<br>—— 腾讯网引用开发者
+    </div>
+
+    <p style="margin-top:14px"><strong style="color:var(--accent)">首个适配 7 家国产芯片的旗舰模型，信创担当</strong></p>
+    <p>适配昇腾/海光/摩尔线程/寒武纪/昆仑芯/沐曦/燧原，首次证明国产芯片可以跑旗舰级大模型。对中国 AI 产业自主可控具有战略意义，已成为国产算力生态的核心模型供应商。</p>
+
+    <p style="margin-top:14px"><strong style="color:var(--accent)">ZCode 平台让模型变工具链</strong></p>
+    <p>配套推出 ZCode 多智能体编码平台，从单纯的"模型"变成完整的"开发工具链"。开源 + 工具链 + 国产芯片适配，走出了独特路线。</p>
+
+    <p style="margin-top:14px"><strong style="color:var(--accent)">多模态和国际影响力仍有差距</strong></p>
+    <p style="color:var(--text-secondary);font-size:13px">多模态仅文/图/代码（无音视频）；国际影响力有限；Arena 排名中游；部分国产芯片上推理速度仍有差距。</p>
+  </div>
+
+  <!-- ⑥ 字节 Seed 2.0 -->
+  <div class="card">
+    <h4>⑥ 字节 Seed 2.0</h4>
+
+    <p style="margin-top:8px"><strong style="color:var(--accent)">国产首个 Arena 全球前十，真实体验驱动</strong></p>
+    <p>Arena Text 国产第一/全球前十，Seed 2.0 Pro 准确率 76.5%。字节做大模型的逻辑和其他家完全不同——以体验为驱动而不是以刷分为驱动，强调指令遵循和长尾知识，面向真实世界的复杂工作流优化。</p>
+
+    <p style="margin-top:14px"><strong style="color:var(--accent)">文/代码/图/视频全链路覆盖，内容创作利器</strong></p>
+    <p>依托抖音/TikTok/剪映/飞书的庞大用户群和丰富场景，形成服务内容生态的完整工具链。Seedance 2.0 是首个明确商业化的 AI 视频模型（$0.14/秒），多镜头叙事+原生音频。</p>
+
+    <p style="margin-top:14px"><strong style="color:var(--accent)">Pro 版推理慢且贵，海外影响力有限</strong></p>
+    <p style="color:var(--text-secondary);font-size:13px">Pro 推理时间 300秒+、成本翻 3 倍；视频模型商业化还在早期；海外影响力不如 OpenAI/Anthropic。</p>
+  </div>
+
+  <!-- ⑦ MiniMax M2.5 -->
+  <div class="card" id="deep-minimax">
+    <h4>⑦ MiniMax M2.5</h4>
+
+    <p style="margin-top:8px"><strong style="color:var(--accent)">Agent 和工具调用能力全球前列</strong></p>
+    <p>SWE-bench 80.2%（逼平 Claude Sonnet 4.5 的 82%），BFCL 76.8%（工具调用），BrowseComp 76.3%（Web Agent）。复杂任务速度快 37%，100 TPS 仅 $1/小时。</p>
+
+    <p style="margin-top:14px"><strong style="color:var(--accent)">成立 3 年逼平国际旗舰，垂直深耕路线验证</strong></p>
+    <p>一家成立仅 3 年、员工不到千人的公司，在 SWE-bench 上逼平 Claude Sonnet 4.5——证明了垂直深耕 + 工程效率优化的路线可以弯道超车。2025 年收入同比增长 158%，ARR 超 $1.5 亿，是中国 AI 创业公司中最会赚钱的。</p>
+
+    <p style="margin-top:14px"><strong style="color:var(--accent)">通用对话不是强项，品牌知名度有限</strong></p>
+    <p style="color:var(--text-secondary);font-size:13px">通用对话能力不如旗舰；品牌知名度有限，很多人没听过；多模态仅文/代码/Agent，没有图像和视频能力。</p>
+  </div>
+
+  <!-- ⑧ DeepSeek-V3 -->
+  <div class="card">
+    <h4>⑧ DeepSeek-V3</h4>
+
+    <p style="margin-top:8px"><strong style="color:var(--accent)">以一己之力改写大模型成本预期</strong></p>
+    <p>V3 训练成本仅 $5.57M（GPT-4 的 1/20），API 价格 $0.28/M 输入——同级中最便宜。迫使全球闭源厂商大幅降价，OpenAI 将 GPT-5.3 Instant 降至 $0.50/M 被解读为直接回应。</p>
+
+    <p style="margin-top:14px"><strong style="color:var(--accent)">MIT 开源 + 中文代码最佳，穷人的 GPT-5</strong></p>
+    <p>MoE 685B（37B 激活），MIT 开源让任何人都能本地部署。R1 开源后 2 周被 20+ 团队微调，用强化学习替代标注数据的范式创新影响深远。中文代码生成在社区公认为最佳。</p>
+    <div class="key-insight">
+      <strong>🗣️ 用户声音：</strong>"性价比之王，穷人的 GPT-5。中文代码生成最佳。"<br>—— 中文技术社区普遍共识
+    </div>
+
+    <p style="margin-top:14px"><strong style="color:var(--accent)">多模态极弱，高峰期排队严重</strong></p>
+    <p style="color:var(--text-secondary);font-size:13px">多模态极弱（仅文/代码）；R1 高峰期"系统繁忙"排队严重，体验不稳定；Arena ~1390 与旗舰有差距。</p>
+  </div>
+
+  <!-- ⑨ Qwen3.5-Plus -->
+  <div class="card" id="deep-qwen">
+    <h4>⑨ Qwen3.5-Plus</h4>
+
+    <p style="margin-top:8px"><strong style="color:var(--accent)">使用成本趋近于零，月费仅 ¥2.2</strong></p>
+    <p>$0.11/$0.11 的定价意味着按 200 万 token 计月费仅 ¥2.2，是 Opus 4.6 的 1/98。对预算敏感的个人用户、学生和轻度使用者是绝对首选。</p>
+
+    <p style="margin-top:14px"><strong style="color:var(--accent)">阿里云生态加持，国内分发优势</strong></p>
+    <p>依托阿里云生态，在中国市场有天然的分发和集成优势。文/图/代码三模态，日常使用完全够用。</p>
+
+    <p style="margin-top:14px"><strong style="color:var(--accent)">旗舰能力与顶尖有差距</strong></p>
+    <p style="color:var(--text-secondary);font-size:13px">旗舰能力与国际顶尖有差距；Agent/工具调用不是强项。适合"够用就好"的用户，不适合追求极致的场景。</p>
+  </div>
+</div>
+
+<!-- 4. 模型演进趋势 -->
+<div class="section" id="category">
+  <h2 class="section-title">四、模型演进趋势分析</h2>
+
+  <!-- 趋势一 -->
+  <div class="card" id="trend-1">
+    <h4>趋势一：各家模型全面趋近 — 能力、模态、排名正在收敛</h4>
+    <div class="verdict-box">
+      <h5>核心判断</h5>
+      <p>2026 年大模型行业最显著的特征不是某一家遥遥领先，而是<strong>所有头部玩家正在加速趋同</strong>。这种趋近发生在三个层面：① 模态覆盖——从纯文本走向文/图/音/视/代码全模态已成标配；② 评测排名——Arena 前 5 名差距仅 1.7%，人类盲测已难以区分；③ 核心能力——推理、编程、Agent 等关键赛道各家差距急剧缩小。差异化窗口正在关闭，竞争正从"谁更强"转向"谁更快、更便宜、生态更深"。</p>
+    </div>
+
+    <p style="margin-top:14px"><strong>论据 1：排名高度趋同 — 从"一家独大"到"五强并列"</strong></p>
+    <p>Chatbot Arena 2026 年 3 月数据：</p>
+    <div class="table-wrap">
+      <table>
+        <tr><th>排名</th><th>模型</th><th>Arena 分数</th><th>与第一名差距</th></tr>
+        <tr><td>1</td><td>Grok 4</td><td>~1450</td><td>—</td></tr>
+        <tr><td>2</td><td>GPT-5.4 Pro</td><td>~1445</td><td>-5（0.3%）</td></tr>
+        <tr><td>3</td><td>Gemini 3 Pro</td><td>~1435</td><td>-15（1.0%）</td></tr>
+        <tr><td>4</td><td>Claude Opus 4.6</td><td>~1430</td><td>-20（1.4%）</td></tr>
+        <tr><td>5</td><td>GPT-5.4</td><td>~1425</td><td>-25（1.7%）</td></tr>
+      </table>
+    </div>
+    <p style="margin-top:8px">前 5 名横跨 4 家公司（xAI / OpenAI / Google / Anthropic），总差距仅 25 分（1.7%）。对比 2023 年 GPT-4 独占鳌头时领先第二名超 80 分的局面，行业已从"一超多强"彻底转为"群雄并列"。</p>
+
+    <p style="margin-top:14px"><strong>论据 2：多模态从差异化变为入场券</strong></p>
+    <div class="table-wrap">
+      <table>
+        <tr><th>时期</th><th>模态格局</th><th>代表事件</th></tr>
+        <tr><td><strong>2022–2023</strong></td><td>纯文本时代</td><td>GPT-3.5/4、Claude 1/2、GLM-130B 均为文本模型</td></tr>
+        <tr><td><strong>2024</strong></td><td>多模态兴起（差异化阶段）</td><td>GPT-4o 首次原生文/图/音；Gemini 1.5 百万上下文；Claude 3 加入视觉</td></tr>
+        <tr><td><strong>2025–2026</strong></td><td>多模态标配（趋同阶段）</td><td>所有旗舰模型均支持≥3种模态；Arena 新增多模态综合榜，前 10 名全部多模态</td></tr>
+      </table>
+    </div>
+    <p style="margin-top:8px">目前各家模态覆盖已高度重叠——OpenAI、Google、字节均支持文/图/音/视四模态输入；Anthropic 和智谱支持文/图/音三模态。唯一例外是 DeepSeek，其多模态能力仍相对薄弱，但也已在规划补齐。企业 RFP 中"多模态支持"已从 2024 年的加分项变为 2026 年的<strong>必选项</strong>。</p>
+
+    <p style="margin-top:14px"><strong>论据 3：核心能力赛道差距急剧缩小</strong></p>
+    <div class="table-wrap">
+      <table>
+        <tr><th>能力赛道</th><th>2024 格局</th><th>2026.03 格局</th><th>趋同程度</th></tr>
+        <tr><td><strong>编程</strong></td><td>Claude 3.5 明显领先</td><td>Opus 4.6 / GPT-5.4 / GLM-5 / M2.5 四强交替领先</td><td>高度趋同</td></tr>
+        <tr><td><strong>推理</strong></td><td>o1 独占深度推理</td><td>GPT-5.4 Pro / Grok 4 / Gemini 3 Pro / DeepSeek-R1 均达顶级</td><td>高度趋同</td></tr>
+        <tr><td><strong>Agent/工具调用</strong></td><td>Claude Computer Use 独家</td><td>GPT-5.4 原生CU、M2.5 BFCL 76.8%、多家跟进</td><td>快速趋同</td></tr>
+        <tr><td><strong>长上下文</strong></td><td>Gemini 1.5 Pro 独占百万</td><td>Gemini 3 Pro / GPT-5.4 / Opus 4.6 均支持 200K+</td><td>基本趋同</td></tr>
+        <tr><td><strong>中文能力</strong></td><td>国产模型明显领先</td><td>GPT-5.4/Gemini 3 中文大幅提升，差距缩小</td><td>加速趋同</td></tr>
+      </table>
+    </div>
+    <p style="margin-top:8px"><strong>趋同的本质</strong>：当所有模型在通用能力上几乎拉平，竞争必然转向<strong>价格</strong>（Qwen3.5-Plus 单价仅为 GPT-5.4 Pro 的 1/1500）、<strong>速度</strong>（Flash-Lite 363 tok/s vs 旗舰模型 ~30 tok/s）、<strong>生态深度</strong>（Google 全产品线集成、字节内容链路闭环、智谱国产算力适配）和<strong>垂直场景</strong>的较量。"谁更聪明"已不再是决胜因素，"谁更适合我的场景"才是用户的真实选择逻辑。</p>
+  </div>
+
+  <!-- 趋势二 -->
+  <div class="card" id="trend-2">
+    <h4>趋势二：竞争焦点从"回答问题"转向"Agent 自主执行"</h4>
+    <div class="verdict-box">
+      <h5>核心判断</h5>
+      <p>2025–2026 年大模型最重要的范式转移：模型不再只是"回答问题"，而是"执行任务"。AI Agent（工具调用、计算机操作、多智能体协作）成为新的核心竞争力，直接决定了模型在企业场景中的实际价值。</p>
+    </div>
+    <p style="margin-top:14px"><strong>论据 1：Agent 能力成为旗舰发布的核心卖点</strong></p>
+    <div class="table-wrap">
+      <table>
+        <tr><th>事件</th><th>Agent 能力突破</th><th>行业影响</th></tr>
+        <tr><td>Claude 4 Computer Use (2025.06)</td><td>首个可直接操作计算机 GUI 的大模型</td><td>开创"AI 操作员"品类</td></tr>
+        <tr><td>GPT-5.3 Codex 全自主开发 (2026.02)</td><td>8 小时无人干预持续编码，OSWorld 64.7%</td><td>证明 AI 可替代初级开发者的完整工作流</td></tr>
+        <tr><td>Claude Opus 4.6 Agent Teams (2026.02)</td><td>16 个 Agent 并行协作，从零构建 C 编译器</td><td>从单 Agent → 多 Agent 协作</td></tr>
+        <tr><td>MiniMax M2.5 BFCL 76.8% (2026.02)</td><td>工具调用和函数调用能力全球前列</td><td>国产模型在 Agent 赛道首次对齐国际旗舰</td></tr>
+        <tr><td>GPT-5.4 原生 Computer Use (2026.03)</td><td>OSWorld 75.0% 超人类（72.4%），原生操控桌面/浏览器/Excel</td><td>首个通用模型带原生CU，Computer Use从"附加能力"变为"内置能力"</td></tr>
+      </table>
+    </div>
+    <p style="margin-top:12px"><strong>论据 2：协议层标准化加速</strong> — Anthropic 的 MCP (Model Context Protocol) 被多家厂商和工具链采纳（Cursor、Windsurf、Zed 等 IDE 原生支持），正在成为 AI Agent 的事实标准接口。这类似于 USB 对外设生态的统一作用。</p>
+    <p style="margin-top:12px"><strong>论据 3：Benchmark 导向转变</strong> — 2025 年之前的核心评测是 MMLU、HumanEval 等"知识/代码生成"测试；2026 年核心评测变为 SWE-bench（工程问题修复）、OSWorld（计算机操作）、Terminal-Bench（终端任务）、BFCL（工具调用）、BrowseComp（Web Agent）——全部是<strong>执行能力</strong>而非生成能力的衡量。GPT-5.4 的 OSWorld 75.0% 超越人类 72.4% 标志着 AI 在计算机操作任务上首次达到人类水平。</p>
+  </div>
+
+  <!-- 趋势三 -->
+  <div class="card" id="trend-3">
+    <h4>趋势三：成本效率的"摩尔定律" — 每年 Token 价格下降 10 倍</h4>
+    <div class="verdict-box">
+      <h5>核心判断</h5>
+      <p>大模型 API 的 Token 价格正在经历类似芯片领域的摩尔定律：同等能力的模型，API 调用成本每 12–18 个月下降约 10 倍。这不仅是技术进步的结果，更是开源竞争倒逼闭源厂商降价的市场效应。</p>
+    </div>
+    <p style="margin-top:14px"><strong>论据 1：价格降幅数据</strong></p>
+    <div class="table-wrap">
+      <table>
+        <tr><th>时间</th><th>同档模型代表</th><th>输入价格 ($/M token)</th><th>对比降幅</th></tr>
+        <tr><td>2023.03</td><td>GPT-4</td><td>$30.00</td><td>基准</td></tr>
+        <tr><td>2024.05</td><td>GPT-4o</td><td>$5.00</td><td>-83%</td></tr>
+        <tr><td>2025.08</td><td>GPT-5</td><td>$2.50</td><td>-92%（vs GPT-4）</td></tr>
+        <tr><td>2026.02</td><td>DeepSeek-V3（同级开源）</td><td>$0.28</td><td>-99%（vs GPT-4）</td></tr>
+      </table>
+    </div>
+    <p style="margin-top:12px"><strong>论据 2：开源是核心降价驱动力</strong> — DeepSeek-V3 训练成本仅 $5.57M（约为 GPT-4 训练成本的 1/20），MIT 协议完全开源。这迫使 OpenAI 将 GPT-5.3 Instant 降至 $0.50/M，GPT-5.4 Thinking 定价 $2.50/M（与 GPT-5 持平但能力跃升），Google 将 Flash-Lite 降至 $0.25/M。中国市场更激进：Qwen3.5-Plus 输入输出均仅 $0.11/M。</p>
+    <p style="margin-top:12px"><strong>论据 3：架构创新降低推理成本</strong> — MoE（混合专家）架构使 685B 参数模型仅需激活 37B 参数（DeepSeek-V3），推理成本降至 Dense 架构的 1/5；MLA（Multi-head Latent Attention）进一步将 KV Cache 压缩 93%，直接降低长上下文场景的显存和算力开销。</p>
+  </div>
+
+  <!-- 趋势四 -->
+  <div class="card" id="trend-4">
+    <h4>趋势四：蒸馏小模型与端侧部署 — AI 从云端走向终端</h4>
+    <div class="verdict-box">
+      <h5>核心判断</h5>
+      <p>2025–2026 年，大模型厂商纷纷将旗舰能力"蒸馏"到 1B–10B 参数的小模型中，使其能在手机、PC、IoT 等端侧设备上本地运行。这标志着 AI 部署范式从"纯云端 API"正在转向"云边端协同"——延迟更低、隐私更强、成本趋零。</p>
+    </div>
+    <p style="margin-top:14px"><strong>论据 1：各家蒸馏小模型密集发布</strong></p>
+    <div class="table-wrap">
+      <table>
+        <tr><th>厂商</th><th>模型</th><th>参数量</th><th>核心亮点</th><th>端侧适配</th></tr>
+        <tr><td><strong>OpenAI</strong></td><td>GPT-5.3 Instant</td><td>未公开（轻量）</td><td>$0.50/M 输入，71 tok/s，日常任务优化</td><td>API 为主，ChatGPT 端侧推理</td></tr>
+        <tr><td><strong>Google</strong></td><td>Gemini 3.1 Flash-Lite</td><td>未公开（轻量）</td><td class="highlight">363 tok/s，$0.25/M，速度和成本新标杆</td><td>Android/Chrome 原生集成</td></tr>
+        <tr><td><strong>阿里</strong></td><td>Qwen3.5 小模型系列</td><td>0.8B / 2B / 4B / 9B</td><td>四款稠密模型，原生多模态，补全大中小全矩阵</td><td>0.8B/2B 适配手机和 IoT 设备</td></tr>
+        <tr><td><strong>面壁智能</strong></td><td>MiniCPM 4.0</td><td>~8B（稀疏）</td><td>端侧长文本+深思考，5%稀疏度+注意力双频换挡</td><td>iPad/手机原生运行，"端侧小钢炮"</td></tr>
+        <tr><td><strong>面壁智能</strong></td><td>AgentCPM</td><td>4B</td><td>端侧 GUI Agent 智能体，自动化操作手机 App</td><td>骁龙 8 至尊版优化，纯端侧运行</td></tr>
+        <tr><td><strong>Apple</strong></td><td>Apple Intelligence</td><td>~3B（设备端）</td><td>与 iOS/macOS 深度集成，隐私优先架构</td><td>iPhone 15 Pro+ / M 系列 Mac</td></tr>
+      </table>
+    </div>
+    <p style="margin-top:12px"><strong>论据 2：蒸馏技术使"小而不弱"成为现实</strong> — Qwen3.5-9B 在多项评测中已接近 2024 年的 GPT-4o-mini 水平，而 MiniCPM-o 2.6（8B）在多模态评测中媲美 GPT-4o。知识蒸馏（大模型教小模型）、MoE 稀疏激活（MiniCPM 4.0 仅 5% 稀疏度）和量化（INT4/INT8）三项技术叠加，使 4B–9B 模型的实际能力相当于两年前百B级别模型的 80%+。</p>
+    <p style="margin-top:12px"><strong>论据 3：端侧部署的三重商业价值</strong></p>
+    <ul>
+      <li><strong>延迟归零</strong>：端侧推理不依赖网络，响应时间 &lt;100ms，适合实时翻译、语音助手、AR/VR 交互</li>
+      <li><strong>隐私合规</strong>：数据不离设备，天然满足 GDPR/个人信息保护法要求，金融、医疗、政务场景的刚需</li>
+      <li><strong>成本归零</strong>：推理在用户设备上完成，厂商无需承担 GPU 推理成本，可实现"用户量增长但边际成本不增"的理想模型</li>
+    </ul>
+    <p style="margin-top:12px"><strong>论据 4：芯片厂商推动端侧 AI 生态</strong> — 高通骁龙 8 至尊版、苹果 M4、联发科天玑 9400 均内置专用 NPU/Neural Engine，为端侧 LLM 提供硬件基础。面壁智能与高通的合作（AgentCPM 4B 在骁龙上原生运行）预示着"芯片+小模型"的端侧 Agent 将在 2026–2027 年大规模落地。</p>
+  </div>
+
+  <!-- 趋势五 -->
+  <div class="card" id="trend-5">
+    <h4>趋势五：发布节奏持续加速 — 从"年更"到"季更"再到"月更"</h4>
+    <div class="verdict-box">
+      <h5>核心判断</h5>
+      <p>大模型的迭代节奏正在经历从"年更"→"季更"→"月更"的加速。头部厂商的发布周期已从 2023 年的 12–18 个月缩短至 2026 年的 2–4 个月，竞争压力和技术扩散共同驱动了这一趋势。发展路径呈现"基座模型大版本 + 持续小版本优化"的双轨制。</p>
+    </div>
+
+    <p style="margin-top:14px"><strong>论据 1：各家发布周期量化数据</strong></p>
+    <div class="table-wrap">
+      <table>
+        <tr><th>厂商</th><th>主要版本</th><th>发布时间</th><th>与上一版间隔</th></tr>
+        <tr><td rowspan="5"><strong>OpenAI</strong></td><td>GPT-3.5</td><td>2022.11</td><td>—</td></tr>
+        <tr><td>GPT-4</td><td>2023.03</td><td>4 个月</td></tr>
+        <tr><td>GPT-4o</td><td>2024.05</td><td>14 个月</td></tr>
+        <tr><td>GPT-5</td><td>2025.08</td><td>15 个月</td></tr>
+        <tr><td>GPT-5.4</td><td>2026.03</td><td class="highlight">7 个月（含 5.2/5.3 中间版本）</td></tr>
+        <tr><td rowspan="4"><strong>Anthropic</strong></td><td>Claude 2</td><td>2023.07</td><td>—</td></tr>
+        <tr><td>Claude 3</td><td>2024.03</td><td>8 个月</td></tr>
+        <tr><td>Claude 4</td><td>2025.06</td><td>15 个月</td></tr>
+        <tr><td>Claude 4.6 Opus</td><td>2026.02</td><td class="highlight">8 个月（含 4.5 中间版本）</td></tr>
+        <tr><td rowspan="3"><strong>Google</strong></td><td>Gemini 1.0</td><td>2023.12</td><td>—</td></tr>
+        <tr><td>Gemini 2.0</td><td>2024.12</td><td>12 个月</td></tr>
+        <tr><td>Gemini 3 Pro</td><td>2026.01</td><td class="highlight">13 个月</td></tr>
+        <tr><td rowspan="2"><strong>DeepSeek</strong></td><td>DeepSeek-V2</td><td>2024.05</td><td>—</td></tr>
+        <tr><td>DeepSeek-V3</td><td>2024.12</td><td class="highlight">7 个月</td></tr>
+      </table>
+    </div>
+    <p style="margin-top:8px">关键观察：OpenAI 在 GPT-5 之后切换为"小版本快速迭代"模式（5.0→5.2→5.3→5.4，7 个月内 4 个版本）。Anthropic 类似（4.0→4.5→4.6，8 个月 3 个版本）。这标志着行业从"大版本年更"转向<strong>"基座+快速迭代"双轨制</strong>：基座模型（GPT-5、Claude 4）仍需 12–15 个月研发，但在基座之上的优化版本可以每 2–3 个月发布一次。</p>
+
+    <p style="margin-top:14px"><strong>论据 2：发展路径的三阶段演进</strong></p>
+    <div class="table-wrap">
+      <table>
+        <tr><th>阶段</th><th>时间</th><th>核心策略</th><th>代表事件</th></tr>
+        <tr><td><strong>1. Scale Up</strong></td><td>2020–2023</td><td>堆参数、堆数据、堆算力</td><td>GPT-3(175B)→GPT-4(~1.8T MoE)，训练成本 $100M+</td></tr>
+        <tr><td><strong>2. Scale Smart</strong></td><td>2024–2025</td><td>架构创新（MoE/MLA）+ 推理时 Scaling</td><td>DeepSeek-V3 用 $5.57M 训练出 GPT-4 级模型；o1 开创推理时计算</td></tr>
+        <tr><td><strong>3. Scale Out</strong></td><td>2025–2026</td><td>多 Agent 协作 + 端云协同 + 持续学习</td><td>Opus 4.6 Agent Teams、GPT-5.4 原生 CU、端侧蒸馏模型</td></tr>
+      </table>
+    </div>
+    <p style="margin-top:8px">当前正处于第二阶段向第三阶段过渡期。"堆参数"的边际收益已显著递减（GPT-5 在 MMLU 上仅比 GPT-4 提升 ~3%），行业重心转向推理效率（o1/R1 系列）、Agent 能力和生态构建。</p>
+
+    <p style="margin-top:14px"><strong>论据 3：加速的驱动力与天花板</strong></p>
+    <ul>
+      <li><strong>驱动力</strong>：① 竞争压力——任何一家的突破都迫使其他家加速跟进；② 技术扩散——论文和开源使核心技术从发明到被复现的周期从 2 年缩短到 3–6 个月；③ 工程工具链成熟——训练框架（Megatron-LM、DeepSpeed）和评测体系的完善降低了迭代门槛</li>
+      <li><strong>天花板</strong>：① 高质量训练数据日趋枯竭，合成数据尚未完全替代真实数据；② 前沿模型训练成本仍在 $100M–$1B 量级（GPT-5 预估 $500M+）；③ 对齐和安全评估需要时间，不能无限压缩</li>
+    </ul>
+  </div>
+
+  <!-- 趋势六 -->
+  <div class="card" id="trend-6">
+    <h4>趋势六：蒸馏降低门槛，但后来者追赶仍受三大核心约束</h4>
+    <div class="verdict-box">
+      <h5>核心判断</h5>
+      <p>知识蒸馏使后来者可以用 1/20 甚至 1/100 的成本获得前沿模型 80%+ 的能力，这是历史性的"后发优势"。但追赶到最后 20% 的成本是非线性增长的，核心瓶颈不在算法，而在<strong>数据飞轮、算力规模和人才密度</strong>三个维度。已经拥有强大基座模型的厂商在蒸馏上具备天然优势——它们既是"老师"又是"学校"。</p>
+    </div>
+
+    <p style="margin-top:14px"><strong>论据 1：蒸馏带来的后发优势——量化证据</strong></p>
+    <div class="table-wrap">
+      <table>
+        <tr><th>案例</th><th>蒸馏策略</th><th>成本</th><th>达到的能力水平</th></tr>
+        <tr><td>DeepSeek-V3 (685B)</td><td>MoE 架构 + 从 V2 蒸馏 + 独立训练</td><td>$5.57M（2048 GPU×2 个月）</td><td>GPT-4o 级（Arena ~1390）</td></tr>
+        <tr><td>DeepSeek-R1-Distill-Qwen-32B</td><td>从 R1(671B) 蒸馏到 Qwen2.5-32B</td><td>极低（微调级别）</td><td>数学/推理接近 o1-mini</td></tr>
+        <tr><td>Qwen3.5-9B</td><td>从 Qwen3.5-Plus 蒸馏</td><td>未公开（显著低于全量训练）</td><td>接近 2024 年 GPT-4o-mini</td></tr>
+        <tr><td>MiniCPM-o 2.6 (8B)</td><td>从大模型蒸馏 + 自研稀疏 MoE</td><td>低（面壁智能为初创公司）</td><td>多模态媲美 GPT-4o</td></tr>
+      </table>
+    </div>
+    <p style="margin-top:8px">蒸馏的核心优势：① <strong>跳过试错成本</strong>——直接学习成功模型的输出分布，无需重复前人踩过的坑；② <strong>压缩知识</strong>——将 685B 参数的知识压缩到 32B，推理成本降低 20 倍；③ <strong>叠加自研创新</strong>——在蒸馏基础上叠加 MoE/MLA 等架构创新，实现"站在巨人肩膀上"的效果。</p>
+
+    <p style="margin-top:14px"><strong>论据 2：追赶的三大核心约束</strong></p>
+    <div class="table-wrap">
+      <table>
+        <tr><th>约束维度</th><th>具体壁垒</th><th>量化数据</th><th>后来者现实</th></tr>
+        <tr><td><strong>① 数据飞轮</strong></td><td>高质量训练数据的采集、清洗、标注体系</td><td>GPT-4 训练数据估计 13T tokens；ChatGPT 每日 1 亿+ 用户交互产生 RLHF 数据</td><td>后来者缺少用户反馈闭环，RLHF 数据量差距 10–100 倍</td></tr>
+        <tr><td><strong>② 算力规模</strong></td><td>前沿模型训练需要万卡集群</td><td>GPT-5 训练估算 25,000+ H100 运行数月，成本 $500M+</td><td>中国企业受出口管制限制，H100 获取困难；但华为昇腾/寒武纪在追赶</td></tr>
+        <tr><td><strong>③ 人才密度</strong></td><td>对齐/安全/架构创新的顶尖人才</td><td>Anthropic ~1000 人中研究员占比 &gt;50%；OpenAI 核心团队 ~200 人创造 GPT-4</td><td>顶尖 AI 人才高度集中在美国 5 家公司，中国通过海归+自主培养在追赶</td></tr>
+      </table>
+    </div>
+
+    <p style="margin-top:14px"><strong>论据 3：拥有基座模型的厂商在蒸馏上的结构性优势</strong></p>
+    <p>已经拥有强大基座模型的厂商（OpenAI、Anthropic、Google、阿里、DeepSeek）在蒸馏上具备<strong>自我增强的飞轮效应</strong>：</p>
+    <ul>
+      <li><strong>Teacher 质量最高</strong>：自家旗舰模型就是最好的老师，无需依赖外部模型的输出</li>
+      <li><strong>蒸馏数据更丰富</strong>：可以控制 Teacher 生成任意领域、任意难度的训练数据，覆盖 edge case</li>
+      <li><strong>端到端优化</strong>：可以同时优化 Teacher 和 Student 的架构，如 Qwen3.5 系列从 0.8B 到 Plus 的全矩阵布局</li>
+      <li><strong>品牌信任</strong>：用户更信任"来自 GPT-5 的蒸馏"而非"来自第三方的蒸馏"</li>
+    </ul>
+    <p style="margin-top:8px"><strong>结论</strong>：蒸馏降低了入场门槛（从 $100M 降到 $5M），但并未消除头部优势。后来者可以快速达到 80 分，但从 80 分到 95 分的差距仍需要数据飞轮、算力投入和人才密度的长期积累。这就是为什么 DeepSeek 虽然用极低成本做出了 GPT-4 级模型，但在 Arena 排名上仍与 GPT-5.4 / Opus 4.6 有明显差距。</p>
+  </div>
+
+  <!-- 趋势七 -->
+  <div class="card" id="trend-7">
+    <h4>趋势七：从"选最强"到"选最懂我" — 品味、个性化与上下文成为新护城河</h4>
+    <div class="verdict-box">
+      <h5>核心判断</h5>
+      <p>当模型能力高度趋同（趋势一），用户的选择逻辑正在发生根本转变：不再是"哪个模型跑分最高"，而是<strong>"哪个模型最懂我"</strong>。差异化的核心正从模型参数转向<strong>品味（Taste）</strong>——即训练者如何筛选数据、定义对齐规则、塑造模型人格。与此同时，Memory、Rules、Projects、CLAUDE.md、Heartbeat/Cron 等个性化机制的出现，使模型能够"记住"用户并持续进化，构建起强大的迁移壁垒和用户粘性。</p>
+    </div>
+
+    <p style="margin-top:14px"><strong>论据 1：品味差异化——以 Claude 的宪法 AI 为典型案例</strong></p>
+    <p>Anthropic 的 Constitutional AI（宪法式 AI）是"品味决定差异"的最佳注脚：</p>
+    <ul>
+      <li><strong>宪法定义行为边界</strong>：Claude 的行为由一组人工编写的"宪法原则"（如"选择最有帮助且最无害的回答"、"如果不确定，宁可谨慎也不要臆造"）而非纯粹的 RLHF 驱动。这使得 Claude 在主观评价中被广泛认为"更有品味"——回答更谨慎、更有深度、更像一个有原则的合作伙伴</li>
+      <li><strong>对比 GPT 的 RLHF 路线</strong>：OpenAI 更依赖大规模人类反馈（每日 1 亿+ 用户交互的隐式反馈），这使 GPT 在"取悦多数人"方面表现更好，但有时被批评为"过于讨好"（sycophantic）。两种路线没有绝对优劣，但产生了明显的<strong>人格差异</strong></li>
+      <li><strong>Anthropic 公开系统提示词</strong>：2024 年 Anthropic 成为全球第一家公开 AI 模型完整系统提示词的公司，展示了 Claude 的"灵魂"如何被定义。这种透明度本身就是差异化策略</li>
+    </ul>
+    <p style="margin-top:8px"><strong>"品味"的本质</strong>：当两个模型在 MMLU 上都达到 90%+ 时，用户感知到的差异并非来自参数或架构，而是来自训练数据的筛选标准、对齐原则的设计哲学、以及模型在模糊地带的取舍方式。就像同样原料做出的菜，厨师的品味决定了最终的味道。</p>
+
+    <p style="margin-top:14px"><strong>论据 2：QuitGPT 运动——150 万用户用脚投票</strong></p>
+    <div class="table-wrap">
+      <table>
+        <tr><th>事件</th><th>时间</th><th>数据</th><th>意义</th></tr>
+        <tr><td>QuitGPT 运动</td><td>2026.02</td><td class="highlight">超过 150 万用户登记抵制 ChatGPT，70 万+ 用户迁移到 Claude</td><td>首次大规模 AI 产品用户迁移事件</td></tr>
+        <tr><td>Claude App Store 排名飙升</td><td>2026.02–03</td><td>iOS 效率榜 80+ 个地区前十，美区总榜一度第一</td><td>迁移不仅是口号，而是实际行为</td></tr>
+        <tr><td>Claude Memory Import</td><td>2026.02</td><td>60 秒一键导入 ChatGPT 记忆，支持全部付费计划</td><td>降低迁移成本是触发大规模迁移的关键</td></tr>
+      </table>
+    </div>
+    <p style="margin-top:8px">这波迁移的深层原因不是 Claude 在某个 Benchmark 上超过了 GPT——恰恰相反，GPT-5.4 的综合跑分仍然领先。用户迁移的真实动机是<strong>对模型"品味"和"价值观"的偏好</strong>：更诚实的态度、更有深度的分析、更尊重用户的交互方式。这证明了一个关键假说：<strong>当能力趋同后，品味和价值观成为用户选择的决定性因素</strong>。</p>
+
+    <p style="margin-top:14px"><strong>论据 3：个性化机制的军备竞赛——Memory/Rules/Soul/Heartbeat</strong></p>
+    <p>各厂商正在构建越来越深的个性化"护城河"：</p>
+    <div class="table-wrap">
+      <table>
+        <tr><th>机制</th><th>功能</th><th>代表实现</th><th>竞争意义</th></tr>
+        <tr><td><strong>Memory</strong></td><td>模型记住用户偏好、历史交互、个人信息</td><td>ChatGPT Memory（2024）、Claude Memory（2025）、Claude Memory Import（2026）</td><td>使用越久越"懂你"，迁移成本递增</td></tr>
+        <tr><td><strong>Custom Instructions / Rules</strong></td><td>用户定义模型行为规则和偏好</td><td>ChatGPT Custom Instructions、Claude Projects、CLAUDE.md 文件</td><td>用户投入的定制规则越多，黏性越强</td></tr>
+        <tr><td><strong>Projects / Contexts</strong></td><td>按项目组织上下文、文件和指令</td><td>Claude Projects（2024）、ChatGPT Projects（2025）、Claude Code CLAUDE.md</td><td>工作流级别的锁定，一个项目的迁移成本远高于单次对话</td></tr>
+        <tr><td><strong>Soul / Character</strong></td><td>定义模型核心人格和价值观</td><td>OpenAI Model Spec（2024.05发布）、Anthropic Constitutional AI + 公开系统提示词</td><td>品牌级差异化，类似"品牌人格"</td></tr>
+        <tr><td><strong>Heartbeat / Cron</strong></td><td>定时任务、主动提醒、后台持续运行</td><td>Claude Code 的后台 Agent、ChatGPT 的 Scheduled Tasks（测试中）</td><td>从"被动回答"到"主动服务"，更深的用户依赖</td></tr>
+        <tr><td><strong>Auto Memory</strong></td><td>模型自动从对话中提取并记录用户偏好</td><td>Claude Code Auto Memory（自动写入 CLAUDE.md）</td><td>零摩擦积累个性化数据，用户无感知中越来越"被理解"</td></tr>
+      </table>
+    </div>
+
+    <p style="margin-top:14px"><strong>论据 4：从工具到伙伴——"最懂我"的商业价值</strong></p>
+    <p>这些个性化机制的叠加效应正在改变 AI 产品的竞争逻辑：</p>
+    <ul>
+      <li><strong>迁移成本指数增长</strong>：Memory Import 虽然降低了"记忆搬家"的门槛，但用户在 Projects 中积累的工作流、在 Rules 中定义的行为模式、在长期交互中形成的隐性偏好，远比结构化记忆更难迁移</li>
+      <li><strong>使用时长 → 数据壁垒</strong>：ChatGPT 每日 1 亿+ 活跃用户意味着每天产生海量的交互数据，这些数据反过来优化模型的个性化能力。Claude 通过 Memory Import 抢夺存量用户，但增量数据仍是 OpenAI 的优势</li>
+      <li><strong>选择标准的范式转移</strong>：企业采购正在从"选跑分最高的"转向"选最适合我们工作流的"——这包括模型是否支持自定义 Rules、是否有 Project 级上下文管理、是否能通过 MCP 接入内部工具链</li>
+    </ul>
+    <p style="margin-top:8px"><strong>终极趋势</strong>：模型竞争正在从"智力竞赛"（谁更聪明）转向"关系竞赛"（谁更懂我）。如同手机从"比参数"到"比生态"的演进，AI 模型的最终护城河不是参数规模，而是<strong>对每个用户的理解深度</strong>。选择排名第一的是一种策略，选择性价比最高的是另一种策略，但越来越多的高价值用户正在选择第三条路：<strong>选择最懂自己的</strong>。</p>
+  </div>
+</div>
+
+<!-- 5. 各家模型系列概览与迭代路径 -->
+<div class="section" id="family">
+  <h2 class="section-title">附录A：各家模型系列概览与迭代路径</h2>
+
+  <!-- Anthropic Claude -->
+  <div class="card" id="fam-claude">
+    <h4>Anthropic Claude 系列</h4>
+    <p style="margin-top:12px"><strong>产品线：</strong>Opus（旗舰/最强）> Sonnet（均衡/主力）> Haiku（轻量/极速）</p>
+    <div class="table-wrap">
+      <table>
+        <tr><th>版本</th><th>发布时间</th><th>关键升级</th><th>标志性数据</th></tr>
+        <tr><td>Claude 1</td><td>2023.03</td><td>首代产品，100K 上下文</td><td>—</td></tr>
+        <tr><td>Claude 2</td><td>2023.07</td><td>200K 上下文，全球首个商用超长上下文</td><td>—</td></tr>
+        <tr><td>Claude 3 (Opus/Sonnet/Haiku)</td><td>2024.03</td><td>多模态视觉能力，Opus 超越 GPT-4</td><td>MMLU: Opus 86.8%</td></tr>
+        <tr><td>Claude 3.5 Sonnet</td><td>2024.06</td><td>性价比突破，编程能力跃升</td><td>成为最受开发者欢迎的 API 模型</td></tr>
+        <tr><td>Claude 3.7 Sonnet</td><td>2025.02</td><td>首个混合推理模型，extended thinking</td><td>SWE-bench 70.3%</td></tr>
+        <tr><td>Claude 4 / Opus 4</td><td>2025.06</td><td>编程登顶，Computer Use 首发</td><td>SWE-bench 72.0%</td></tr>
+        <tr><td>Claude 4.5 Sonnet/Opus</td><td>2025.10</td><td>速度提升，Agent 能力增强</td><td>SWE-bench 82.0%(Sonnet 并行)</td></tr>
+        <tr><td class="highlight">Claude Opus 4.6</td><td>2026.02.05</td><td>1M 上下文(Beta)，Agent Teams 多智能体协作，ARC-AGI-2 翻倍</td><td>ARC-AGI-2: 68.8%, MRCR v2: 76%</td></tr>
+      </table>
+    </div>
+    <div class="key-insight">
+      <strong>关键事实：</strong>Opus 4.6 相比 4.5——新颖问题解决能力 +83%（ARC-AGI-2 从 37.6% → 68.8%），长上下文检索 +4.1x（MRCR 从 18.5% → 76%），Agent 从单 Agent 串行升级为 16 Agent 并行协作。定价不变（$5/$25），意味着实际性价比翻倍。
+    </div>
+  </div>
+
+  <!-- OpenAI GPT -->
+  <div class="card" id="fam-gpt">
+    <h4>OpenAI GPT 系列</h4>
+    <p style="margin-top:12px"><strong>产品矩阵：</strong>5.4 Pro（极致推理）> 5.4 Thinking（标准推理+CU）> Instant（极速日常）</p>
+    <div class="table-wrap">
+      <table>
+        <tr><th>版本</th><th>发布时间</th><th>关键升级</th><th>标志性数据</th></tr>
+        <tr><td>GPT-3.5</td><td>2022.11</td><td>ChatGPT 横空出世，开启 LLM 时代</td><td>—</td></tr>
+        <tr><td>GPT-4</td><td>2023.03</td><td>多模态输入（图像），推理大幅提升</td><td>MMLU: 86.4%</td></tr>
+        <tr><td>GPT-4o</td><td>2024.05</td><td>首个原生多模态模型（文/图/音），速度翻倍</td><td>50种语言支持</td></tr>
+        <tr><td>GPT-4.5</td><td>2025.02</td><td>最大密集模型，强调"情商"和幻觉降低</td><td>—</td></tr>
+        <tr><td>GPT-5</td><td>2025.08</td><td>"最智能AI"，整合 o3 推理链</td><td>GPQA: 93.2%</td></tr>
+        <tr><td>GPT-5.2 (Instant/Thinking/Pro)</td><td>2025 Q4</td><td>三档分级，Pro 极致推理，Instant 极速</td><td>ARC-AGI-2: 54.2%</td></tr>
+        <tr><td class="highlight">GPT-5.3 Codex / Instant</td><td>2026.02–03</td><td>Codex: 编程速度+25%，Terminal-Bench 大幅提升；Instant: 日常交互优化</td><td>Terminal-Bench: 77.3%, OSWorld: 64.7%</td></tr>
+      </table>
+    </div>
+    <div class="key-insight">
+      <strong>关键事实：</strong>GPT-5.4 是 OpenAI 面向"专业工作"的重磅升级——原生 Computer Use 能力使 OSWorld 从 GPT-5.2 的 47.3% 跃升至 75.0%（超越人类 72.4%）；BrowseComp 从 GPT-5.2 的 47.1% 提升至 89.3%（Pro 版）；投行基准从 68.4% → 87.5%；幻觉降低 33%。定价：GPT-5.4 $2.50/$15.00，GPT-5.4 Pro $30/$180，1M 上下文窗口（>272K 时翻倍计费）。继承 GPT-5.3 Codex 的编程能力。
+    </div>
+  </div>
+
+  <!-- Google Gemini -->
+  <div class="card" id="fam-gemini">
+    <h4>Google Gemini 系列</h4>
+    <p style="margin-top:12px"><strong>产品矩阵：</strong>Pro（旗舰）> Flash（均衡高速）> Flash-Lite（极致性价比）</p>
+    <div class="table-wrap">
+      <table>
+        <tr><th>版本</th><th>发布时间</th><th>关键升级</th><th>标志性数据</th></tr>
+        <tr><td>Gemini 1.0 (Ultra/Pro/Nano)</td><td>2023.12</td><td>首发三档架构，原生多模态</td><td>MMLU: Ultra 90.0%</td></tr>
+        <tr><td>Gemini 1.5 Pro</td><td>2024.02</td><td>突破性 100万 token 上下文</td><td>1M tokens 上下文窗口</td></tr>
+        <tr><td>Gemini 2.0 Flash</td><td>2024.12</td><td>"为 Agent 时代设计"，多模态输出</td><td>文本→语音/图像</td></tr>
+        <tr><td>Gemini 2.5 Flash/Pro</td><td>2025 Q2</td><td>动态计算，可控推理深度</td><td>—</td></tr>
+        <tr><td>Gemini 3 Pro</td><td>2025 Q4</td><td>多模态最强，原生视频流处理</td><td>Arena ~1435, 视频理解领先</td></tr>
+        <tr><td class="highlight">Gemini 3.1 Pro / Flash-Lite</td><td>2026.02</td><td>Flash-Lite 极致性价比，363 tokens/s</td><td>$0.25/M 输入，速度最快</td></tr>
+      </table>
+    </div>
+    <div class="key-insight">
+      <strong>关键事实：</strong>Flash-Lite 以 363 tok/s 的速度和 $0.25/M 的输入价格，成为所有轻量任务的绝对最优选择——速度是 GPT-5.3 Instant 的 5x，价格是其 1/2。
+    </div>
+  </div>
+
+  <!-- xAI Grok -->
+  <div class="card" id="fam-grok">
+    <h4>xAI Grok 系列</h4>
+    <div class="table-wrap">
+      <table>
+        <tr><th>版本</th><th>发布时间</th><th>关键升级</th></tr>
+        <tr><td>Grok 1</td><td>2023.11</td><td>首发，X 平台实时数据集成</td></tr>
+        <tr><td>Grok 2</td><td>2024.08</td><td>性能大幅提升，图像生成(FLUX)</td></tr>
+        <tr><td>Grok 3</td><td>2025.02</td><td>Arena 首个突破 1400 分，推理极强，AIME 2025: 93分</td></tr>
+        <tr><td class="highlight">Grok 4 Heavy</td><td>2025 Q4</td><td>Arena 最高分 ~1450+，但仅限 $3000/年 SuperGrok 订阅</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- DeepSeek -->
+  <div class="card">
+    <h4>DeepSeek 系列</h4>
+    <div class="verdict-box">
+      <h5>判断</h5>
+      <p><strong>穷人的 GPT-5，成本革命者。</strong>DeepSeek 以一己之力改写了大模型的成本预期——V1→V2→V3 参数翻倍但训练成本仅增加一倍（得益于 MoE + MLA 创新）。R1 用多阶段强化学习实现了推理能力的涌现，证明了"小投入大产出"可行。V3 开源 MIT，$0.28/M 输入在同级中最便宜，<strong>迫使全球闭源厂商大幅降价</strong>。</p>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <tr><th>版本</th><th>发布时间</th><th>关键升级</th><th>架构</th></tr>
+        <tr><td>DeepSeek-V1 (67B)</td><td>2023 Q4</td><td>低成本 Scaling Laws 实验，延用 LLaMA 2 架构</td><td>Dense</td></tr>
+        <tr><td>DeepSeek-V2 (236B)</td><td>2024.05</td><td>MLA 注意力机制，推理效率大幅提升</td><td>MoE，21B 激活</td></tr>
+        <tr><td>DeepSeek-V3 (685B)</td><td>2024.12</td><td>训练成本仅$5.57M，MIT开源</td><td>MoE，37B 激活</td></tr>
+        <tr><td>DeepSeek-R1</td><td>2025.01</td><td>推理模型，通过强化学习达到 o1 级别</td><td>基于 V3 底座</td></tr>
+      </table>
+    </div>
+    <div class="key-insight">
+      <strong>关键事实：</strong>V3 训练成本仅 $5.57M（约为 GPT-4 的 1/20），685B 参数但仅需 37B 激活（MoE），API 价格 $0.28/M 输入——同级能力的模型中最便宜。R1 开源后 2 周内被超过 20 个团队基于其做微调或蒸馏。
+    </div>
+  </div>
+
+  <!-- 智谱 GLM -->
+  <div class="card" id="fam-glm">
+    <h4>智谱 GLM 系列</h4>
+    <div class="table-wrap">
+      <table>
+        <tr><th>版本</th><th>发布时间</th><th>关键升级</th><th>参数</th></tr>
+        <tr><td>GLM-10B</td><td>2021.09</td><td>自主 GLM 算法，开源百亿模型</td><td>10B</td></tr>
+        <tr><td>GLM-130B</td><td>2022.08</td><td>中英双语千亿模型，对标 GPT-3</td><td>130B</td></tr>
+        <tr><td>ChatGLM → ChatGLM-3</td><td>2023</td><td>对话优化，开源 6B 版本广泛使用</td><td>6B/130B</td></tr>
+        <tr><td>GLM-4</td><td>2024.01</td><td>性能提升60%，支持多模态，接近 GPT-4</td><td>未公开</td></tr>
+        <tr><td>GLM-4.7 / Z1</td><td>2025</td><td>编程+推理能力提升，混合推理架构</td><td>355B (MoE, 32B激活)</td></tr>
+        <tr><td class="highlight">GLM-5</td><td>2026.02.12</td><td>编程对齐 Claude Opus 4.5，开源模型全球第一（Artificial Analysis），适配7家国产芯片</td><td>744B (MoE, 40B激活), 28.5T 训练数据</td></tr>
+      </table>
+    </div>
+    <div class="key-insight">
+      <strong>关键事实：</strong>全球权威 Agent 榜单第 4、开源第 1；编程能力较 GLM-4.7 平均提升 >20%；已适配昇腾、摩尔线程、寒武纪、昆仑芯、沐曦、燧原、海光 7 家国产芯片；配套推出 ZCode 多智能体编码平台。
+    </div>
+  </div>
+
+  <!-- 字节 Seed 2.0 -->
+  <div class="card">
+    <h4>字节跳动 Seed 2.0 系列</h4>
+    <div class="verdict-box">
+      <h5>判断</h5>
+      <p><strong>体验驱动，不刷分；强调指令遵循和长尾知识，面向真实世界复杂工作流。</strong>字节做大模型的逻辑和其他家完全不同——以体验为驱动而不是以刷分为驱动。核心优势在于能<strong>放量</strong>：依托抖音/TikTok/剪映/飞书的庞大用户群和丰富使用场景，积累了大量面向真实场景的评测基准。从文本对话到深度思考到视频生成，形成服务内容生态的完整工具链。<strong>不做最强的单点模型，而做最完整的内容创作引擎。</strong></p>
+    </div>
+    <p style="margin-top:12px"><strong>全线矩阵：</strong>覆盖文本、代码/思考、图像、视频四个方向</p>
+    <div class="table-wrap">
+      <table>
+        <tr><th>子模型</th><th>类型</th><th>关键能力</th><th>发布日期</th></tr>
+        <tr><td><strong>Seed 2.0 / 豆包 2.0</strong></td><td>通用文本</td><td>Arena Text 榜国产第一（全球前十），准确率76.5%</td><td>2026.02.14</td></tr>
+        <tr><td><strong>Seed 2.0 Pro</strong></td><td>深度推理</td><td>准确率登顶，推理时间 300秒+，成本翻3倍</td><td>2026.02.14</td></tr>
+        <tr><td><strong>Seed-Thinking-v1.5</strong></td><td>推理/思考</td><td>MoE 200B (20B激活)，推理成本比 R1 低50%</td><td>2025.04</td></tr>
+        <tr><td><strong>Seedance 2.0</strong></td><td>视频生成</td><td>双分支扩散变换器，多镜头叙事，原生音频</td><td>2026.02.12</td></tr>
+      </table>
+    </div>
+    <div class="key-insight">
+      <strong>关键事实：</strong>Seedance 2.0 定价约 $0.14/秒（不含视频输入）/$0.04/秒（含视频输入），是首个清晰商业化的 AI 视频模型。Seed 2.0 成为首个进入 Chatbot Arena 全球前十的国产模型。
+    </div>
+  </div>
+
+  <!-- MiniMax M2.5 -->
+  <div class="card" id="fam-minimax">
+    <h4>MiniMax M 系列</h4>
+    <div class="table-wrap">
+      <table>
+        <tr><th>版本</th><th>发布时间</th><th>关键升级</th></tr>
+        <tr><td>abab 5 / 5.5</td><td>2023</td><td>早期文本模型</td></tr>
+        <tr><td>abab 6</td><td>2024.01</td><td>国内首个 MoE 大语言模型</td></tr>
+        <tr><td>abab 6.5 (万亿MoE)</td><td>2024.04</td><td>200K 上下文，接近 GPT-4 级别</td></tr>
+        <tr><td>M2 / M2.1</td><td>2025</td><td>品牌升级，存量代码维护能力</td></tr>
+        <tr><td class="highlight">M2.5</td><td>2026.02.12</td><td>SWE-bench 80.2%, BrowseComp 76.3%, BFCL 76.8%, 复杂任务速度快37%</td></tr>
+      </table>
+    </div>
+    <div class="key-insight">
+      <strong>关键事实：</strong>SWE-bench Verified 80.2%，Multi-SWE-Bench 51.3%（多语言），BrowseComp 76.3%（Web Agent），定价 100 TPS 仅 $1/小时。MiniMax 2025 年收入同比增长 158%，ARR 超 $1.5 亿。
+    </div>
+  </div>
+
+  <h3 style="margin-top:28px;margin-bottom:16px;font-size:18px;color:var(--accent)">各家纵向对比</h3>
+
+  <div class="card">
+    <h4>D. Claude Opus 4.5 → 4.6 纵向提升</h4>
+    <div class="table-wrap">
+      <table>
+        <tr><th>指标</th><th>Opus 4.5</th><th>Opus 4.6</th><th>提升幅度</th></tr>
+        <tr><td>上下文窗口</td><td>200K</td><td>1M (Beta)</td><td>5x</td></tr>
+        <tr><td>ARC-AGI-2</td><td>37.6%</td><td>68.8%</td><td>+83%</td></tr>
+        <tr><td>MRCR v2 (长上下文检索)</td><td>18.5%</td><td>76%</td><td>+4.1x</td></tr>
+        <tr><td>Agent 模式</td><td>单Agent串行</td><td>Agent Teams 多Agent并行</td><td>质变</td></tr>
+        <tr><td>自适应思维</td><td>无</td><td>有（根据任务复杂度调整推理深度）</td><td>新功能</td></tr>
+        <tr><td>定价</td><td>$5/$25</td><td>$5/$25</td><td>不变</td></tr>
+      </table>
+    </div>
+    <p style="font-size:12px;color:var(--text-tertiary);margin-top:8px">来源：Anthropic 官方公告 (2026.02.05)、CSDN/博客园评测文章</p>
+  </div>
+
+  <div class="card">
+    <h4>E. GPT-5.2 → 5.4 纵向提升</h4>
+    <div class="table-wrap">
+      <table>
+        <tr><th>指标</th><th>GPT-5.2</th><th>GPT-5.4</th><th>提升幅度</th></tr>
+        <tr><td>上下文窗口</td><td>128K</td><td>1M（输出128K）</td><td>8x</td></tr>
+        <tr><td>OSWorld-Verified</td><td>47.3%</td><td>75.0%</td><td>+59%（超人类72.4%）</td></tr>
+        <tr><td>BrowseComp</td><td>47.1%</td><td>89.3%（Pro）</td><td>+90%</td></tr>
+        <tr><td>GDPval（专业工作）</td><td>71.0%</td><td>83.0%</td><td>+17%</td></tr>
+        <tr><td>投行基准</td><td>68.4%</td><td>87.5%</td><td>+28%</td></tr>
+        <tr><td>MMMU-Pro</td><td>—</td><td>81.2%</td><td>新指标</td></tr>
+        <tr><td>幻觉率</td><td>基准</td><td>降低33%</td><td>显著改善</td></tr>
+        <tr><td>Computer Use</td><td>无</td><td>原生支持（首个通用模型）</td><td>质变</td></tr>
+        <tr><td>工具搜索效率</td><td>基准</td><td>-47% token消耗</td><td>显著优化</td></tr>
+        <tr><td>深度办公集成</td><td>无</td><td>原生Excel/Google Sheets/金融插件</td><td>新功能</td></tr>
+        <tr><td>定价（Thinking）</td><td>$1.75/$14.00</td><td>$2.50/$15.00</td><td>+43%/+7%（能力提升远超价格涨幅）</td></tr>
+      </table>
+    </div>
+    <p style="font-size:12px;color:var(--text-tertiary);margin-top:8px">来源：OpenAI 官方公告 (2026.03.05)、VentureBeat 报道</p>
+  </div>
+
+  <div class="card">
+    <h4>F. GPT-5.3 Codex → 5.4 编程能力继承</h4>
+    <div class="table-wrap">
+      <table>
+        <tr><th>指标</th><th>GPT-5.3 Codex</th><th>GPT-5.4</th><th>说明</th></tr>
+        <tr><td>Terminal-Bench 2.0</td><td>77.3%</td><td>继承+</td><td>GPT-5.4 整合了 Codex 编程能力</td></tr>
+        <tr><td>SWE-bench Pro</td><td>56.8%</td><td>继承</td><td>编程子系统未单独评测</td></tr>
+        <tr><td>全自主编码</td><td>8小时无人干预</td><td>更长时间</td><td>Computer Use 进一步增强自主能力</td></tr>
+        <tr><td>API层速度</td><td>+40%</td><td>进一步优化</td><td>—</td></tr>
+      </table>
+    </div>
+    <p style="font-size:12px;color:var(--text-tertiary);margin-top:8px">来源：OpenAI 官方公告，GPT-5.4继承并整合了GPT-5.3 Codex的编程能力</p>
+  </div>
+
+  <div class="card">
+    <h4>G. GLM-4.7 → GLM-5 纵向提升</h4>
+    <div class="table-wrap">
+      <table>
+        <tr><th>指标</th><th>GLM-4.7</th><th>GLM-5</th><th>提升幅度</th></tr>
+        <tr><td>参数规模</td><td>355B (32B激活)</td><td>744B (40B激活)</td><td>+2.1x / +25%激活</td></tr>
+        <tr><td>训练数据</td><td>23T</td><td>28.5T</td><td>+24%</td></tr>
+        <tr><td>编程能力（综合）</td><td>基准</td><td>+20%以上</td><td>显著</td></tr>
+        <tr><td>Agent 榜单排名</td><td>—</td><td>全球第4，开源第1</td><td>首次上榜</td></tr>
+        <tr><td>国产芯片适配</td><td>有限</td><td>7家深度适配</td><td>全面覆盖</td></tr>
+      </table>
+    </div>
+    <p style="font-size:12px;color:var(--text-tertiary);margin-top:8px">来源：智谱AI官方公告 (2026.02.12)、腾讯网、企鹅号报道</p>
+  </div>
+
+  <div class="card">
+    <h4>H. 其他模型纵向参考</h4>
+    <ul>
+      <li><strong>MiniMax M2.1 → M2.5：</strong>从"读懂存量代码"升级为"快速创造新产品"，SWE-bench 突破 80%，复杂任务速度快37%（来源：MiniMax官方 & CSDN评测）</li>
+      <li><strong>字节 Seed 1.x → 2.0：</strong>Arena 排名从未进前20到进入全球前10，Seed 2.0 Pro 准确率76.5%登顶，但推理时间从33秒增至300秒+（来源：CSDN实测）</li>
+      <li><strong>Gemini 2.5 → 3.1：</strong>Flash-Lite 将价格压至 $0.25/M、速度363 tok/s，成为轻量任务性价比之王（来源：Google官方）</li>
+    </ul>
+    <div class="note-box">
+      ⚠️ <strong>附录完整性说明：</strong>以上纵向对比数据主要来源于各厂商官方公告和中文技术社区（CSDN/博客园/腾讯网/搜狐科技）的评测整理。部分 benchmark 细项数据（如 GLM-5 在 SWE-bench 上的具体分数、Seed 2.0 的详细 Arena 分数）在公开渠道中尚未完整披露，建议人工查阅各厂商技术报告或联系商务获取。此外，建议关注以下公众号获取更深入的中文评测：<strong>机器之心、量子位、新智元、Datawhale</strong>。
+    </div>
+  </div>
+</div>
+
+<!-- 附录B：Benchmark 实测数据 -->
+<div class="section" id="appendix-bench">
+  <h2 class="section-title">附录B：Benchmark 实测数据</h2>
+
+  <div class="card">
+    <h4>A. 编程与软件工程 Benchmark（2026.03 最新数据）</h4>
+    <div class="table-wrap">
+      <table>
+        <tr><th>基准测试</th><th>测试内容</th><th>Opus 4.6</th><th>GPT-5.4</th><th>GLM-5</th><th>M2.5</th></tr>
+        <tr><td>SWE-bench Verified</td><td>GitHub 问题修复</td><td>—</td><td>新SOTA</td><td>—</td><td class="highlight">80.2%</td></tr>
+        <tr><td>OSWorld-Verified</td><td>计算机任务执行</td><td>—</td><td class="highlight">75.0%（超人类72.4%）</td><td>—</td><td>—</td></tr>
+        <tr><td>Terminal-Bench 2.0</td><td>终端操作</td><td>65.4%</td><td>77.3%+</td><td>—</td><td>—</td></tr>
+        <tr><td>BrowseComp</td><td>Web搜索Agent</td><td>最佳</td><td class="highlight">89.3%（Pro）</td><td>—</td><td>76.3%</td></tr>
+        <tr><td>LFG Bench</td><td>综合实战（4项）</td><td class="highlight">9.25/10</td><td>7.5/10</td><td>—</td><td>—</td></tr>
+        <tr><td>Multi-SWE-Bench</td><td>多语言代码修复</td><td>—</td><td>—</td><td>—</td><td class="highlight">51.3%</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="card">
+    <h4>B. 通用推理 Benchmark</h4>
+    <div class="table-wrap">
+      <table>
+        <tr><th>基准测试</th><th>测试内容</th><th>Opus 4.6</th><th>GPT-5.4 Pro</th><th>Gemini 3</th><th>Grok 4</th><th>DeepSeek-R1</th></tr>
+        <tr><td>ARC-AGI-2</td><td>抽象推理/泛化</td><td class="highlight">68.8%</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+        <tr><td>GPQA Diamond</td><td>研究生级科学</td><td>~88%</td><td class="highlight">93.2%+</td><td>~87%</td><td>75%</td><td>~71%</td></tr>
+        <tr><td>GDPval</td><td>44类专业工作</td><td>+144 Elo</td><td class="highlight">83.0%</td><td>—</td><td>—</td><td>—</td></tr>
+        <tr><td>AIME 2025</td><td>数学竞赛</td><td>—</td><td>—</td><td>—</td><td class="highlight">93分</td><td>~87分</td></tr>
+        <tr><td>MMMU-Pro</td><td>多模态理解</td><td>—</td><td class="highlight">81.2%</td><td>—</td><td>—</td><td>—</td></tr>
+        <tr><td>投行基准</td><td>金融知识+操作</td><td>—</td><td class="highlight">87.5%</td><td>—</td><td>—</td><td>—</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="card">
+    <h4>C. Chatbot Arena 排名（截至2026年3月）</h4>
+    <div class="table-wrap">
+      <table>
+        <tr><th>排名</th><th>模型</th><th>ELO 分数</th><th>备注</th></tr>
+        <tr><td>1</td><td>Grok 4 Heavy</td><td>~1450+</td><td>仅限$3000/年订阅</td></tr>
+        <tr><td>2</td><td>GPT-5.4 Pro</td><td>~1445</td><td>极致推理+Computer Use</td></tr>
+        <tr><td>3</td><td>Gemini 3 Pro</td><td>~1435</td><td>多模态加分</td></tr>
+        <tr><td>4</td><td>Claude Opus 4.6</td><td>~1430</td><td>编程/推理最强</td></tr>
+        <tr><td>5</td><td>GPT-5.4</td><td>~1425</td><td>3月5日上线，原生CU</td></tr>
+        <tr><td>~10</td><td>Seed 2.0 Preview</td><td>—</td><td>国产首次进入前十</td></tr>
+        <tr><td>—</td><td>DeepSeek-R1</td><td>~1390</td><td>开源推理最强</td></tr>
+      </table>
+    </div>
+  </div>
+</div>
+
+<div class="footer">
+  <p>
+    <strong>数据来源</strong><br>
+    Anthropic 官方公告 (2026.02.05) · OpenAI 官方公告 (2026.02.05, 2026.03.03) · 智谱AI 官方公告 (2026.02.12) · MiniMax 官方 (minimaxi.com) · 字节跳动/火山引擎公告<br>
+    Chatbot Arena (lmarena.ai) · Digital Applied · CSDN · 博客园 · 腾讯网 · 搜狐科技 · 凤凰科技 · IT之家<br>
+    数据截至 2026年3月5日 · 仅供参考 · 不构成商业建议<br>
+    <em>⚠️ 本报告基于公开可搜索的信源内容编写。标注了"来源"的数据均可追溯；未标注的推测性内容已注明建议人工核实。</em>
+  </p>
+</div>
+
+</div>
+
+<script>
+// ===== 折线时间轴 =====
+(function(){
+  var events = [
+    {date:'2025-01', label:'DeepSeek-R1', company:'DeepSeek', major:true,
+     desc:'开源推理模型，RL 驱动推理涌现，2 周被 20+ 团队微调蒸馏，推动全行业降价'},
+    {date:'2025-02', label:'Grok 3', company:'xAI', major:true,
+     desc:'Arena 首个突破 1400 分，AIME 2025 数学竞赛 93 分，10 万张 H100 Colossus 集群'},
+    {date:'2025-02', label:'GPT-4.5', company:'OpenAI', major:false,
+     desc:'最大密集模型，强调"情商"和幻觉降低'},
+    {date:'2025-04', label:'Seed-Think v1.5', company:'字节', major:false,
+     desc:'MoE 200B (20B激活)，推理成本比 R1 低 50%'},
+    {date:'2025-05', label:'Gemini 2.5', company:'Google', major:false,
+     desc:'动态计算，可控推理深度，Flash/Pro 双线'},
+    {date:'2025-06', label:'Claude 4', company:'Anthropic', major:true,
+     desc:'编程登顶 SWE-bench 72.0%，Computer Use 首发——开创"AI 操作员"品类'},
+    {date:'2025-08', label:'GPT-5', company:'OpenAI', major:true,
+     desc:'"最智能AI"，整合 o3 推理链，GPQA 93.2%，$2.50/M 输入'},
+    {date:'2025-10', label:'Claude 4.5', company:'Anthropic', major:false,
+     desc:'速度提升，Sonnet 并行 SWE-bench 82.0%'},
+    {date:'2025-Q4', label:'GPT-5.2', company:'OpenAI', major:false,
+     desc:'三档分级 Pro/Thinking/Instant，ARC-AGI-2 54.2%'},
+    {date:'2025-Q4', label:'Gemini 3 Pro', company:'Google', major:true,
+     desc:'多模态最强，原生视频流处理，Arena ~1435'},
+    {date:'2025-Q4', label:'Grok 4', company:'xAI', major:true,
+     desc:'Arena 最高分 ~1450+，$3000/年 SuperGrok 订阅'},
+    {date:'2026-02', label:'Opus 4.6', company:'Anthropic', major:true,
+     desc:'1M 上下文(Beta)，Agent Teams 16 Agent 并行协作，ARC-AGI-2 68.8%（+83%），MRCR 76%（+4.1x）'},
+    {date:'2026-02', label:'GLM-5', company:'智谱AI', major:true,
+     desc:'MoE 744B，开源编程全球第一，适配 7 家国产芯片，Agent 榜全球第 4'},
+    {date:'2026-02', label:'M2.5', company:'MiniMax', major:true,
+     desc:'SWE-bench 80.2%，BFCL 76.8%，BrowseComp 76.3%，100 TPS 仅 $1/h'},
+    {date:'2026-02', label:'Seed 2.0', company:'字节', major:true,
+     desc:'Arena Text 国产第一/全球前十，Seedance 2.0 电影级视频生成 $0.14/s'},
+    {date:'2026-02', label:'Gemini 3.1', company:'Google', major:false,
+     desc:'Flash-Lite 363 tok/s + $0.25/M，速度和性价比新标杆'},
+    {date:'2026-02', label:'GPT-5.3 Codex', company:'OpenAI', major:false,
+     desc:'编程+25%，Terminal-Bench 77.3%，8 小时无人干预全自主编码'},
+    {date:'2026-03', label:'GPT-5.4', company:'OpenAI', major:true,
+     desc:'原生 Computer Use，OSWorld 75.0% 超越人类 72.4%，1M 上下文，BrowseComp 89.3%（Pro），幻觉-33%'}
+  ];
+
+  // 颜色映射
+  var colors = {
+    'OpenAI':'#C96442','Anthropic':'#4A7B9D','Google':'#5A8F6B',
+    'xAI':'#7B6B9D','DeepSeek':'#B8863B','字节':'#4A8F8F',
+    '智谱AI':'#C96442','MiniMax':'#7B6B9D'
+  };
+
+  // 解析日期为数字（用于排序和定位）
+  function dateToNum(d){
+    if(d.indexOf('Q')>-1){
+      var parts=d.split('-Q'); var y=parseInt(parts[0]);
+      var q=parseInt(parts[1]); return y+(q*3-1)/12;
+    }
+    var p=d.split('-'); return parseInt(p[0])+(parseInt(p[1])-1)/12;
+  }
+
+  events.forEach(function(e){ e._t = dateToNum(e.date); });
+  events.sort(function(a,b){ return a._t - b._t; });
+
+  var container = document.getElementById('timelineChart');
+  var W = Math.max(container.offsetWidth, 780);
+  var H = 320;
+  var padL=50, padR=40, padT=50, padB=50;
+  var chartW = W-padL-padR, chartH = H-padT-padB;
+
+  var minT = events[0]._t, maxT = events[events.length-1]._t;
+  var rangeT = maxT - minT || 1;
+
+  // 计算 X 位置
+  events.forEach(function(e){
+    e._x = padL + ((e._t - minT)/rangeT)*chartW;
+  });
+
+  // Y: 用锯齿分布避免重叠，大事件在中线附近，小事件偏上或偏下
+  var midY = padT + chartH/2;
+  // 分配 Y：交替上下，major 靠中线
+  var prev = {};
+  events.forEach(function(e, i){
+    var baseY = midY;
+    var offset = (i % 2 === 0 ? -1 : 1) * (30 + (i % 3)*18);
+    if(e.major) offset *= 0.6;
+    e._y = baseY + offset;
+    // 避免同日期重叠
+    var key = Math.round(e._x);
+    if(prev[key]){ e._y += (prev[key]%2===0?25:-25); }
+    prev[key] = (prev[key]||0)+1;
+  });
+
+  // 构建 SVG
+  var svg = document.createElementNS('http://www.w3.org/2000/svg','svg');
+  svg.setAttribute('width', W);
+  svg.setAttribute('height', H);
+  svg.setAttribute('viewBox','0 0 '+W+' '+H);
+  svg.style.display = 'block';
+
+  // 折线
+  var pts = events.map(function(e){ return e._x+','+e._y; }).join(' ');
+  var polyline = document.createElementNS('http://www.w3.org/2000/svg','polyline');
+  polyline.setAttribute('points', pts);
+  polyline.setAttribute('fill','none');
+  polyline.setAttribute('stroke','rgba(201,100,66,0.18)');
+  polyline.setAttribute('stroke-width','2.5');
+  polyline.setAttribute('stroke-linejoin','round');
+  polyline.setAttribute('stroke-linecap','round');
+  svg.appendChild(polyline);
+
+  // X轴基线
+  var axisLine = document.createElementNS('http://www.w3.org/2000/svg','line');
+  axisLine.setAttribute('x1',padL); axisLine.setAttribute('y1',H-padB+10);
+  axisLine.setAttribute('x2',W-padR); axisLine.setAttribute('y2',H-padB+10);
+  axisLine.setAttribute('stroke','rgba(0,0,0,0.1)'); axisLine.setAttribute('stroke-width','1');
+  svg.appendChild(axisLine);
+
+  // 时间刻度
+  var ticks = ['2025-01','2025-04','2025-07','2025-10','2026-01','2026-03'];
+  var tickLabels = ["'25.01","'25.04","'25.07","'25.10","'26.01","'26.03"];
+  ticks.forEach(function(t,i){
+    var tn = dateToNum(t);
+    var tx = padL + ((tn-minT)/rangeT)*chartW;
+    var tick = document.createElementNS('http://www.w3.org/2000/svg','line');
+    tick.setAttribute('x1',tx); tick.setAttribute('y1',H-padB+6);
+    tick.setAttribute('x2',tx); tick.setAttribute('y2',H-padB+14);
+    tick.setAttribute('stroke','rgba(0,0,0,0.15)'); tick.setAttribute('stroke-width','1');
+    svg.appendChild(tick);
+    var lb = document.createElementNS('http://www.w3.org/2000/svg','text');
+    lb.setAttribute('x',tx); lb.setAttribute('y',H-padB+26);
+    lb.setAttribute('text-anchor','middle');
+    lb.setAttribute('class','tl-axis-label');
+    lb.textContent = tickLabels[i];
+    svg.appendChild(lb);
+  });
+
+  // Tooltip 容器
+  var tooltip = document.createElement('div');
+  tooltip.className = 'tl-tooltip';
+  tooltip.innerHTML = '<div class="tt-date"></div><div class="tt-title"></div><div class="tt-desc"></div><div class="tt-tag"></div>';
+
+  // 节点
+  events.forEach(function(e, idx){
+    var r = e.major ? 7 : 4.5;
+    var c = colors[e.company] || '#C96442';
+
+    // 外圈光晕（major）
+    if(e.major){
+      var glow = document.createElementNS('http://www.w3.org/2000/svg','circle');
+      glow.setAttribute('cx',e._x); glow.setAttribute('cy',e._y);
+      glow.setAttribute('r', r+4);
+      glow.setAttribute('fill', c); glow.setAttribute('opacity','0.12');
+      svg.appendChild(glow);
+    }
+
+    var dot = document.createElementNS('http://www.w3.org/2000/svg','circle');
+    dot.setAttribute('cx',e._x); dot.setAttribute('cy',e._y);
+    dot.setAttribute('r', r);
+    dot.setAttribute('fill', c);
+    dot.setAttribute('stroke','#fff'); dot.setAttribute('stroke-width', e.major?2.5:1.5);
+    dot.setAttribute('class','tl-dot');
+    dot.setAttribute('data-idx', idx);
+    svg.appendChild(dot);
+
+    // 标签（仅 major 显示）
+    if(e.major){
+      var lbl = document.createElementNS('http://www.w3.org/2000/svg','text');
+      lbl.setAttribute('x', e._x);
+      lbl.setAttribute('y', e._y + (idx%2===0 ? -14 : 16));
+      lbl.setAttribute('text-anchor','middle');
+      lbl.setAttribute('class','tl-label');
+      lbl.setAttribute('fill', c);
+      lbl.textContent = e.label;
+      svg.appendChild(lbl);
+    }
+  });
+
+  // Wrap
+  var wrap = document.createElement('div');
+  wrap.className = 'tl-wrap';
+  wrap.style.position = 'relative';
+  wrap.appendChild(svg);
+  wrap.appendChild(tooltip);
+  container.appendChild(wrap);
+
+  // Hover 交互
+  svg.addEventListener('mousemove', function(ev){
+    var target = ev.target;
+    if(!target.classList.contains('tl-dot')){ tooltip.classList.remove('show'); return; }
+    var idx = parseInt(target.getAttribute('data-idx'));
+    var e = events[idx];
+    var c = colors[e.company] || '#C96442';
+    tooltip.querySelector('.tt-date').textContent = e.date + ' · ' + e.company;
+    tooltip.querySelector('.tt-title').textContent = e.label;
+    tooltip.querySelector('.tt-desc').textContent = e.desc;
+    var tagEl = tooltip.querySelector('.tt-tag');
+    tagEl.textContent = e.major ? '核心里程碑' : '重要更新';
+    tagEl.style.background = c+'18'; tagEl.style.color = c;
+
+    // 定位
+    var rect = wrap.getBoundingClientRect();
+    var tx = e._x - 150;
+    if(tx < 0) tx = 4;
+    if(tx + 300 > W) tx = W - 304;
+    var ty = e._y < H/2 ? e._y + 18 : e._y - 160;
+    tooltip.style.left = tx + 'px';
+    tooltip.style.top = ty + 'px';
+    tooltip.classList.add('show');
+  });
+
+  svg.addEventListener('mouseleave', function(){
+    tooltip.classList.remove('show');
+  });
+})();
+
+// ===== 侧边栏滚动高亮 =====
+(function(){
+  var nav = document.getElementById('sideNav');
+  if(!nav) return;
+  var links = nav.querySelectorAll('a[href^="#"]');
+  var targets = [];
+  links.forEach(function(a){
+    var id = a.getAttribute('href').slice(1);
+    var el = document.getElementById(id);
+    if(el) targets.push({link:a, el:el});
+  });
+  links.forEach(function(a){
+    a.addEventListener('click', function(e){
+      e.preventDefault();
+      var id = a.getAttribute('href').slice(1);
+      var el = document.getElementById(id);
+      if(el) el.scrollIntoView({behavior:'smooth', block:'start'});
+    });
+  });
+  var ticking = false;
+  window.addEventListener('scroll', function(){
+    if(!ticking){
+      requestAnimationFrame(function(){
+        var current = null;
+        for(var i = targets.length - 1; i >= 0; i--){
+          if(targets[i].el.getBoundingClientRect().top <= 100){
+            current = targets[i].link; break;
+          }
+        }
+        links.forEach(function(l){ l.classList.remove('active'); });
+        if(current){
+          current.classList.add('active');
+          current.scrollIntoView({block:'nearest', behavior:'smooth'});
+        }
+        ticking = false;
+      });
+      ticking = true;
+    }
+  });
+})();
+</script>
+</body>
+</html>
